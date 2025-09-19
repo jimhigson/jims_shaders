@@ -1,0 +1,11 @@
+/** 
+this is a bit messy, but there's stuff storybook provides
+that I just don't need (yet anyway)
+- instead of digging through their config to turn stuff off,
+  I'm just hiding it with CSS
+*/
+
+/* Hide preview toolbar */
+[data-test-id="sb-preview-toolbar"] {
+  display: none !important;
+}
