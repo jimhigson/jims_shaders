@@ -9,7 +9,7 @@ interface MediaSelectorProps {
 
 export const MediaSelector = ({ value, onChange }: MediaSelectorProps) => {
   return (
-    <div className="flex gap-2 p-2.5 bg-background-content border-b border-border overflow-x-auto absolute top-0 left-0 z-media-selector">
+    <div className="flex flex-col gap-2 p-2.5 bg-background-content border-b border-border overflow-x-auto absolute top-0 left-0 z-media-selector max-h-full">
       {Object.entries(exampleMedia).map(([key, media]) => (
         <button
           key={key}

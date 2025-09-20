@@ -11,7 +11,10 @@ export type CurvatureFilterOptions = {
   curvatureX?: number;
   /** Vertical curvature amount (0-1, typically 0.15) */
   curvatureY?: number;
-  /** Enable multisampling for smoother curvature */
+  /**
+   * Enable multisampling (FSAA) for smoother curvature, but also slower rendering.
+   * Also add some blurring.
+   */
   multisampling?: boolean;
 };
 

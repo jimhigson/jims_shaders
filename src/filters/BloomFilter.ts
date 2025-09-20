@@ -12,7 +12,10 @@ export type BloomFilterUniforms = {
   cutoff?: number;
   /** Bloom intensity multiplier */
   intensity?: number;
-  /** Edge blur amount for smooth transitions */
+  /**
+   * How much more should the edge/corner of the screen blur? This reproduces CRT screens which would be
+   * well focussed in the middle and slightly unfocused in the corners
+   */
   edgeBlur?: number;
 };
 

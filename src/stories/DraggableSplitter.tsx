@@ -53,11 +53,9 @@ export const DraggableSplitter = ({
       onMouseDown={() => setIsDragging(true)}
     >
       <div
-        className={`h-full ${
-          isDragging ? "bg-blue" : "bg-black transition-colors duration-200"
-        }`}
+        className={`h-full ${isDragging ? "bg-blue" : "bg-white"}`}
         style={{
-          width: width,
+          width,
         }}
       />
     </div>

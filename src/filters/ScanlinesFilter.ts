@@ -8,7 +8,10 @@ import fragment from "./scanlines.frag?raw";
 export type ScanlinesFilterUniforms = {
   /** Height of each scanline in pixels */
   pixelHeight?: number;
-  /** Brightness of the gap between scanlines (0-1) */
+  /**
+   * Brightness of the gap between scanlines (0-1). Setting this to 1 turns scanlines off entirely.
+   * Setting to 0 makes hard, dark scanlines.
+   */
   gapBrightness?: number;
 };
 

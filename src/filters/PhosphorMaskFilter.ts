@@ -9,9 +9,16 @@ import fragment from "./phosphorMask.frag?raw";
 export type PhosphorMaskFilterOptions = {
   /** Width of phosphor mask pixels */
   pixelWidth?: number;
-  /** Brightness of the mask pattern (0-1) */
+  /**
+   * Brightness of the mask pattern (0-1). This is the brightness of the 'off' pixels - a value of 1
+   * turns the phosphor mask effect off entirely. A value of 0 means only pure red, green, and blue
+   * pixels will be on */
   maskBrightness?: number;
-  /** Number of samples for antialiasing (1 = off, 2-8 recommended) */
+  /**
+   * Number of samples for antialiasing (1 = off, 2-8 recommended). Setting this higher can
+   * avoid Moire patterns, but is slower to render. Try adjusting in combination with the transition
+   * width to get a good compromise.
+   */
   numSamples?: number;
   /**
    * how smooth is the transition between R,G,B phosphors.

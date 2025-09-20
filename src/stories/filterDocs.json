@@ -106,7 +106,7 @@
         "name": "edgeBlur",
         "optional": true,
         "type": "number",
-        "description": "Edge blur amount for smooth transitions"
+        "description": "How much more should the edge/corner of the screen blur? This reproduces CRT screens which would be\nwell focussed in the middle and slightly unfocused in the corners"
       },
       "intensity": {
         "name": "intensity",
@@ -400,7 +400,7 @@
         "name": "multisampling",
         "optional": true,
         "type": "boolean",
-        "description": "Enable multisampling for smoother curvature"
+        "description": "Enable multisampling (FSAA) for smoother curvature, but also slower rendering.\nAlso add some blurring."
       }
     }
   },
@@ -505,13 +505,13 @@
         "name": "maskBrightness",
         "optional": true,
         "type": "number",
-        "description": "Brightness of the mask pattern (0-1)"
+        "description": "Brightness of the mask pattern (0-1). This is the brightness of the 'off' pixels - a value of 1\nturns the phosphor mask effect off entirely. A value of 0 means only pure red, green, and blue\npixels will be on"
       },
       "numSamples": {
         "name": "numSamples",
         "optional": true,
         "type": "number",
-        "description": "Number of samples for antialiasing (1 = off, 2-8 recommended)"
+        "description": "Number of samples for antialiasing (1 = off, 2-8 recommended). Setting this higher can\navoid Moire patterns, but is slower to render. Try adjusting in combination with the transition\nwidth to get a good compromise."
       },
       "pixelWidth": {
         "name": "pixelWidth",
@@ -733,7 +733,7 @@
         "name": "gapBrightness",
         "optional": true,
         "type": "number",
-        "description": "Brightness of the gap between scanlines (0-1)"
+        "description": "Brightness of the gap between scanlines (0-1). Setting this to 1 turns scanlines off entirely.\nSetting to 0 makes hard, dark scanlines."
       },
       "pixelHeight": {
         "name": "pixelHeight",
