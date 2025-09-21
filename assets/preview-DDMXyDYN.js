@@ -1,0 +1,1 @@
+import{_ as r}from"./index-bg_4cTLT.js";import"./index-0yr9KlQE.js";const a={parameters:{docs:{theme:r.dark},darkMode:{current:"dark",dark:r.dark,light:r.light},controls:{matchers:{color:/(background|color)$/i,date:/Date$/i}},actions:{disable:!0},interactions:{disable:!0},chromatic:{disable:!0},layout:"fullscreen"}};export{a as default};
