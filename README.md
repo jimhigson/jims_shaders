@@ -36,6 +36,11 @@ Originally created for my open source, web-based remake of the classic [Head ove
 
 Install `@blockstacking/jims-shaders` from npm with npm/yarn/pnpm/whatever.
 
+## Performance
+
+I get 60fps on my 2021 iphone, and 120fps in 4k on my M4 Macbook. Haven't tested anything lower spec than this, but the shaders shouldn't be expensive to run. If they're lagging, turning off multisampling (for the shaders that use it) is 
+probably going to make the biggest difference.
+
 ## Why?
 
 In short to make my [head over heels remake a bit less pixel-y](https://blockstack.ing) in a realistic way.

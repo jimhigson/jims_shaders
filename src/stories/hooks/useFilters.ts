@@ -27,7 +27,6 @@ export const useFilters = ({
   vignette,
   vignetteIntensity,
   vignetteRadius,
-  softness,
   colorAdjustment,
   gamma,
   saturation,
@@ -50,7 +49,7 @@ export const useFilters = ({
       curvature: curvature ? { curvatureX, curvatureY, multisampling } : false,
       vignette:
         vignette ?
-          { intensity: vignetteIntensity, radius: vignetteRadius, softness }
+          { intensity: vignetteIntensity, radius: vignetteRadius }
         : false,
       colorAdjustment:
         colorAdjustment ? { gamma, saturation, brightness } : false,
@@ -78,7 +77,6 @@ export const useFilters = ({
     vignette,
     vignetteIntensity,
     vignetteRadius,
-    softness,
     colorAdjustment,
     gamma,
     saturation,
