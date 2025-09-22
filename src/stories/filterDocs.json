@@ -844,19 +844,13 @@
         "name": "intensity",
         "optional": true,
         "type": "number",
-        "description": "Vignette intensity (negative values brighten edges)"
+        "description": "Vignette intensity"
       },
       "radius": {
         "name": "radius",
         "optional": true,
         "type": "number",
         "description": "Radius from center where vignette starts"
-      },
-      "softness": {
-        "name": "softness",
-        "optional": true,
-        "type": "number",
-        "description": "Edge softness for smooth transitions"
       }
     }
   }

@@ -57,7 +57,6 @@ export interface CRTFiltersProps {
   vignette: boolean;
   vignetteIntensity: number;
   vignetteRadius: number;
-  softness: number;
   // Color adjustment filter
   colorAdjustment: boolean;
   gamma: number;
@@ -166,7 +165,9 @@ const meta = {
     cornerRadius: {
       control: { type: "range", min: 0, max: 0.2, step: 0.01 },
       if: { arg: "roundedCorners", truthy: true },
-      description: "Corner radius",
+      description:
+        filterDocs.RoundedCornersFilterUniforms.properties.cornerRadius
+          .description,
       table: {
         category: "Screen Shape",
         subcategory: "Settings",
@@ -186,7 +187,8 @@ const meta = {
     },
     pixelHeight: {
       control: { type: "range", min: 2, max: 8, step: 0.1 },
-      description: "Pixel height",
+      description:
+        filterDocs.ScanlinesFilterUniforms.properties.pixelHeight.description,
       if: { arg: "scanlines", truthy: true },
       table: {
         category: "Scanlines",
@@ -196,7 +198,8 @@ const meta = {
     },
     gapBrightness: {
       control: { type: "range", min: 0, max: 1, step: 0.1 },
-      description: "Gap brightness",
+      description:
+        filterDocs.ScanlinesFilterUniforms.properties.gapBrightness.description,
       if: { arg: "scanlines", truthy: true },
       table: {
         category: "Scanlines",
@@ -325,7 +328,8 @@ const meta = {
     },
     curvatureX: {
       control: { type: "range", min: 0, max: 0.6, step: 0.01 },
-      description: "Horizontal curvature",
+      description:
+        filterDocs.CurvatureFilterOptions.properties.curvatureX.description,
       if: { arg: "curvature", truthy: true },
       table: {
         category: "Screen Curvature",
@@ -335,7 +339,8 @@ const meta = {
     },
     curvatureY: {
       control: { type: "range", min: 0, max: 0.6, step: 0.01 },
-      description: "Vertical curvature",
+      description:
+        filterDocs.CurvatureFilterOptions.properties.curvatureY.description,
       if: { arg: "curvature", truthy: true },
       table: {
         category: "Screen Curvature",
@@ -345,7 +350,8 @@ const meta = {
     },
     multisampling: {
       control: "boolean",
-      description: "Enable multisampling for smoother curvature",
+      description:
+        filterDocs.CurvatureFilterOptions.properties.multisampling.description,
       if: { arg: "curvature", truthy: true },
       table: {
         category: "Screen Curvature",
@@ -363,8 +369,9 @@ const meta = {
       },
     },
     vignetteIntensity: {
-      control: { type: "range", min: -1, max: 1, step: 0.1 },
-      description: "Vignette intensity (negative values brighten)",
+      control: { type: "range", min: 0, max: 1, step: 0.1 },
+      description:
+        filterDocs.VignetteFilterUniforms.properties.intensity.description,
       if: { arg: "vignette", truthy: true },
       table: {
         category: "Vignette",
@@ -374,22 +381,13 @@ const meta = {
     },
     vignetteRadius: {
       control: { type: "range", min: 0, max: 2, step: 0.1 },
-      description: "Vignette radius",
+      description:
+        filterDocs.VignetteFilterUniforms.properties.radius.description,
       if: { arg: "vignette", truthy: true },
       table: {
         category: "Vignette",
         subcategory: "Settings",
         defaultValue: { summary: `${defaultVignetteUniforms.radius}` },
-      },
-    },
-    softness: {
-      control: { type: "range", min: 0, max: 1, step: 0.1 },
-      description: "Softness",
-      if: { arg: "vignette", truthy: true },
-      table: {
-        category: "Vignette",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultVignetteUniforms.softness}` },
       },
     },
 
@@ -403,7 +401,8 @@ const meta = {
     },
     gamma: {
       control: { type: "range", min: 0.5, max: 2, step: 0.1 },
-      description: "Gamma correction",
+      description:
+        filterDocs.ColorAdjustmentFilterUniforms.properties.gamma.description,
       if: { arg: "colorAdjustment", truthy: true },
       table: {
         category: "Color Adjustment",
@@ -413,7 +412,9 @@ const meta = {
     },
     saturation: {
       control: { type: "range", min: 0, max: 2, step: 0.1 },
-      description: "Color saturation",
+      description:
+        filterDocs.ColorAdjustmentFilterUniforms.properties.saturation
+          .description,
       if: { arg: "colorAdjustment", truthy: true },
       table: {
         category: "Color Adjustment",
@@ -425,7 +426,9 @@ const meta = {
     },
     brightness: {
       control: { type: "range", min: 0, max: 2, step: 0.1 },
-      description: "Brightness level",
+      description:
+        filterDocs.ColorAdjustmentFilterUniforms.properties.brightness
+          .description,
       if: { arg: "colorAdjustment", truthy: true },
       table: {
         category: "Color Adjustment",
@@ -466,7 +469,6 @@ export const Default: Story = {
     vignette: true,
     vignetteIntensity: 0.6, //defaultVignetteUniforms.intensity,
     vignetteRadius: 1.3, // defaultVignetteUniforms.radius,
-    softness: 0.5, //defaultVignetteUniforms.softness,
     colorAdjustment: true,
     gamma: 1, //defaultColorAdjustmentUniforms.gamma,
     saturation: 1.2, // defaultColorAdjustmentUniforms.saturation,
