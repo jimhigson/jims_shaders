@@ -11,6 +11,9 @@ export type { ColorAdjustmentFilterUniforms } from "./filters/ColorAdjustmentFil
 export { CurvatureFilter } from "./filters/CurvatureFilter";
 export type { CurvatureFilterOptions } from "./filters/CurvatureFilter";
 
+export { NoiseFilter } from "./filters/NoiseFilter";
+export type { NoiseFilterOptions } from "./filters/NoiseFilter";
+
 export { PhosphorMaskFilter } from "./filters/PhosphorMaskFilter";
 export type { PhosphorMaskFilterOptions } from "./filters/PhosphorMaskFilter";
 
@@ -27,6 +30,7 @@ export type { VignetteFilterUniforms } from "./filters/VignetteFilter";
 export { defaultBloomUniforms } from "./filters/BloomFilter";
 export { defaultColorAdjustmentUniforms } from "./filters/ColorAdjustmentFilter";
 export { defaultCurvatureOptions } from "./filters/CurvatureFilter";
+export { defaultNoiseUniforms } from "./filters/NoiseFilter";
 export { defaultPhosphorMaskOptions } from "./filters/PhosphorMaskFilter";
 export { defaultRoundedCornersUniforms } from "./filters/RoundedCornersFilter";
 export { defaultScanlinesUniforms } from "./filters/ScanlinesFilter";
@@ -40,6 +44,7 @@ export type { CrtFilterPipelineOptions } from "./filters/crtFilters";
 export { default as bloomFragmentSource } from "./filters/bloom.frag?raw";
 export { default as colorAdjustmentFragmentSource } from "./filters/colorAdjustment.frag?raw";
 export { default as curvatureFragmentSource } from "./filters/curvature.frag?raw";
+export { default as noiseFragmentSource } from "./filters/noise.frag?raw";
 export { default as phosphorMaskFragmentSource } from "./filters/phosphorMask.frag?raw";
 export { default as roundedCornersFragmentSource } from "./filters/roundedCorners.frag?raw";
 export { default as scanlinesFragmentSource } from "./filters/scanlines.frag?raw";
