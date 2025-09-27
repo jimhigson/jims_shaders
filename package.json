@@ -25,6 +25,7 @@
     "dev": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "build-lib": "vite build",
+    "watch": "vite build --watch",
     "check:lint": "eslint .",
     "fix:lint": "eslint --fix .",
     "check:format": "prettier . --check",

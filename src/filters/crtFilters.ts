@@ -11,29 +11,32 @@ import type { VignetteFilterUniforms } from "./VignetteFilter";
 import { BloomFilter } from "./BloomFilter";
 import { ColorAdjustmentFilter } from "./ColorAdjustmentFilter";
 import { CurvatureFilter } from "./CurvatureFilter";
+import { NoiseFilter, type NoiseFilterOptions } from "./NoiseFilter";
 import { PhosphorMaskFilter } from "./PhosphorMaskFilter";
 import { RoundedCornersFilter } from "./RoundedCornersFilter";
 import { ScanlinesFilter } from "./ScanlinesFilter";
 import { VignetteFilter } from "./VignetteFilter";
 
 export interface CrtFilterPipelineOptions {
+  noise?: false | NoiseFilterOptions | undefined;
   /** Rounded corners filter options, undefined to use defaults, false to disable */
-  roundedCorners?: false | Partial<RoundedCornersFilterUniforms> | undefined;
+  roundedCorners?: false | RoundedCornersFilterUniforms | undefined;
   /** Scanlines filter options, undefined to use defaults, false to disable */
-  scanlines?: false | Partial<ScanlinesFilterUniforms> | undefined;
+  scanlines?: false | ScanlinesFilterUniforms | undefined;
   /** Phosphor mask filter options, undefined to use defaults, false to disable */
-  phosphorMask?: false | Partial<PhosphorMaskFilterOptions> | undefined;
+  phosphorMask?: false | PhosphorMaskFilterOptions | undefined;
   /** Bloom filter options, undefined to use defaults, false to disable */
-  bloom?: false | Partial<BloomFilterUniforms> | undefined;
+  bloom?: BloomFilterUniforms | false | undefined;
   /** Curvature filter options, undefined to use defaults, false to disable */
-  curvature?: false | Partial<CurvatureFilterOptions> | undefined;
+  curvature?: CurvatureFilterOptions | false | undefined;
   /** Vignette filter options, undefined to use defaults, false to disable */
-  vignette?: false | Partial<VignetteFilterUniforms> | undefined;
+  vignette?: false | undefined | VignetteFilterUniforms;
   /** Color adjustment filter options, undefined to use defaults, false to disable */
-  colorAdjustment?: false | Partial<ColorAdjustmentFilterUniforms> | undefined;
+  colorAdjustment?: ColorAdjustmentFilterUniforms | false | undefined;
 }
 
 export const crtFilters = ({
+  noise,
   roundedCorners,
   scanlines,
   phosphorMask,
@@ -43,6 +46,10 @@ export const crtFilters = ({
   colorAdjustment,
 }: CrtFilterPipelineOptions): Filter[] => {
   const filters = [];
+
+  if (noise !== false) {
+    filters.push(new NoiseFilter(noise));
+  }
 
   // Rounded corners first to clip the input
   if (roundedCorners !== false) {

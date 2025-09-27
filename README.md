@@ -208,7 +208,7 @@ gl.shaderSource(shader, processedShader);
 gl.compileShader(shader);
 ```
 
-Note that you will have to provide the `uInputClamp`, the same way as pixi.js does - this describes the "active" part of the texture using xyzw for xywh. See pixi docs for examples.
+Note that you will have to provide the `uInputClamp`, the same way as pixi.js does - this describes the "active" part of the texture using xyzw: xy as the min texture coords and zw as the max texture coords of visible area
 
 ## Development
 

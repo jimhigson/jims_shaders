@@ -20,6 +20,7 @@ extend({
 import { defaultBloomUniforms } from "../filters/BloomFilter";
 import { defaultColorAdjustmentUniforms } from "../filters/ColorAdjustmentFilter";
 import { defaultCurvatureOptions } from "../filters/CurvatureFilter";
+import { defaultNoiseUniforms } from "../filters/NoiseFilter";
 import { defaultPhosphorMaskOptions } from "../filters/PhosphorMaskFilter";
 import { defaultRoundedCornersUniforms } from "../filters/RoundedCornersFilter";
 import { defaultScanlinesUniforms } from "../filters/ScanlinesFilter";
@@ -29,7 +30,12 @@ import filterDocs from "./filterDocs.json";
 
 export interface CRTFiltersProps {
   imageSource: ExampleMediaId;
-  // Rounded corners filter (first)
+  // Noise filter (first)
+  noise: boolean;
+  noiseIntensity: number;
+  noiseScale: number;
+  noiseFPS: number;
+  // Rounded corners filter
   roundedCorners: boolean;
   cornerRadius: number;
   // Scanlines filter
@@ -44,7 +50,7 @@ export interface CRTFiltersProps {
   transitionWidth: number;
   // Bloom filter
   bloom: boolean;
-  intensity: number;
+  bloomIntensity: number;
   radius: number;
   cutoff: number;
   edgeBlur: number;
@@ -155,7 +161,46 @@ const meta = {
       },
     },
 
-    // Screen Shape (first to clip the input)
+    // Noise (first filter in the pipeline)
+    noise: {
+      control: "boolean",
+      description: "Enable noise filter",
+      table: {
+        category: "Noise",
+      },
+    },
+    noiseIntensity: {
+      control: { type: "range", min: 0, max: 0.5, step: 0.01 },
+      description: "Noise intensity",
+      if: { arg: "noise", truthy: true },
+      table: {
+        category: "Noise",
+        subcategory: "Settings",
+        defaultValue: { summary: `${defaultNoiseUniforms.intensity}` },
+      },
+    },
+    noiseScale: {
+      control: { type: "range", min: 1, max: 10, step: 1 },
+      description: "Noise scale - larger values create bigger noise pixels",
+      if: { arg: "noise", truthy: true },
+      table: {
+        category: "Noise",
+        subcategory: "Settings",
+        defaultValue: { summary: `${defaultNoiseUniforms.scale}` },
+      },
+    },
+    noiseFPS: {
+      control: { type: "range", min: 12, max: 120, step: 1 },
+      description: "Noise FPS - frequency at which the noise updates per second",
+      if: { arg: "noise", truthy: true },
+      table: {
+        category: "Noise",
+        subcategory: "Settings",
+        defaultValue: { summary: `${defaultNoiseUniforms.fps}` },
+      },
+    },
+
+    // Screen Shape
     roundedCorners: {
       control: "boolean",
       table: {
@@ -275,7 +320,7 @@ const meta = {
         category: "Bloom Filter",
       },
     },
-    intensity: {
+    bloomIntensity: {
       control: { type: "range", min: 0, max: 1, step: 0.01 },
       description:
         filterDocs.BloomFilterUniforms.properties.intensity.description,
@@ -447,6 +492,10 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     imageSource: "moonbase",
+    noise: true,
+    noiseIntensity: defaultNoiseUniforms.intensity,
+    noiseScale: defaultNoiseUniforms.scale,
+    noiseFPS: defaultNoiseUniforms.fps,
     roundedCorners: true,
     cornerRadius: 0.06, //defaultRoundedCornersUniforms.cornerRadius,
     scanlines: true,
@@ -458,7 +507,7 @@ export const Default: Story = {
     phosphorMaskNumSamples: 6, // defaultPhosphorMaskOptions.numSamples,
     transitionWidth: 0.3, // defaultPhosphorMaskOptions.transitionWidth,
     bloom: true,
-    intensity: defaultBloomUniforms.intensity,
+    bloomIntensity: defaultBloomUniforms.intensity,
     radius: 6.5, // defaultBloomUniforms.radius,
     cutoff: defaultBloomUniforms.cutoff,
     edgeBlur: defaultBloomUniforms.edgeBlur,

@@ -5,6 +5,10 @@ import type { CRTFiltersProps } from "../CRTFilters.stories";
 import { crtFilters } from "../../filters/crtFilters";
 
 export const useFilters = ({
+  noise,
+  noiseIntensity,
+  noiseScale,
+  noiseFPS,
   roundedCorners,
   cornerRadius,
   scanlines,
@@ -16,7 +20,7 @@ export const useFilters = ({
   phosphorMaskNumSamples,
   transitionWidth,
   bloom,
-  intensity,
+  bloomIntensity,
   radius,
   cutoff,
   edgeBlur,
@@ -34,6 +38,10 @@ export const useFilters = ({
 }: CRTFiltersProps) => {
   return useMemo(() => {
     return crtFilters({
+      noise:
+        noise ?
+          { intensity: noiseIntensity, scale: noiseScale, fps: noiseFPS }
+        : false,
       roundedCorners: roundedCorners ? { cornerRadius } : false,
       scanlines: scanlines ? { pixelHeight, gapBrightness } : false,
       phosphorMask:
@@ -45,7 +53,8 @@ export const useFilters = ({
             transitionWidth,
           }
         : false,
-      bloom: bloom ? { intensity, radius, cutoff, edgeBlur } : false,
+      bloom:
+        bloom ? { intensity: bloomIntensity, radius, cutoff, edgeBlur } : false,
       curvature: curvature ? { curvatureX, curvatureY, multisampling } : false,
       vignette:
         vignette ?
@@ -55,6 +64,10 @@ export const useFilters = ({
         colorAdjustment ? { gamma, saturation, brightness } : false,
     });
   }, [
+    noise,
+    noiseIntensity,
+    noiseScale,
+    noiseFPS,
     roundedCorners,
     cornerRadius,
     scanlines,
@@ -66,7 +79,7 @@ export const useFilters = ({
     phosphorMaskNumSamples,
     transitionWidth,
     bloom,
-    intensity,
+    bloomIntensity,
     radius,
     cutoff,
     edgeBlur,
