@@ -15,7 +15,7 @@ export type NoiseFilterOptions = {
 };
 
 export const defaultNoiseUniforms: Required<NoiseFilterOptions> = {
-  intensity: 0.02,
+  intensity: 0.04,
   scale: 6,
   fps: 30,
 };

@@ -13,22 +13,6 @@ uniform float uTime;
 // Pixi built-in uniforms (provided automatically)
 uniform vec4 uInputClamp;  // xy: min texture coords, zw: max texture coords of visible area
 
-//  1 out, 2 in...
-float hash12(vec2 p)
-{
-	vec3 p3  = fract(vec3(p.xyx) * .1031);
-    p3 += dot(p3, p3.yzx + 33.33);
-    return fract((p3.x + p3.y) * p3.z);
-}
-
-//  3 out, 1 in...
-vec3 hash31(float p)
-{
-   vec3 p3 = fract(vec3(p) * vec3(.1031, .1030, .0973));
-   p3 += dot(p3, p3.yzx+33.33);
-   return fract((p3.xxy+p3.yzz)*p3.zyx); 
-}
-
 ///  3 out, 2 in...
 vec3 hash32(vec2 p)
 {
@@ -52,12 +36,18 @@ void main() {
 
     vec3 rgbNoise = hash32( uvRounded * (uFrameNumber + 1000.0));
 
+    // Keep original value if >= 0.7, otherwise set to 0 (not all pixels have noise in all channels)
+    rgbNoise = rgbNoise * step(vec3(0.7), rgbNoise);
+
     // shift from [0,1] to [-0.5,0.5]
-    rgbNoise -= 0.5;
+    // actually, don't, keep this additive only (positive noise only)
+    //rgbNoise -= 0.5;
     // shift from [-0.5,0.5] to [-1,1]
-    rgbNoise *= 2.0;
+    //rgbNoise *= 2.0;
 
     vec4 color = texture(uTexture, vTextureCoord);
 
-    finalColor = color + vec4(rgbNoise * uIntensity, 1.0);
+    // Add noise and clamp to valid range [0.0, 1.0]
+    vec3 noisyColor = clamp(color.rgb + rgbNoise * uIntensity, 0.0, 1.0);
+    finalColor = vec4(noisyColor, color.a);
 }

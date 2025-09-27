@@ -191,7 +191,8 @@ const meta = {
     },
     noiseFPS: {
       control: { type: "range", min: 12, max: 120, step: 1 },
-      description: "Noise FPS - frequency at which the noise updates per second",
+      description:
+        "Noise FPS - frequency at which the noise updates per second. Set to 30 to emulate NTSC, or 25 for PAL.",
       if: { arg: "noise", truthy: true },
       table: {
         category: "Noise",
