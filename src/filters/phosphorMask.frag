@@ -29,7 +29,8 @@ void main() {
     // Map texture coord to position within visible area (0-1), then to pixel position
     float normalizedX = (vTextureCoord.x - uInputClamp.x) / (uInputClamp.z - uInputClamp.x);
 
-    // Multi-sample the phosphor mask to reduce aliasing
+    // Mask will accumulate the phosphor value of our current pixel - eg, how much it is a r, g, b
+    // sub-pixel:
     vec3 mask = vec3(0.0);
     float sampleWidth = 1.0 / uResolution.x; // Width of one output pixel in normalized coords
 
@@ -40,6 +41,7 @@ void main() {
         float sampleVirtualX = sampleX * uResolution.x / uPixelWidth;
         float samplePos = fract(sampleVirtualX);
 
+        // work out if we are in an R,G,or B sub-pixel
         // smooth transitions for each RGB sample:
         float isRed = 1.0 - smoothstep(0.333333 - transitionWidth, 0.333333 + transitionWidth, samplePos);
         float isGreen = smoothstep(0.333333 - transitionWidth, 0.333333 + transitionWidth, samplePos) *
@@ -54,15 +56,13 @@ void main() {
 
     mask /= float(NUM_SAMPLES); // Average the samples
     
+    // the value of this pixel. However, if we left it here, we'd be trending darker overall - 
+    // need to compensate for bright pixels to not bring down the overall appearance
     vec3 maskedColour = originalColour * mask;
-    
-    // White boost for bright grays/whites
-    float minOriginal = min(min(originalColour.r, originalColour.g), originalColour.b);
-    float maxOriginal = max(max(originalColour.r, originalColour.g), originalColour.b);
-    float colorVariation = maxOriginal - minOriginal;
-    float grayness = 1.0 - smoothstep(0.0, 0.1, colorVariation);
+        
+    // boost for bright colours:
     float brightness = (originalColour.r + originalColour.g + originalColour.b) / 3.0;
-    float whiteBoost = grayness * smoothstep(0.5, 0.8, brightness);
+    float brightBoost = smoothstep(0.5, 1.0, brightness);
     
     // Apply compensation
     float avgMaskEffect = (1.0 + 2.0 * uMaskBrightness) / 3.0;
@@ -72,7 +72,7 @@ void main() {
     float clampScale = min(1.0, 1.0 / max(maxChannel, 0.001));
     vec3 maskedPath = compensatedColour * clampScale;
     
-    colour = mix(maskedPath, originalColour, whiteBoost);
+    colour = mix(maskedPath, originalColour, brightBoost);
     
     finalColor = vec4(colour, 1.0);
 }

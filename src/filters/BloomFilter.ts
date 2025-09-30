@@ -20,10 +20,10 @@ export type BloomFilterUniforms = {
 };
 
 export const defaultBloomUniforms: Required<BloomFilterUniforms> = {
-  radius: 3.0,
+  radius: 1.2,
   cutoff: 0.88,
   intensity: 0.14,
-  edgeBlur: 1.5,
+  edgeBlur: 0.5,
 };
 
 export class BloomFilter extends Filter {

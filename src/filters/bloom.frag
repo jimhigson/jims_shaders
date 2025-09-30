@@ -15,39 +15,51 @@ uniform vec4 uInputClamp;  // xy: min texture coords, zw: max texture coords of 
 
 out vec4 finalColor;
 
-// 13-tap pattern: center + 4-point diamond inner ring + 8-point outer ring
-// This gives smoother, more circular bloom
-const vec2 poissonOffsets[13] = vec2[](
+// Configuration for the poisson disk sampling pattern
+const float INNER_RING_RADIUS = 0.7;
+const float OUTER_RING_RADIUS = 1.0;
+const float CENTER_WEIGHT = 4.0;
+const float INNER_WEIGHT = 3.5;
+const float OUTER_WEIGHT = 0.1;
+
+// Rotation angle for outer ring: 22.5° = π/8 radians
+const float OUTER_ROTATION = 0.39269908169872414;
+const float COS_OUTER_ROT = cos(OUTER_ROTATION);
+const float SIN_OUTER_ROT = sin(OUTER_ROTATION);
+
+// 13-tap pattern: center + 4-point inner ring + 8-point outer ring
+// Inner ring on cardinal axes, outer ring rotated 22.5° between cardinal/diagonal
+const vec2 poissonOffsets[12] = vec2[](
     // Center
-    vec2(0.0, 0.0),
-    
-    // Inner ring (diamond pattern at radius ~0.4)
-    vec2(0.283, -0.283),   // Top-right diagonal
-    vec2(0.283, 0.283),    // Bottom-right diagonal
-    vec2(-0.283, 0.283),   // Bottom-left diagonal
-    vec2(-0.283, -0.283),  // Top-left diagonal
-    
-    // Outer ring (8 points at radius ~1.0)
-    vec2(0.0, -1.0),       // Top
-    vec2(0.707, -0.707),   // Top-right
-    vec2(1.0, 0.0),        // Right
-    vec2(0.707, 0.707),    // Bottom-right
-    vec2(0.0, 1.0),        // Bottom
-    vec2(-0.707, 0.707),   // Bottom-left
-    vec2(-1.0, 0.0),       // Left
-    vec2(-0.707, -0.707)   // Top-left
+    //vec2(0.0, 0.0),
+
+    // Inner ring (on cardinal axes)
+    vec2(0.0, -INNER_RING_RADIUS),
+    vec2(INNER_RING_RADIUS, 0.0),
+    vec2(0.0, INNER_RING_RADIUS),
+    vec2(-INNER_RING_RADIUS, 0.0),
+
+    // Outer ring rotated 22.5° from top, going clockwise
+    vec2(SIN_OUTER_ROT * OUTER_RING_RADIUS, -COS_OUTER_ROT * OUTER_RING_RADIUS),
+    vec2(COS_OUTER_ROT * OUTER_RING_RADIUS, -SIN_OUTER_ROT * OUTER_RING_RADIUS),
+    vec2(COS_OUTER_ROT * OUTER_RING_RADIUS, SIN_OUTER_ROT * OUTER_RING_RADIUS),
+    vec2(SIN_OUTER_ROT * OUTER_RING_RADIUS, COS_OUTER_ROT * OUTER_RING_RADIUS),
+    vec2(-SIN_OUTER_ROT * OUTER_RING_RADIUS, COS_OUTER_ROT * OUTER_RING_RADIUS),
+    vec2(-COS_OUTER_ROT * OUTER_RING_RADIUS, SIN_OUTER_ROT * OUTER_RING_RADIUS),
+    vec2(-COS_OUTER_ROT * OUTER_RING_RADIUS, -SIN_OUTER_ROT * OUTER_RING_RADIUS),
+    vec2(-SIN_OUTER_ROT * OUTER_RING_RADIUS, -COS_OUTER_ROT * OUTER_RING_RADIUS)
 );
 
 // Weights for each sample - falloff from center to outer ring
-const float poissonWeights[13] = float[](
-    4.0,  // Center - highest weight
-    
-    // Inner ring - medium weight
-    2.5, 2.5, 2.5, 2.5,
-    
-    // Outer ring - lower weight (33% of original)
-    0.4, 0.33, 0.4, 0.33,
-    0.4, 0.33, 0.4, 0.33
+const float poissonWeights[12] = float[](
+    //CENTER_WEIGHT,
+
+    // Inner ring
+    INNER_WEIGHT, INNER_WEIGHT, INNER_WEIGHT, INNER_WEIGHT,
+
+    // Outer ring
+    OUTER_WEIGHT, OUTER_WEIGHT, OUTER_WEIGHT, OUTER_WEIGHT,
+    OUTER_WEIGHT, OUTER_WEIGHT, OUTER_WEIGHT, OUTER_WEIGHT
 );
 
 void main() {
@@ -60,23 +72,21 @@ void main() {
     vec2 visibleSize = uInputClamp.zw - uInputClamp.xy;
     vec2 visibleCenter = (uInputClamp.xy + uInputClamp.zw) * 0.5;
     vec2 centered = (vTextureCoord - visibleCenter) / visibleSize;
-    
-    // Distance from center (0 at center, ~0.707 at corners for square aspect)
-    float distFromCenter = length(centered);
-    
-    // Calculate variable intensity based on distance from center
-    // At center: intensity = uIntensity
-    // At corners: intensity = uIntensity * uEdgeBlur
-    // Linear interpolation based on distance
-    float localIntensity = uIntensity * mix(1.0, uEdgeBlur, distFromCenter);
-    
+            
     // Accumulate bloom from neighboring pixels
     vec3 bloom = vec3(0.0);
     float totalWeight = 0.0;
+
+    // Distance from center (0 at center, ~0.707 at corners for square aspect)
+    float distFromCenter = length(centered);
+
+    // transform edgeBlue from 0..1 to 1..2, raising initially slowly but
+    // ramping up more sharply at the corners due to the square factor
+    float blurCoefForEdge = (distFromCenter * distFromCenter + 1.0) * (uEdgeBlur + 1.0);
     
     // Sample using two-ring pattern for smoother bloom
     for (int i = 0; i < 13; i++) {
-        vec2 offset = poissonOffsets[i] * pixelSize * uRadius;
+        vec2 offset = poissonOffsets[i] * pixelSize * uRadius * blurCoefForEdge;
         vec2 sampleCoord = vTextureCoord + offset;
         
         // Sample the neighbor
@@ -97,18 +107,10 @@ void main() {
     }
     
     // Normalize the bloom (avoid divide by zero)
-    bloom /= max(totalWeight, 0.001);
-    
-    // Calculate brightness of current pixel
-    float currentBrightness = max(max(originalColor.r, originalColor.g), originalColor.b);
-    
-    // Bloom should only affect pixels that are darker than the bloom source
-    // Calculate the difference and clamp to positive values only
-    vec3 bloomDiff = max(bloom - originalColor, vec3(0.0));
-    vec3 bloomContribution = bloomDiff * localIntensity;
+    bloom /= max(totalWeight, 0.001);        
     
     // Add bloom to original color
-    vec3 result = originalColor + bloomContribution;
+    vec3 result = originalColor + (bloom * uIntensity * blurCoefForEdge);
     
     finalColor = vec4(result, 1.0);
 }

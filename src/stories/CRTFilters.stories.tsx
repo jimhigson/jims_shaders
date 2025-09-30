@@ -333,7 +333,7 @@ const meta = {
       },
     },
     radius: {
-      control: { type: "range", min: 1, max: 10, step: 0.5 },
+      control: { type: "range", min: 1, max: 5, step: 0.1 },
       description: filterDocs.BloomFilterUniforms.properties.radius.description,
       if: { arg: "bloom", truthy: true },
       table: {
@@ -353,7 +353,7 @@ const meta = {
       },
     },
     edgeBlur: {
-      control: { type: "range", min: 0, max: 5, step: 0.1 },
+      control: { type: "range", min: 0, max: 1, step: 0.1 },
       description:
         filterDocs.BloomFilterUniforms.properties.edgeBlur.description,
       if: { arg: "bloom", truthy: true },
@@ -509,7 +509,7 @@ export const Default: Story = {
     transitionWidth: 0.3, // defaultPhosphorMaskOptions.transitionWidth,
     bloom: true,
     bloomIntensity: defaultBloomUniforms.intensity,
-    radius: 6.5, // defaultBloomUniforms.radius,
+    radius: 1.2, // defaultBloomUniforms.radius,
     cutoff: defaultBloomUniforms.cutoff,
     edgeBlur: defaultBloomUniforms.edgeBlur,
     curvature: true,
