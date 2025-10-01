@@ -1,100 +1,10 @@
 {
   "BloomFilter": {
     "name": "BloomFilter",
-    "kind": 128,
-    "properties": {
-      "antialias": {
-        "name": "antialias",
-        "optional": false,
-        "type": "FilterAntialias",
-        "description": "should the filter use antialiasing?"
-      },
-      "blendRequired": {
-        "name": "blendRequired",
-        "optional": false,
-        "type": "boolean",
-        "description": "Whether or not this filter requires the previous render texture for blending."
-      },
-      "clipToViewport": {
-        "name": "clipToViewport",
-        "optional": false,
-        "type": "boolean",
-        "description": "Clip texture into viewport or not"
-      },
-      "compatibleRenderers": {
-        "name": "compatibleRenderers",
-        "optional": false,
-        "type": "number",
-        "description": "A number that uses two bits on whether the shader is compatible with the WebGL renderer and/or the WebGPU renderer.\n0b00 - not compatible with either\n0b01 - compatible with WebGL\n0b10 - compatible with WebGPU\nThis is automatically set based on if a GlProgram or GpuProgram is provided."
-      },
-      "enabled": {
-        "name": "enabled",
-        "optional": false,
-        "type": "boolean",
-        "description": "If enabled is true the filter is applied, if false it will not."
-      },
-      "glProgram": {
-        "name": "glProgram",
-        "optional": false,
-        "type": "GlProgram",
-        "description": "An instance of the GL program used by the WebGL renderer"
-      },
-      "gpuProgram": {
-        "name": "gpuProgram",
-        "optional": false,
-        "type": "GpuProgram",
-        "description": "An instance of the GPU program used by the WebGPU renderer"
-      },
-      "groups": {
-        "name": "groups",
-        "optional": false,
-        "type": "Record"
-      },
-      "padding": {
-        "name": "padding",
-        "optional": false,
-        "type": "number",
-        "description": "The padding of the filter. Some filters require extra space to breath such as a blur.\nIncreasing this will add extra width and height to the bounds of the object that the\nfilter is applied to."
-      },
-      "resolution": {
-        "name": "resolution",
-        "optional": false,
-        "type": "union",
-        "description": "The resolution of the filter. Setting this to be lower will lower the quality but\nincrease the performance of the filter."
-      },
-      "resources": {
-        "name": "resources",
-        "optional": false,
-        "type": "Record",
-        "description": "A record of the resources used by the shader."
-      },
-      "uid": {
-        "name": "uid",
-        "optional": false,
-        "type": "number",
-        "description": "A unique identifier for the shader"
-      },
-      "uniforms": {
-        "name": "uniforms",
-        "optional": false,
-        "type": "reflection"
-      },
-      "defaultOptions": {
-        "name": "defaultOptions",
-        "optional": false,
-        "type": "FilterOptions",
-        "description": "The default filter settings"
-      },
-      "prefixed": {
-        "name": "prefixed",
-        "optional": false,
-        "type": "union"
-      }
-    }
+    "description": "Creates a bloom/glow effect around bright areas to simulate CRT phosphor persistence and light bleeding"
   },
-  "BloomFilterUniforms": {
-    "name": "BloomFilterUniforms",
-    "kind": 2097152,
+  "BloomFilterOptions": {
+    "name": "BloomFilterOptions",
     "properties": {
       "cutoff": {
         "name": "cutoff",
@@ -124,100 +34,10 @@
   },
   "ColorAdjustmentFilter": {
     "name": "ColorAdjustmentFilter",
-    "kind": 128,
-    "properties": {
-      "antialias": {
-        "name": "antialias",
-        "optional": false,
-        "type": "FilterAntialias",
-        "description": "should the filter use antialiasing?"
-      },
-      "blendRequired": {
-        "name": "blendRequired",
-        "optional": false,
-        "type": "boolean",
-        "description": "Whether or not this filter requires the previous render texture for blending."
-      },
-      "clipToViewport": {
-        "name": "clipToViewport",
-        "optional": false,
-        "type": "boolean",
-        "description": "Clip texture into viewport or not"
-      },
-      "compatibleRenderers": {
-        "name": "compatibleRenderers",
-        "optional": false,
-        "type": "number",
-        "description": "A number that uses two bits on whether the shader is compatible with the WebGL renderer and/or the WebGPU renderer.\n0b00 - not compatible with either\n0b01 - compatible with WebGL\n0b10 - compatible with WebGPU\nThis is automatically set based on if a GlProgram or GpuProgram is provided."
-      },
-      "enabled": {
-        "name": "enabled",
-        "optional": false,
-        "type": "boolean",
-        "description": "If enabled is true the filter is applied, if false it will not."
-      },
-      "glProgram": {
-        "name": "glProgram",
-        "optional": false,
-        "type": "GlProgram",
-        "description": "An instance of the GL program used by the WebGL renderer"
-      },
-      "gpuProgram": {
-        "name": "gpuProgram",
-        "optional": false,
-        "type": "GpuProgram",
-        "description": "An instance of the GPU program used by the WebGPU renderer"
-      },
-      "groups": {
-        "name": "groups",
-        "optional": false,
-        "type": "Record"
-      },
-      "padding": {
-        "name": "padding",
-        "optional": false,
-        "type": "number",
-        "description": "The padding of the filter. Some filters require extra space to breath such as a blur.\nIncreasing this will add extra width and height to the bounds of the object that the\nfilter is applied to."
-      },
-      "resolution": {
-        "name": "resolution",
-        "optional": false,
-        "type": "union",
-        "description": "The resolution of the filter. Setting this to be lower will lower the quality but\nincrease the performance of the filter."
-      },
-      "resources": {
-        "name": "resources",
-        "optional": false,
-        "type": "Record",
-        "description": "A record of the resources used by the shader."
-      },
-      "uid": {
-        "name": "uid",
-        "optional": false,
-        "type": "number",
-        "description": "A unique identifier for the shader"
-      },
-      "uniforms": {
-        "name": "uniforms",
-        "optional": false,
-        "type": "reflection"
-      },
-      "defaultOptions": {
-        "name": "defaultOptions",
-        "optional": false,
-        "type": "FilterOptions",
-        "description": "The default filter settings"
-      },
-      "prefixed": {
-        "name": "prefixed",
-        "optional": false,
-        "type": "union"
-      }
-    }
+    "description": "Adjusts gamma, saturation, and brightness for final color calibration. Can be put anywhere\nin the filters chain. One use is to counter-act if the other filters such as phosphor mask filter\nhave had an overall desaturating effect"
   },
-  "ColorAdjustmentFilterUniforms": {
-    "name": "ColorAdjustmentFilterUniforms",
-    "kind": 2097152,
+  "ColorAdjustmentFilterOptions": {
+    "name": "ColorAdjustmentFilterOptions",
     "properties": {
       "brightness": {
         "name": "brightness",
@@ -241,7 +61,6 @@
   },
   "CrtFilterPipelineOptions": {
     "name": "CrtFilterPipelineOptions",
-    "kind": 256,
     "properties": {
       "bloom": {
         "name": "bloom",
@@ -261,11 +80,22 @@
         "type": "union",
         "description": "Curvature filter options, undefined to use defaults, false to disable"
       },
+      "noise": {
+        "name": "noise",
+        "optional": true,
+        "type": "union"
+      },
       "phosphorMask": {
         "name": "phosphorMask",
         "optional": true,
         "type": "union",
         "description": "Phosphor mask filter options, undefined to use defaults, false to disable"
+      },
+      "raiseBlackPoint": {
+        "name": "raiseBlackPoint",
+        "optional": true,
+        "type": "union",
+        "description": "Raise black point filter options, undefined to use defaults, false to disable"
       },
       "roundedCorners": {
         "name": "roundedCorners",
@@ -289,100 +119,10 @@
   },
   "CurvatureFilter": {
     "name": "CurvatureFilter",
-    "kind": 128,
-    "properties": {
-      "antialias": {
-        "name": "antialias",
-        "optional": false,
-        "type": "FilterAntialias",
-        "description": "should the filter use antialiasing?"
-      },
-      "blendRequired": {
-        "name": "blendRequired",
-        "optional": false,
-        "type": "boolean",
-        "description": "Whether or not this filter requires the previous render texture for blending."
-      },
-      "clipToViewport": {
-        "name": "clipToViewport",
-        "optional": false,
-        "type": "boolean",
-        "description": "Clip texture into viewport or not"
-      },
-      "compatibleRenderers": {
-        "name": "compatibleRenderers",
-        "optional": false,
-        "type": "number",
-        "description": "A number that uses two bits on whether the shader is compatible with the WebGL renderer and/or the WebGPU renderer.\n0b00 - not compatible with either\n0b01 - compatible with WebGL\n0b10 - compatible with WebGPU\nThis is automatically set based on if a GlProgram or GpuProgram is provided."
-      },
-      "enabled": {
-        "name": "enabled",
-        "optional": false,
-        "type": "boolean",
-        "description": "If enabled is true the filter is applied, if false it will not."
-      },
-      "glProgram": {
-        "name": "glProgram",
-        "optional": false,
-        "type": "GlProgram",
-        "description": "An instance of the GL program used by the WebGL renderer"
-      },
-      "gpuProgram": {
-        "name": "gpuProgram",
-        "optional": false,
-        "type": "GpuProgram",
-        "description": "An instance of the GPU program used by the WebGPU renderer"
-      },
-      "groups": {
-        "name": "groups",
-        "optional": false,
-        "type": "Record"
-      },
-      "padding": {
-        "name": "padding",
-        "optional": false,
-        "type": "number",
-        "description": "The padding of the filter. Some filters require extra space to breath such as a blur.\nIncreasing this will add extra width and height to the bounds of the object that the\nfilter is applied to."
-      },
-      "resolution": {
-        "name": "resolution",
-        "optional": false,
-        "type": "union",
-        "description": "The resolution of the filter. Setting this to be lower will lower the quality but\nincrease the performance of the filter."
-      },
-      "resources": {
-        "name": "resources",
-        "optional": false,
-        "type": "Record",
-        "description": "A record of the resources used by the shader."
-      },
-      "uid": {
-        "name": "uid",
-        "optional": false,
-        "type": "number",
-        "description": "A unique identifier for the shader"
-      },
-      "uniforms": {
-        "name": "uniforms",
-        "optional": false,
-        "type": "reflection"
-      },
-      "defaultOptions": {
-        "name": "defaultOptions",
-        "optional": false,
-        "type": "FilterOptions",
-        "description": "The default filter settings"
-      },
-      "prefixed": {
-        "name": "prefixed",
-        "optional": false,
-        "type": "union"
-      }
-    }
+    "description": "Emulates the curved look of projecting onto a rounded glass screen"
   },
   "CurvatureFilterOptions": {
     "name": "CurvatureFilterOptions",
-    "kind": 2097152,
     "properties": {
       "curvatureX": {
         "name": "curvatureX",
@@ -404,102 +144,39 @@
       }
     }
   },
-  "PhosphorMaskFilter": {
-    "name": "PhosphorMaskFilter",
-    "kind": 128,
+  "NoiseFilter": {
+    "name": "NoiseFilter",
+    "description": "Adds animated noise to simulate analog video interference and screen grain"
+  },
+  "NoiseFilterOptions": {
+    "name": "NoiseFilterOptions",
     "properties": {
-      "antialias": {
-        "name": "antialias",
-        "optional": false,
-        "type": "FilterAntialias",
-        "description": "should the filter use antialiasing?"
-      },
-      "blendRequired": {
-        "name": "blendRequired",
-        "optional": false,
-        "type": "boolean",
-        "description": "Whether or not this filter requires the previous render texture for blending."
-      },
-      "clipToViewport": {
-        "name": "clipToViewport",
-        "optional": false,
-        "type": "boolean",
-        "description": "Clip texture into viewport or not"
-      },
-      "compatibleRenderers": {
-        "name": "compatibleRenderers",
-        "optional": false,
+      "fps": {
+        "name": "fps",
+        "optional": true,
         "type": "number",
-        "description": "A number that uses two bits on whether the shader is compatible with the WebGL renderer and/or the WebGPU renderer.\n0b00 - not compatible with either\n0b01 - compatible with WebGL\n0b10 - compatible with WebGPU\nThis is automatically set based on if a GlProgram or GpuProgram is provided."
+        "description": "Noise FPS - frequency at which the noise updates per second"
       },
-      "enabled": {
-        "name": "enabled",
-        "optional": false,
-        "type": "boolean",
-        "description": "If enabled is true the filter is applied, if false it will not."
-      },
-      "glProgram": {
-        "name": "glProgram",
-        "optional": false,
-        "type": "GlProgram",
-        "description": "An instance of the GL program used by the WebGL renderer"
-      },
-      "gpuProgram": {
-        "name": "gpuProgram",
-        "optional": false,
-        "type": "GpuProgram",
-        "description": "An instance of the GPU program used by the WebGPU renderer"
-      },
-      "groups": {
-        "name": "groups",
-        "optional": false,
-        "type": "Record"
-      },
-      "padding": {
-        "name": "padding",
-        "optional": false,
+      "intensity": {
+        "name": "intensity",
+        "optional": true,
         "type": "number",
-        "description": "The padding of the filter. Some filters require extra space to breath such as a blur.\nIncreasing this will add extra width and height to the bounds of the object that the\nfilter is applied to."
+        "description": "Noise intensity"
       },
-      "resolution": {
-        "name": "resolution",
-        "optional": false,
-        "type": "union",
-        "description": "The resolution of the filter. Setting this to be lower will lower the quality but\nincrease the performance of the filter."
-      },
-      "resources": {
-        "name": "resources",
-        "optional": false,
-        "type": "Record",
-        "description": "A record of the resources used by the shader."
-      },
-      "uid": {
-        "name": "uid",
-        "optional": false,
+      "scale": {
+        "name": "scale",
+        "optional": true,
         "type": "number",
-        "description": "A unique identifier for the shader"
-      },
-      "uniforms": {
-        "name": "uniforms",
-        "optional": false,
-        "type": "reflection"
-      },
-      "defaultOptions": {
-        "name": "defaultOptions",
-        "optional": false,
-        "type": "FilterOptions",
-        "description": "The default filter settings"
-      },
-      "prefixed": {
-        "name": "prefixed",
-        "optional": false,
-        "type": "union"
+        "description": "Noise scale - larger values create bigger noise pixels"
       }
     }
   },
+  "PhosphorMaskFilter": {
+    "name": "PhosphorMaskFilter",
+    "description": "Simulates the RGB phosphor dot pattern of CRT displays by creating vertical red, green, and blue stripes.\nOnly a slot mask is supported, since this was the most common type used in TVs and arcades."
+  },
   "PhosphorMaskFilterOptions": {
     "name": "PhosphorMaskFilterOptions",
-    "kind": 2097152,
     "properties": {
       "maskBrightness": {
         "name": "maskBrightness",
@@ -527,102 +204,27 @@
       }
     }
   },
-  "RoundedCornersFilter": {
-    "name": "RoundedCornersFilter",
-    "kind": 128,
+  "RaiseBlackPointFilter": {
+    "name": "RaiseBlackPointFilter",
+    "description": "Raises the black point of the image, simulating how older CRT screens couldn't produce perfect blacks"
+  },
+  "RaiseBlackPointFilterOptions": {
+    "name": "RaiseBlackPointFilterOptions",
     "properties": {
-      "antialias": {
-        "name": "antialias",
-        "optional": false,
-        "type": "FilterAntialias",
-        "description": "should the filter use antialiasing?"
-      },
-      "blendRequired": {
-        "name": "blendRequired",
-        "optional": false,
-        "type": "boolean",
-        "description": "Whether or not this filter requires the previous render texture for blending."
-      },
-      "clipToViewport": {
-        "name": "clipToViewport",
-        "optional": false,
-        "type": "boolean",
-        "description": "Clip texture into viewport or not"
-      },
-      "compatibleRenderers": {
-        "name": "compatibleRenderers",
-        "optional": false,
+      "blackPoint": {
+        "name": "blackPoint",
+        "optional": true,
         "type": "number",
-        "description": "A number that uses two bits on whether the shader is compatible with the WebGL renderer and/or the WebGPU renderer.\n0b00 - not compatible with either\n0b01 - compatible with WebGL\n0b10 - compatible with WebGPU\nThis is automatically set based on if a GlProgram or GpuProgram is provided."
-      },
-      "enabled": {
-        "name": "enabled",
-        "optional": false,
-        "type": "boolean",
-        "description": "If enabled is true the filter is applied, if false it will not."
-      },
-      "glProgram": {
-        "name": "glProgram",
-        "optional": false,
-        "type": "GlProgram",
-        "description": "An instance of the GL program used by the WebGL renderer"
-      },
-      "gpuProgram": {
-        "name": "gpuProgram",
-        "optional": false,
-        "type": "GpuProgram",
-        "description": "An instance of the GPU program used by the WebGPU renderer"
-      },
-      "groups": {
-        "name": "groups",
-        "optional": false,
-        "type": "Record"
-      },
-      "padding": {
-        "name": "padding",
-        "optional": false,
-        "type": "number",
-        "description": "The padding of the filter. Some filters require extra space to breath such as a blur.\nIncreasing this will add extra width and height to the bounds of the object that the\nfilter is applied to."
-      },
-      "resolution": {
-        "name": "resolution",
-        "optional": false,
-        "type": "union",
-        "description": "The resolution of the filter. Setting this to be lower will lower the quality but\nincrease the performance of the filter."
-      },
-      "resources": {
-        "name": "resources",
-        "optional": false,
-        "type": "Record",
-        "description": "A record of the resources used by the shader."
-      },
-      "uid": {
-        "name": "uid",
-        "optional": false,
-        "type": "number",
-        "description": "A unique identifier for the shader"
-      },
-      "uniforms": {
-        "name": "uniforms",
-        "optional": false,
-        "type": "reflection"
-      },
-      "defaultOptions": {
-        "name": "defaultOptions",
-        "optional": false,
-        "type": "FilterOptions",
-        "description": "The default filter settings"
-      },
-      "prefixed": {
-        "name": "prefixed",
-        "optional": false,
-        "type": "union"
+        "description": "Simulates how older screens couldn't make perfect blacks by compressing the dynamic range slightly.\n0 means no effect (same as not having the filter, whereas a value like 0.1 would be a very strong effect"
       }
     }
   },
-  "RoundedCornersFilterUniforms": {
-    "name": "RoundedCornersFilterUniforms",
-    "kind": 2097152,
+  "RoundedCornersFilter": {
+    "name": "RoundedCornersFilter",
+    "description": "Adds rounded corners to the screen edges to simulate the physical shape of CRT displays"
+  },
+  "RoundedCornersFilterOptions": {
+    "name": "RoundedCornersFilterOptions",
     "properties": {
       "cornerRadius": {
         "name": "cornerRadius",
@@ -634,100 +236,10 @@
   },
   "ScanlinesFilter": {
     "name": "ScanlinesFilter",
-    "kind": 128,
-    "properties": {
-      "antialias": {
-        "name": "antialias",
-        "optional": false,
-        "type": "FilterAntialias",
-        "description": "should the filter use antialiasing?"
-      },
-      "blendRequired": {
-        "name": "blendRequired",
-        "optional": false,
-        "type": "boolean",
-        "description": "Whether or not this filter requires the previous render texture for blending."
-      },
-      "clipToViewport": {
-        "name": "clipToViewport",
-        "optional": false,
-        "type": "boolean",
-        "description": "Clip texture into viewport or not"
-      },
-      "compatibleRenderers": {
-        "name": "compatibleRenderers",
-        "optional": false,
-        "type": "number",
-        "description": "A number that uses two bits on whether the shader is compatible with the WebGL renderer and/or the WebGPU renderer.\n0b00 - not compatible with either\n0b01 - compatible with WebGL\n0b10 - compatible with WebGPU\nThis is automatically set based on if a GlProgram or GpuProgram is provided."
-      },
-      "enabled": {
-        "name": "enabled",
-        "optional": false,
-        "type": "boolean",
-        "description": "If enabled is true the filter is applied, if false it will not."
-      },
-      "glProgram": {
-        "name": "glProgram",
-        "optional": false,
-        "type": "GlProgram",
-        "description": "An instance of the GL program used by the WebGL renderer"
-      },
-      "gpuProgram": {
-        "name": "gpuProgram",
-        "optional": false,
-        "type": "GpuProgram",
-        "description": "An instance of the GPU program used by the WebGPU renderer"
-      },
-      "groups": {
-        "name": "groups",
-        "optional": false,
-        "type": "Record"
-      },
-      "padding": {
-        "name": "padding",
-        "optional": false,
-        "type": "number",
-        "description": "The padding of the filter. Some filters require extra space to breath such as a blur.\nIncreasing this will add extra width and height to the bounds of the object that the\nfilter is applied to."
-      },
-      "resolution": {
-        "name": "resolution",
-        "optional": false,
-        "type": "union",
-        "description": "The resolution of the filter. Setting this to be lower will lower the quality but\nincrease the performance of the filter."
-      },
-      "resources": {
-        "name": "resources",
-        "optional": false,
-        "type": "Record",
-        "description": "A record of the resources used by the shader."
-      },
-      "uid": {
-        "name": "uid",
-        "optional": false,
-        "type": "number",
-        "description": "A unique identifier for the shader"
-      },
-      "uniforms": {
-        "name": "uniforms",
-        "optional": false,
-        "type": "reflection"
-      },
-      "defaultOptions": {
-        "name": "defaultOptions",
-        "optional": false,
-        "type": "FilterOptions",
-        "description": "The default filter settings"
-      },
-      "prefixed": {
-        "name": "prefixed",
-        "optional": false,
-        "type": "union"
-      }
-    }
+    "description": "Creates horizontal scanlines to simulate CRT display raster lines"
   },
-  "ScanlinesFilterUniforms": {
-    "name": "ScanlinesFilterUniforms",
-    "kind": 2097152,
+  "ScanlinesFilterOptions": {
+    "name": "ScanlinesFilterOptions",
     "properties": {
       "gapBrightness": {
         "name": "gapBrightness",
@@ -745,100 +257,10 @@
   },
   "VignetteFilter": {
     "name": "VignetteFilter",
-    "kind": 128,
-    "properties": {
-      "antialias": {
-        "name": "antialias",
-        "optional": false,
-        "type": "FilterAntialias",
-        "description": "should the filter use antialiasing?"
-      },
-      "blendRequired": {
-        "name": "blendRequired",
-        "optional": false,
-        "type": "boolean",
-        "description": "Whether or not this filter requires the previous render texture for blending."
-      },
-      "clipToViewport": {
-        "name": "clipToViewport",
-        "optional": false,
-        "type": "boolean",
-        "description": "Clip texture into viewport or not"
-      },
-      "compatibleRenderers": {
-        "name": "compatibleRenderers",
-        "optional": false,
-        "type": "number",
-        "description": "A number that uses two bits on whether the shader is compatible with the WebGL renderer and/or the WebGPU renderer.\n0b00 - not compatible with either\n0b01 - compatible with WebGL\n0b10 - compatible with WebGPU\nThis is automatically set based on if a GlProgram or GpuProgram is provided."
-      },
-      "enabled": {
-        "name": "enabled",
-        "optional": false,
-        "type": "boolean",
-        "description": "If enabled is true the filter is applied, if false it will not."
-      },
-      "glProgram": {
-        "name": "glProgram",
-        "optional": false,
-        "type": "GlProgram",
-        "description": "An instance of the GL program used by the WebGL renderer"
-      },
-      "gpuProgram": {
-        "name": "gpuProgram",
-        "optional": false,
-        "type": "GpuProgram",
-        "description": "An instance of the GPU program used by the WebGPU renderer"
-      },
-      "groups": {
-        "name": "groups",
-        "optional": false,
-        "type": "Record"
-      },
-      "padding": {
-        "name": "padding",
-        "optional": false,
-        "type": "number",
-        "description": "The padding of the filter. Some filters require extra space to breath such as a blur.\nIncreasing this will add extra width and height to the bounds of the object that the\nfilter is applied to."
-      },
-      "resolution": {
-        "name": "resolution",
-        "optional": false,
-        "type": "union",
-        "description": "The resolution of the filter. Setting this to be lower will lower the quality but\nincrease the performance of the filter."
-      },
-      "resources": {
-        "name": "resources",
-        "optional": false,
-        "type": "Record",
-        "description": "A record of the resources used by the shader."
-      },
-      "uid": {
-        "name": "uid",
-        "optional": false,
-        "type": "number",
-        "description": "A unique identifier for the shader"
-      },
-      "uniforms": {
-        "name": "uniforms",
-        "optional": false,
-        "type": "reflection"
-      },
-      "defaultOptions": {
-        "name": "defaultOptions",
-        "optional": false,
-        "type": "FilterOptions",
-        "description": "The default filter settings"
-      },
-      "prefixed": {
-        "name": "prefixed",
-        "optional": false,
-        "type": "union"
-      }
-    }
+    "description": "Darkens the edges of the screen to simulate the natural light falloff on CRT displays"
   },
-  "VignetteFilterUniforms": {
-    "name": "VignetteFilterUniforms",
-    "kind": 2097152,
+  "VignetteFilterOptions": {
+    "name": "VignetteFilterOptions",
     "properties": {
       "intensity": {
         "name": "intensity",

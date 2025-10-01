@@ -24,6 +24,7 @@ export const defaultCurvatureOptions: Required<CurvatureFilterOptions> = {
   multisampling: true,
 };
 
+/** Emulates the curved look of projecting onto a rounded glass screen */
 export class CurvatureFilter extends Filter {
   public uniforms: {
     uCurvatureX: number;

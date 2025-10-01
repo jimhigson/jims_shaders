@@ -31,6 +31,8 @@ export const useFilters = ({
   vignette,
   vignetteIntensity,
   vignetteRadius,
+  raiseBlackPoint,
+  blackPoint,
   colorAdjustment,
   gamma,
   saturation,
@@ -60,6 +62,7 @@ export const useFilters = ({
         vignette ?
           { intensity: vignetteIntensity, radius: vignetteRadius }
         : false,
+      raiseBlackPoint: raiseBlackPoint ? { blackPoint } : false,
       colorAdjustment:
         colorAdjustment ? { gamma, saturation, brightness } : false,
     });
@@ -90,6 +93,8 @@ export const useFilters = ({
     vignette,
     vignetteIntensity,
     vignetteRadius,
+    raiseBlackPoint,
+    blackPoint,
     colorAdjustment,
     gamma,
     saturation,

@@ -3,22 +3,26 @@ import { Filter, GlProgram } from "pixi.js";
 import { defaultVertex } from "../utils/defaultVertex";
 import fragment from "./roundedCorners.frag?raw";
 
-export type RoundedCornersFilterUniforms = {
+export type RoundedCornersFilterOptions = {
   /** Corner radius as proportion of screen size (0-0.1) */
   cornerRadius?: number;
 };
 
-export const defaultRoundedCornersUniforms: Required<RoundedCornersFilterUniforms> =
+export const defaultRoundedCornersUniforms: Required<RoundedCornersFilterOptions> =
   {
     cornerRadius: 0.025,
   };
 
+/**
+ * Adds rounded corners to the screen edges to simulate the physical shape of CRT displays.
+ * This is separate from, but related to, the CurvatureFilter, which distorts the image to simulate the curved glass screen.
+ */
 export class RoundedCornersFilter extends Filter {
   public uniforms: {
     uCornerRadius: number;
   };
 
-  constructor(uniforms: RoundedCornersFilterUniforms = {}) {
+  constructor(uniforms: RoundedCornersFilterOptions = {}) {
     const finalUniforms = { ...defaultRoundedCornersUniforms, ...uniforms };
 
     const glProgram = GlProgram.from({

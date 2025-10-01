@@ -5,7 +5,7 @@ import { Filter, GlProgram } from "pixi.js";
 import { defaultVertex } from "../utils/defaultVertex";
 import fragment from "./scanlines.frag?raw";
 
-export type ScanlinesFilterUniforms = {
+export type ScanlinesFilterOptions = {
   /** Height of each scanline in pixels */
   pixelHeight?: number;
   /**
@@ -15,11 +15,14 @@ export type ScanlinesFilterUniforms = {
   gapBrightness?: number;
 };
 
-export const defaultScanlinesUniforms: Required<ScanlinesFilterUniforms> = {
+export const defaultScanlinesUniforms: Required<ScanlinesFilterOptions> = {
   pixelHeight: 4,
   gapBrightness: 0.7,
 };
 
+/**
+ * Creates horizontal scanlines to simulate CRT display raster lines
+ */
 export class ScanlinesFilter extends Filter {
   public uniforms: {
     uPixelHeight: number;
@@ -27,7 +30,7 @@ export class ScanlinesFilter extends Filter {
     uGapBrightness: number;
   };
 
-  constructor(uniforms: ScanlinesFilterUniforms = {}) {
+  constructor(uniforms: ScanlinesFilterOptions = {}) {
     const finalUniforms = { ...defaultScanlinesUniforms, ...uniforms };
 
     const glProgram = GlProgram.from({

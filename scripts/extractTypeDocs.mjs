@@ -26,7 +26,6 @@ const typeDocs = {};
 function extractTypeInfo(reflection) {
   const info = {
     name: reflection.name,
-    kind: reflection.kindString || reflection.kind,
   };
 
   // Add comment/description if available
@@ -106,12 +105,23 @@ if (docs.children) {
     // Each child is a module, look inside for the actual types
     if (module.children) {
       module.children.forEach((item) => {
-        // Extract all exported types (interfaces, type aliases, classes)
-        if (
-          item.kind === ReflectionKind.Interface ||
-          item.kind === ReflectionKind.TypeAlias ||
-          item.kind === ReflectionKind.Class
+        // Extract filter classes (description only, no properties)
+        if (item.kind === ReflectionKind.Class && item.name.endsWith("Filter")) {
+          const info = {
+            name: item.name,
+          };
+          if (item.comment) {
+            info.description = item.comment.summary
+              ?.map((part) => part.text)
+              .join("");
+          }
+          typeDocs[item.name] = info;
+        } else if (
+          (item.kind === ReflectionKind.Interface ||
+            item.kind === ReflectionKind.TypeAlias) &&
+          item.name.endsWith("Options")
         ) {
+          // Extract only *Options types (not Filter inherited properties)
           typeDocs[item.name] = extractTypeInfo(item);
         }
       });

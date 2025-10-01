@@ -3,10 +3,10 @@
 
 // Filters
 export { BloomFilter } from "./filters/BloomFilter";
-export type { BloomFilterUniforms } from "./filters/BloomFilter";
+export type { BloomFilterOptions } from "./filters/BloomFilter";
 
 export { ColorAdjustmentFilter } from "./filters/ColorAdjustmentFilter";
-export type { ColorAdjustmentFilterUniforms } from "./filters/ColorAdjustmentFilter";
+export type { ColorAdjustmentFilterOptions } from "./filters/ColorAdjustmentFilter";
 
 export { CurvatureFilter } from "./filters/CurvatureFilter";
 export type { CurvatureFilterOptions } from "./filters/CurvatureFilter";
@@ -18,13 +18,16 @@ export { PhosphorMaskFilter } from "./filters/PhosphorMaskFilter";
 export type { PhosphorMaskFilterOptions } from "./filters/PhosphorMaskFilter";
 
 export { RoundedCornersFilter } from "./filters/RoundedCornersFilter";
-export type { RoundedCornersFilterUniforms } from "./filters/RoundedCornersFilter";
+export type { RoundedCornersFilterOptions } from "./filters/RoundedCornersFilter";
 
 export { ScanlinesFilter } from "./filters/ScanlinesFilter";
-export type { ScanlinesFilterUniforms } from "./filters/ScanlinesFilter";
+export type { ScanlinesFilterOptions } from "./filters/ScanlinesFilter";
 
 export { VignetteFilter } from "./filters/VignetteFilter";
-export type { VignetteFilterUniforms } from "./filters/VignetteFilter";
+export type { VignetteFilterOptions } from "./filters/VignetteFilter";
+
+export { RaiseBlackPointFilter } from "./filters/RaiseBlackPointFilter";
+export type { RaiseBlackPointFilterOptions } from "./filters/RaiseBlackPointFilter";
 
 // Default uniforms/options
 export { defaultBloomUniforms } from "./filters/BloomFilter";
@@ -35,6 +38,7 @@ export { defaultPhosphorMaskOptions } from "./filters/PhosphorMaskFilter";
 export { defaultRoundedCornersUniforms } from "./filters/RoundedCornersFilter";
 export { defaultScanlinesUniforms } from "./filters/ScanlinesFilter";
 export { defaultVignetteUniforms } from "./filters/VignetteFilter";
+export { defaultRaiseBlackPointUniforms } from "./filters/RaiseBlackPointFilter";
 
 // Utility functions
 export { crtFilters as createCrtFilterPipeline } from "./filters/crtFilters";
@@ -49,6 +53,7 @@ export { default as phosphorMaskFragmentSource } from "./filters/phosphorMask.fr
 export { default as roundedCornersFragmentSource } from "./filters/roundedCorners.frag?raw";
 export { default as scanlinesFragmentSource } from "./filters/scanlines.frag?raw";
 export { default as vignetteFragmentSource } from "./filters/vignette.frag?raw";
+export { default as raiseBlackPointFragmentSource } from "./filters/raiseBlackPoint.frag?raw";
 
 // Utility for replacing placeholders in shader source
 export { replacePlaceholders } from "./utils/replacePlaceholders";

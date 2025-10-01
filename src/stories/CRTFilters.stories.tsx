@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/react";
 
 import { Application, extend } from "@pixi/react";
 import { useArgs } from "@storybook/preview-api";
@@ -22,6 +22,7 @@ import { defaultColorAdjustmentUniforms } from "../filters/ColorAdjustmentFilter
 import { defaultCurvatureOptions } from "../filters/CurvatureFilter";
 import { defaultNoiseUniforms } from "../filters/NoiseFilter";
 import { defaultPhosphorMaskOptions } from "../filters/PhosphorMaskFilter";
+import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
 import { defaultRoundedCornersUniforms } from "../filters/RoundedCornersFilter";
 import { defaultScanlinesUniforms } from "../filters/ScanlinesFilter";
 import { defaultVignetteUniforms } from "../filters/VignetteFilter";
@@ -35,9 +36,6 @@ export interface CRTFiltersProps {
   noiseIntensity: number;
   noiseScale: number;
   noiseFPS: number;
-  // Rounded corners filter
-  roundedCorners: boolean;
-  cornerRadius: number;
   // Scanlines filter
   scanlines: boolean;
   pixelHeight: number;
@@ -54,15 +52,21 @@ export interface CRTFiltersProps {
   radius: number;
   cutoff: number;
   edgeBlur: number;
+  // Vignette filter
+  vignette: boolean;
+  vignetteIntensity: number;
+  vignetteRadius: number;
+  // Raise black point filter
+  raiseBlackPoint: boolean;
+  blackPoint: number;
+  // Rounded corners filter
+  roundedCorners: boolean;
+  cornerRadius: number;
   // Curvature filter
   curvature: boolean;
   curvatureX: number;
   curvatureY: number;
   multisampling: boolean;
-  // Vignette filter
-  vignette: boolean;
-  vignetteIntensity: number;
-  vignetteRadius: number;
   // Color adjustment filter
   colorAdjustment: boolean;
   gamma: number;
@@ -91,6 +95,357 @@ const CRTFiltersDemo = (props: CRTFiltersProps) => {
     </>
   );
 };
+
+const noiseArgTypes = {
+  noise: {
+    control: "boolean",
+    description: filterDocs.NoiseFilter.description,
+    table: {
+      category: "Noise",
+    },
+  },
+  noiseIntensity: {
+    control: { type: "range", min: 0, max: 0.5, step: 0.01 },
+    description: "Noise intensity",
+    if: { arg: "noise", truthy: true },
+    table: {
+      category: "Noise",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultNoiseUniforms.intensity}` },
+    },
+  },
+  noiseScale: {
+    control: { type: "range", min: 1, max: 10, step: 1 },
+    description: "Noise scale - larger values create bigger noise pixels",
+    if: { arg: "noise", truthy: true },
+    table: {
+      category: "Noise",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultNoiseUniforms.scale}` },
+    },
+  },
+  noiseFPS: {
+    control: { type: "range", min: 12, max: 120, step: 1 },
+    description:
+      "Noise FPS - frequency at which the noise updates per second. Set to 30 to emulate NTSC, or 25 for PAL.",
+    if: { arg: "noise", truthy: true },
+    table: {
+      category: "Noise",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultNoiseUniforms.fps}` },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
+
+const scanlinesArgTypes = {
+  scanlines: {
+    control: "boolean",
+    description: filterDocs.ScanlinesFilter.description,
+    table: {
+      category: "Scanlines",
+    },
+  },
+  pixelHeight: {
+    control: { type: "range", min: 2, max: 8, step: 0.1 },
+    description:
+      filterDocs.ScanlinesFilterOptions.properties.pixelHeight.description,
+    if: { arg: "scanlines", truthy: true },
+    table: {
+      category: "Scanlines",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultScanlinesUniforms.pixelHeight}` },
+    },
+  },
+  gapBrightness: {
+    control: { type: "range", min: 0, max: 1, step: 0.1 },
+    description:
+      filterDocs.ScanlinesFilterOptions.properties.gapBrightness.description,
+    if: { arg: "scanlines", truthy: true },
+    table: {
+      category: "Scanlines",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultScanlinesUniforms.gapBrightness}` },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
+
+const phosphorMaskArgTypes = {
+  phosphorMask: {
+    control: "boolean",
+    description: filterDocs.PhosphorMaskFilter.description,
+    table: {
+      category: "Phosphor Mask",
+    },
+  },
+  pixelWidth: {
+    control: { type: "range", min: 3, max: 12, step: 0.05 },
+    description:
+      filterDocs.PhosphorMaskFilterOptions.properties.pixelWidth.description,
+    if: { arg: "phosphorMask", truthy: true },
+    table: {
+      category: "Phosphor Mask",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultPhosphorMaskOptions.pixelWidth}` },
+    },
+  },
+  maskBrightness: {
+    control: { type: "range", min: 0, max: 1, step: 0.1 },
+    description:
+      filterDocs.PhosphorMaskFilterOptions.properties.maskBrightness
+        .description,
+    if: { arg: "phosphorMask", truthy: true },
+    table: {
+      category: "Phosphor Mask",
+      subcategory: "Settings",
+      defaultValue: {
+        summary: `${defaultPhosphorMaskOptions.maskBrightness}`,
+      },
+    },
+  },
+  phosphorMaskNumSamples: {
+    control: { type: "range", min: 1, max: 16, step: 1 },
+    description:
+      filterDocs.PhosphorMaskFilterOptions.properties.numSamples.description,
+    if: { arg: "phosphorMask", truthy: true },
+    table: {
+      category: "Phosphor Mask",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultPhosphorMaskOptions.numSamples}` },
+    },
+  },
+  transitionWidth: {
+    control: { type: "range", min: 0, max: 1, step: 0.05 },
+    description:
+      filterDocs.PhosphorMaskFilterOptions.properties.transitionWidth
+        .description,
+    if: { arg: "phosphorMask", truthy: true },
+    table: {
+      category: "Phosphor Mask",
+      subcategory: "Settings",
+      defaultValue: {
+        summary: `${defaultPhosphorMaskOptions.transitionWidth}`,
+      },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
+
+const bloomArgTypes = {
+  bloom: {
+    control: "boolean",
+    description: filterDocs.BloomFilter.description,
+    table: {
+      category: "Bloom Filter",
+    },
+  },
+  bloomIntensity: {
+    control: { type: "range", min: 0, max: 1, step: 0.01 },
+    description: filterDocs.BloomFilterOptions.properties.intensity.description,
+    if: { arg: "bloom", truthy: true },
+    table: {
+      category: "Bloom Filter",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultBloomUniforms.intensity}` },
+    },
+  },
+  radius: {
+    control: { type: "range", min: 1, max: 5, step: 0.1 },
+    description: filterDocs.BloomFilterOptions.properties.radius.description,
+    if: { arg: "bloom", truthy: true },
+    table: {
+      category: "Bloom Filter",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultBloomUniforms.radius}` },
+    },
+  },
+  cutoff: {
+    control: { type: "range", min: 0, max: 1, step: 0.01 },
+    description: filterDocs.BloomFilterOptions.properties.cutoff.description,
+    if: { arg: "bloom", truthy: true },
+    table: {
+      category: "Bloom Filter",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultBloomUniforms.cutoff}` },
+    },
+  },
+  edgeBlur: {
+    control: { type: "range", min: 0, max: 1, step: 0.1 },
+    description: filterDocs.BloomFilterOptions.properties.edgeBlur.description,
+    if: { arg: "bloom", truthy: true },
+    table: {
+      category: "Bloom Filter",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultBloomUniforms.edgeBlur}` },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
+
+const vignetteArgTypes = {
+  vignette: {
+    control: "boolean",
+    description: filterDocs.VignetteFilter.description,
+    table: {
+      category: "Vignette",
+    },
+  },
+  vignetteIntensity: {
+    control: { type: "range", min: 0, max: 1, step: 0.1 },
+    description:
+      filterDocs.VignetteFilterOptions.properties.intensity.description,
+    if: { arg: "vignette", truthy: true },
+    table: {
+      category: "Vignette",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultVignetteUniforms.intensity}` },
+    },
+  },
+  vignetteRadius: {
+    control: { type: "range", min: 0, max: 2, step: 0.1 },
+    description: filterDocs.VignetteFilterOptions.properties.radius.description,
+    if: { arg: "vignette", truthy: true },
+    table: {
+      category: "Vignette",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultVignetteUniforms.radius}` },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
+
+const raiseBlackPointArgTypes = {
+  raiseBlackPoint: {
+    control: "boolean",
+    description: filterDocs.RaiseBlackPointFilter.description,
+    table: {
+      category: "Raise Black Point",
+    },
+  },
+  blackPoint: {
+    control: { type: "range", min: 0, max: 0.1, step: 0.005 },
+    description:
+      filterDocs.RaiseBlackPointFilterOptions.properties.blackPoint.description,
+    if: { arg: "raiseBlackPoint", truthy: true },
+    table: {
+      category: "Raise Black Point",
+      subcategory: "Settings",
+      defaultValue: {
+        summary: `${defaultRaiseBlackPointUniforms.blackPoint}`,
+      },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
+
+const roundedCornersArgTypes = {
+  roundedCorners: {
+    control: "boolean",
+    description: filterDocs.RoundedCornersFilter.description,
+    table: {
+      category: "Screen Shape",
+    },
+  },
+  cornerRadius: {
+    control: { type: "range", min: 0, max: 0.2, step: 0.01 },
+    if: { arg: "roundedCorners", truthy: true },
+    description:
+      filterDocs.RoundedCornersFilterOptions.properties.cornerRadius
+        .description,
+    table: {
+      category: "Screen Shape",
+      subcategory: "Settings",
+      defaultValue: {
+        summary: `${defaultRoundedCornersUniforms.cornerRadius}`,
+      },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
+
+const curvatureArgTypes = {
+  curvature: {
+    control: "boolean",
+    description: filterDocs.CurvatureFilter.description,
+    table: {
+      category: "Screen Curvature",
+    },
+  },
+  curvatureX: {
+    control: { type: "range", min: 0, max: 0.6, step: 0.01 },
+    description:
+      filterDocs.CurvatureFilterOptions.properties.curvatureX.description,
+    if: { arg: "curvature", truthy: true },
+    table: {
+      category: "Screen Curvature",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultCurvatureOptions.curvatureX}` },
+    },
+  },
+  curvatureY: {
+    control: { type: "range", min: 0, max: 0.6, step: 0.01 },
+    description:
+      filterDocs.CurvatureFilterOptions.properties.curvatureY.description,
+    if: { arg: "curvature", truthy: true },
+    table: {
+      category: "Screen Curvature",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultCurvatureOptions.curvatureY}` },
+    },
+  },
+  multisampling: {
+    control: "boolean",
+    description:
+      filterDocs.CurvatureFilterOptions.properties.multisampling.description,
+    if: { arg: "curvature", truthy: true },
+    table: {
+      category: "Screen Curvature",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultCurvatureOptions.multisampling}` },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
+
+const colorAdjustmentArgTypes = {
+  colorAdjustment: {
+    control: "boolean",
+    description: filterDocs.ColorAdjustmentFilter.description,
+    table: {
+      category: "Color Adjustment",
+    },
+  },
+  gamma: {
+    control: { type: "range", min: 0.5, max: 2, step: 0.1 },
+    description:
+      filterDocs.ColorAdjustmentFilterOptions.properties.gamma.description,
+    if: { arg: "colorAdjustment", truthy: true },
+    table: {
+      category: "Color Adjustment",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultColorAdjustmentUniforms.gamma}` },
+    },
+  },
+  saturation: {
+    control: { type: "range", min: 0, max: 2, step: 0.1 },
+    description:
+      filterDocs.ColorAdjustmentFilterOptions.properties.saturation.description,
+    if: { arg: "colorAdjustment", truthy: true },
+    table: {
+      category: "Color Adjustment",
+      subcategory: "Settings",
+      defaultValue: {
+        summary: `${defaultColorAdjustmentUniforms.saturation}`,
+      },
+    },
+  },
+  brightness: {
+    control: { type: "range", min: 0, max: 2, step: 0.1 },
+    description:
+      filterDocs.ColorAdjustmentFilterOptions.properties.brightness.description,
+    if: { arg: "colorAdjustment", truthy: true },
+    table: {
+      category: "Color Adjustment",
+      subcategory: "Settings",
+      defaultValue: {
+        summary: `${defaultColorAdjustmentUniforms.brightness}`,
+      },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
 
 const meta = {
   title: "CRT Filters/All Filters",
@@ -161,329 +516,15 @@ const meta = {
       },
     },
 
-    // Noise (first filter in the pipeline)
-    noise: {
-      control: "boolean",
-      description: "Enable noise filter",
-      table: {
-        category: "Noise",
-      },
-    },
-    noiseIntensity: {
-      control: { type: "range", min: 0, max: 0.5, step: 0.01 },
-      description: "Noise intensity",
-      if: { arg: "noise", truthy: true },
-      table: {
-        category: "Noise",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultNoiseUniforms.intensity}` },
-      },
-    },
-    noiseScale: {
-      control: { type: "range", min: 1, max: 10, step: 1 },
-      description: "Noise scale - larger values create bigger noise pixels",
-      if: { arg: "noise", truthy: true },
-      table: {
-        category: "Noise",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultNoiseUniforms.scale}` },
-      },
-    },
-    noiseFPS: {
-      control: { type: "range", min: 12, max: 120, step: 1 },
-      description:
-        "Noise FPS - frequency at which the noise updates per second. Set to 30 to emulate NTSC, or 25 for PAL.",
-      if: { arg: "noise", truthy: true },
-      table: {
-        category: "Noise",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultNoiseUniforms.fps}` },
-      },
-    },
-
-    // Screen Shape
-    roundedCorners: {
-      control: "boolean",
-      table: {
-        category: "Screen Shape",
-      },
-    },
-    cornerRadius: {
-      control: { type: "range", min: 0, max: 0.2, step: 0.01 },
-      if: { arg: "roundedCorners", truthy: true },
-      description:
-        filterDocs.RoundedCornersFilterUniforms.properties.cornerRadius
-          .description,
-      table: {
-        category: "Screen Shape",
-        subcategory: "Settings",
-        defaultValue: {
-          summary: `${defaultRoundedCornersUniforms.cornerRadius}`,
-        },
-      },
-    },
-
-    // Scanlines
-    scanlines: {
-      control: "boolean",
-      description: "Enable scanlines",
-      table: {
-        category: "Scanlines",
-      },
-    },
-    pixelHeight: {
-      control: { type: "range", min: 2, max: 8, step: 0.1 },
-      description:
-        filterDocs.ScanlinesFilterUniforms.properties.pixelHeight.description,
-      if: { arg: "scanlines", truthy: true },
-      table: {
-        category: "Scanlines",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultScanlinesUniforms.pixelHeight}` },
-      },
-    },
-    gapBrightness: {
-      control: { type: "range", min: 0, max: 1, step: 0.1 },
-      description:
-        filterDocs.ScanlinesFilterUniforms.properties.gapBrightness.description,
-      if: { arg: "scanlines", truthy: true },
-      table: {
-        category: "Scanlines",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultScanlinesUniforms.gapBrightness}` },
-      },
-    },
-
-    // Phosphor Mask
-    phosphorMask: {
-      control: "boolean",
-      description: "Enable phosphor mask",
-      table: {
-        category: "Phosphor Mask",
-      },
-    },
-    pixelWidth: {
-      control: { type: "range", min: 3, max: 12, step: 0.05 },
-      description:
-        filterDocs.PhosphorMaskFilterOptions.properties.pixelWidth.description,
-      if: { arg: "phosphorMask", truthy: true },
-      table: {
-        category: "Phosphor Mask",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultPhosphorMaskOptions.pixelWidth}` },
-      },
-    },
-    maskBrightness: {
-      control: { type: "range", min: 0, max: 1, step: 0.1 },
-      description:
-        filterDocs.PhosphorMaskFilterOptions.properties.maskBrightness
-          .description,
-      if: { arg: "phosphorMask", truthy: true },
-      table: {
-        category: "Phosphor Mask",
-        subcategory: "Settings",
-        defaultValue: {
-          summary: `${defaultPhosphorMaskOptions.maskBrightness}`,
-        },
-      },
-    },
-    phosphorMaskNumSamples: {
-      control: { type: "range", min: 1, max: 16, step: 1 },
-      description:
-        filterDocs.PhosphorMaskFilterOptions.properties.numSamples.description,
-      if: { arg: "phosphorMask", truthy: true },
-      table: {
-        category: "Phosphor Mask",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultPhosphorMaskOptions.numSamples}` },
-      },
-    },
-    transitionWidth: {
-      control: { type: "range", min: 0, max: 1, step: 0.05 },
-      description:
-        filterDocs.PhosphorMaskFilterOptions.properties.transitionWidth
-          .description,
-      if: { arg: "phosphorMask", truthy: true },
-      table: {
-        category: "Phosphor Mask",
-        subcategory: "Settings",
-        defaultValue: {
-          summary: `${defaultPhosphorMaskOptions.transitionWidth}`,
-        },
-      },
-    },
-
-    // Bloom Filter
-    bloom: {
-      control: "boolean",
-      description: "Enable bloom filter",
-      table: {
-        category: "Bloom Filter",
-      },
-    },
-    bloomIntensity: {
-      control: { type: "range", min: 0, max: 1, step: 0.01 },
-      description:
-        filterDocs.BloomFilterUniforms.properties.intensity.description,
-      if: { arg: "bloom", truthy: true },
-      table: {
-        category: "Bloom Filter",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultBloomUniforms.intensity}` },
-      },
-    },
-    radius: {
-      control: { type: "range", min: 1, max: 5, step: 0.1 },
-      description: filterDocs.BloomFilterUniforms.properties.radius.description,
-      if: { arg: "bloom", truthy: true },
-      table: {
-        category: "Bloom Filter",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultBloomUniforms.radius}` },
-      },
-    },
-    cutoff: {
-      control: { type: "range", min: 0, max: 1, step: 0.01 },
-      description: filterDocs.BloomFilterUniforms.properties.cutoff.description,
-      if: { arg: "bloom", truthy: true },
-      table: {
-        category: "Bloom Filter",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultBloomUniforms.cutoff}` },
-      },
-    },
-    edgeBlur: {
-      control: { type: "range", min: 0, max: 1, step: 0.1 },
-      description:
-        filterDocs.BloomFilterUniforms.properties.edgeBlur.description,
-      if: { arg: "bloom", truthy: true },
-      table: {
-        category: "Bloom Filter",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultBloomUniforms.edgeBlur}` },
-      },
-    },
-
-    // Screen Curvature
-    curvature: {
-      control: "boolean",
-      description: "Enable screen curvature",
-      table: {
-        category: "Screen Curvature",
-      },
-    },
-    curvatureX: {
-      control: { type: "range", min: 0, max: 0.6, step: 0.01 },
-      description:
-        filterDocs.CurvatureFilterOptions.properties.curvatureX.description,
-      if: { arg: "curvature", truthy: true },
-      table: {
-        category: "Screen Curvature",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultCurvatureOptions.curvatureX}` },
-      },
-    },
-    curvatureY: {
-      control: { type: "range", min: 0, max: 0.6, step: 0.01 },
-      description:
-        filterDocs.CurvatureFilterOptions.properties.curvatureY.description,
-      if: { arg: "curvature", truthy: true },
-      table: {
-        category: "Screen Curvature",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultCurvatureOptions.curvatureY}` },
-      },
-    },
-    multisampling: {
-      control: "boolean",
-      description:
-        filterDocs.CurvatureFilterOptions.properties.multisampling.description,
-      if: { arg: "curvature", truthy: true },
-      table: {
-        category: "Screen Curvature",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultCurvatureOptions.multisampling}` },
-      },
-    },
-
-    // Vignette
-    vignette: {
-      control: "boolean",
-      description: "Enable vignette",
-      table: {
-        category: "Vignette",
-      },
-    },
-    vignetteIntensity: {
-      control: { type: "range", min: 0, max: 1, step: 0.1 },
-      description:
-        filterDocs.VignetteFilterUniforms.properties.intensity.description,
-      if: { arg: "vignette", truthy: true },
-      table: {
-        category: "Vignette",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultVignetteUniforms.intensity}` },
-      },
-    },
-    vignetteRadius: {
-      control: { type: "range", min: 0, max: 2, step: 0.1 },
-      description:
-        filterDocs.VignetteFilterUniforms.properties.radius.description,
-      if: { arg: "vignette", truthy: true },
-      table: {
-        category: "Vignette",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultVignetteUniforms.radius}` },
-      },
-    },
-
-    // Color Adjustment (at the end)
-    colorAdjustment: {
-      control: "boolean",
-      description: "Enable color adjustment",
-      table: {
-        category: "Color Adjustment",
-      },
-    },
-    gamma: {
-      control: { type: "range", min: 0.5, max: 2, step: 0.1 },
-      description:
-        filterDocs.ColorAdjustmentFilterUniforms.properties.gamma.description,
-      if: { arg: "colorAdjustment", truthy: true },
-      table: {
-        category: "Color Adjustment",
-        subcategory: "Settings",
-        defaultValue: { summary: `${defaultColorAdjustmentUniforms.gamma}` },
-      },
-    },
-    saturation: {
-      control: { type: "range", min: 0, max: 2, step: 0.1 },
-      description:
-        filterDocs.ColorAdjustmentFilterUniforms.properties.saturation
-          .description,
-      if: { arg: "colorAdjustment", truthy: true },
-      table: {
-        category: "Color Adjustment",
-        subcategory: "Settings",
-        defaultValue: {
-          summary: `${defaultColorAdjustmentUniforms.saturation}`,
-        },
-      },
-    },
-    brightness: {
-      control: { type: "range", min: 0, max: 2, step: 0.1 },
-      description:
-        filterDocs.ColorAdjustmentFilterUniforms.properties.brightness
-          .description,
-      if: { arg: "colorAdjustment", truthy: true },
-      table: {
-        category: "Color Adjustment",
-        subcategory: "Settings",
-        defaultValue: {
-          summary: `${defaultColorAdjustmentUniforms.brightness}`,
-        },
-      },
-    },
+    ...noiseArgTypes,
+    ...scanlinesArgTypes,
+    ...phosphorMaskArgTypes,
+    ...bloomArgTypes,
+    ...vignetteArgTypes,
+    ...raiseBlackPointArgTypes,
+    ...roundedCornersArgTypes,
+    ...curvatureArgTypes,
+    ...colorAdjustmentArgTypes,
   },
 } satisfies Meta<typeof CRTFiltersDemo>;
 
@@ -519,6 +560,8 @@ export const Default: Story = {
     vignette: true,
     vignetteIntensity: 0.6, //defaultVignetteUniforms.intensity,
     vignetteRadius: 1.3, // defaultVignetteUniforms.radius,
+    raiseBlackPoint: false,
+    blackPoint: defaultRaiseBlackPointUniforms.blackPoint,
     colorAdjustment: true,
     gamma: 1, //defaultColorAdjustmentUniforms.gamma,
     saturation: 1.2, // defaultColorAdjustmentUniforms.saturation,

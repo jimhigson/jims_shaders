@@ -20,6 +20,9 @@ export const defaultNoiseUniforms: Required<NoiseFilterOptions> = {
   fps: 30,
 };
 
+/**
+ * Adds animated noise to simulate analog video interference and screen grain
+ */
 export class NoiseFilter extends Filter {
   public uniforms: {
     uIntensity: number;

@@ -37,6 +37,10 @@ export const defaultPhosphorMaskOptions: Required<PhosphorMaskFilterOptions> = {
   transitionWidth: 0.3,
 };
 
+/**
+ * Simulates the RGB phosphor dot pattern of CRT displays by creating vertical red, green, and blue stripes.
+ * Only a slot mask is supported, since this was the most common type used in TVs and arcades.
+ */
 export class PhosphorMaskFilter extends Filter {
   public uniforms: {
     uPixelWidth: number;

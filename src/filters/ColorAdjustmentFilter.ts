@@ -3,7 +3,7 @@ import { Filter, GlProgram } from "pixi.js";
 import { defaultVertex } from "../utils/defaultVertex";
 import fragment from "./colorAdjustment.frag?raw";
 
-export type ColorAdjustmentFilterUniforms = {
+export type ColorAdjustmentFilterOptions = {
   /** Gamma correction (0.5-2.0, 1.0 = no correction) */
   gamma?: number;
   /** Color saturation (0-2, 0 = grayscale, 1 = normal) */
@@ -12,13 +12,18 @@ export type ColorAdjustmentFilterUniforms = {
   brightness?: number;
 };
 
-export const defaultColorAdjustmentUniforms: Required<ColorAdjustmentFilterUniforms> =
+export const defaultColorAdjustmentUniforms: Required<ColorAdjustmentFilterOptions> =
   {
     gamma: 1.0,
     saturation: 1.0,
     brightness: 1.0,
   };
 
+/**
+ * Adjusts gamma, saturation, and brightness for final color calibration. Can be put anywhere
+ * in the filters chain. One use is to counter-act if the other filters such as phosphor mask filter
+ * have had an overall desaturating effect
+ */
 export class ColorAdjustmentFilter extends Filter {
   public uniforms: {
     uGamma: number;
@@ -26,7 +31,7 @@ export class ColorAdjustmentFilter extends Filter {
     uBrightness: number;
   };
 
-  constructor(uniforms: ColorAdjustmentFilterUniforms = {}) {
+  constructor(uniforms: ColorAdjustmentFilterOptions = {}) {
     const finalUniforms = { ...defaultColorAdjustmentUniforms, ...uniforms };
 
     const glProgram = GlProgram.from({
