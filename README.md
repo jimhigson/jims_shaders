@@ -2,6 +2,10 @@
 
 A collection of modular filters for Pixi.js, targeted at pixi v8+, written in GLSL. Each one is designed to do one very small job well, and to be composed with other shaders. Use all of them, or some of them. Don't like one? drop and replace it. Mix them with other filters as you wish. Tree shakes fine.
 
+TLDR: it makes graphics look like this:
+
+![Example](examples/slug_full.png)
+
 Originally created for my open source, web-based remake of the classic [Head over Heels](https://en.wikipedia.org/wiki/Head_over_Heels_(video_game)) at [blockstack.ing](https://blockstack.ing) - [github repo here](https://github.com/jimhigson/head-over-heels-online).
 
 <div align="center">

@@ -7,22 +7,28 @@ interface DraggableSplitterProps {
   hitAreaWidth?: number;
 }
 
+/**
+ * A draggable vertical split on the page, separating visually a left from right pane
+ * (with and without filters)
+ */
 export const DraggableSplitter = ({
   onPositionChange,
-  initialPosition,
+  initialPosition = 0,
   width = 8,
   hitAreaWidth = 40,
 }: DraggableSplitterProps) => {
-  const [position, setPosition] = useState(
-    initialPosition ?? window.innerWidth / 2,
-  );
+  const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      const newPosition = e.clientX;
+      if (!isDragging || !containerRef.current) return;
+      const parent = containerRef.current.parentElement;
+      if (!parent) return;
+      const parentRect = parent.getBoundingClientRect();
+      const centerX = parentRect.left + parentRect.width / 2;
+      const newPosition = e.clientX - centerX;
       setPosition(newPosition);
       onPositionChange(newPosition);
     };
@@ -45,9 +51,10 @@ export const DraggableSplitter = ({
   return (
     <div
       ref={containerRef}
-      className="fixed top-0 h-screen cursor-col-resize z-splitter flex items-center justify-center"
+      className="absolute top-0 h-full cursor-col-resize z-splitter flex items-center justify-center"
       style={{
-        left: position - hitAreaWidth / 2,
+        left: "50%",
+        transform: `translateX(${position - hitAreaWidth / 2}px)`,
         width: hitAreaWidth,
       }}
       onMouseDown={() => setIsDragging(true)}

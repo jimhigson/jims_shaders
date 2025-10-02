@@ -1,7 +1,7 @@
 {
   "BloomFilter": {
     "name": "BloomFilter",
-    "description": "Creates a bloom/glow effect around bright areas to simulate CRT phosphor persistence and light bleeding"
+    "description": "Creates a bloom/glow effect around bright areas to simulate light bleeding"
   },
   "BloomFilterOptions": {
     "name": "BloomFilterOptions",
@@ -44,6 +44,12 @@
         "optional": true,
         "type": "number",
         "description": "Brightness level (0-2, 1 = normal)"
+      },
+      "brightnessBottom": {
+        "name": "brightnessBottom",
+        "optional": true,
+        "type": "number",
+        "description": "Extra brightness at bottom of screen (-1 to 1, 0 = no gradient). Positive values brighten the bottom, negative darken it,\nsimulates variable brightness on the round tube."
       },
       "gamma": {
         "name": "gamma",
@@ -221,7 +227,7 @@
   },
   "RoundedCornersFilter": {
     "name": "RoundedCornersFilter",
-    "description": "Adds rounded corners to the screen edges to simulate the physical shape of CRT displays"
+    "description": "Adds rounded corners to the screen edges to simulate the physical shape of CRT displays.\nThis is separate from, but related to, the CurvatureFilter, which distorts the image to simulate the curved glass screen."
   },
   "RoundedCornersFilterOptions": {
     "name": "RoundedCornersFilterOptions",

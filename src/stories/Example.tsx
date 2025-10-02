@@ -119,11 +119,12 @@ export const Example = (props: ExampleProps) => {
     resource.type === "video" ? VideoExample : ImageExample;
 
   const graphics = useMemo(() => {
+    const absolutePosition = app.screen.width / 2 + splitPosition;
     return new Graphics()
       .rect(
-        splitPosition,
+        absolutePosition,
         0,
-        app.screen.width - splitPosition,
+        app.screen.width - absolutePosition,
         app.screen.height,
       )
       .fill("#ffffff");

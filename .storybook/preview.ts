@@ -26,6 +26,10 @@ const preview: Preview = {
     chromatic: { disable: true },
     // Use fullscreen layout by default
     layout: "fullscreen",
+    // Show controls panel at the bottom by default
+    options: {
+      panelPosition: "bottom",
+    },
   },
 };
 

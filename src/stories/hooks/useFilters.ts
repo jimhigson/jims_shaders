@@ -37,6 +37,7 @@ export const useFilters = ({
   gamma,
   saturation,
   brightness,
+  brightnessBottom,
 }: CRTFiltersProps) => {
   return useMemo(() => {
     return crtFilters({
@@ -64,7 +65,9 @@ export const useFilters = ({
         : false,
       raiseBlackPoint: raiseBlackPoint ? { blackPoint } : false,
       colorAdjustment:
-        colorAdjustment ? { gamma, saturation, brightness } : false,
+        colorAdjustment ?
+          { gamma, saturation, brightness, brightnessBottom }
+        : false,
     });
   }, [
     noise,
@@ -99,5 +102,6 @@ export const useFilters = ({
     gamma,
     saturation,
     brightness,
+    brightnessBottom,
   ]);
 };

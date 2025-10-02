@@ -10,6 +10,11 @@ export type ColorAdjustmentFilterOptions = {
   saturation?: number;
   /** Brightness level (0-2, 1 = normal) */
   brightness?: number;
+  /**
+   * Extra brightness at bottom of screen (-1 to 1, 0 = no gradient). Positive values brighten the bottom, negative darken it,
+   * simulates variable brightness on the round tube.
+   */
+  brightnessBottom?: number;
 };
 
 export const defaultColorAdjustmentUniforms: Required<ColorAdjustmentFilterOptions> =
@@ -17,6 +22,7 @@ export const defaultColorAdjustmentUniforms: Required<ColorAdjustmentFilterOptio
     gamma: 1.0,
     saturation: 1.0,
     brightness: 1.0,
+    brightnessBottom: 0.0,
   };
 
 /**
@@ -29,6 +35,7 @@ export class ColorAdjustmentFilter extends Filter {
     uGamma: number;
     uSaturation: number;
     uBrightness: number;
+    uBrightnessBottom: number;
   };
 
   constructor(uniforms: ColorAdjustmentFilterOptions = {}) {
@@ -54,6 +61,10 @@ export class ColorAdjustmentFilter extends Filter {
           },
           uBrightness: {
             value: finalUniforms.brightness,
+            type: "f32",
+          },
+          uBrightnessBottom: {
+            value: finalUniforms.brightnessBottom,
             type: "f32",
           },
         },

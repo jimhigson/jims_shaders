@@ -9,7 +9,7 @@ interface MediaSelectorProps {
 
 export const MediaSelector = ({ value, onChange }: MediaSelectorProps) => {
   return (
-    <div className="flex flex-col gap-2 p-2.5 bg-background-content border-b border-border overflow-x-auto absolute top-0 left-0 z-media-selector max-h-full">
+    <div className="flex flex-col gap-2 p-2.5 bg-background-content border-b border-border overflow-x-auto z-media-selector max-h-full">
       {Object.entries(exampleMedia).map(([key, media]) => (
         <button
           key={key}
@@ -28,9 +28,9 @@ export const MediaSelector = ({ value, onChange }: MediaSelectorProps) => {
             <img
               src={media.src}
               alt={key}
-              className="w-20 h-[60px] object-cover rounded-sm"
+              className="w-[160px] h-[120px] object-cover rounded-sm"
             />
-          : <div className="w-20 h-[60px] bg-background-bar rounded-sm flex items-center justify-center text-2xl">
+          : <div className="w-[160px] h-[120px] bg-background-bar rounded-sm flex items-center justify-center text-2xl">
               ▶️
             </div>
           }
