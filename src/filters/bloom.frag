@@ -29,9 +29,8 @@ const float SIN_OUTER_ROT = sin(OUTER_ROTATION);
 
 // 13-tap pattern: center + 4-point inner ring + 8-point outer ring
 // Inner ring on cardinal axes, outer ring rotated 22.5° between cardinal/diagonal
-const vec2 poissonOffsets[12] = vec2[](
-    // Center
-    //vec2(0.0, 0.0),
+const int NUM_SAMPLES = 12;
+const vec2 poissonOffsets[NUM_SAMPLES] = vec2[](
 
     // Inner ring (on cardinal axes)
     vec2(0.0, -INNER_RING_RADIUS),
@@ -51,9 +50,7 @@ const vec2 poissonOffsets[12] = vec2[](
 );
 
 // Weights for each sample - falloff from center to outer ring
-const float poissonWeights[12] = float[](
-    //CENTER_WEIGHT,
-
+const float poissonWeights[NUM_SAMPLES] = float[](
     // Inner ring
     INNER_WEIGHT, INNER_WEIGHT, INNER_WEIGHT, INNER_WEIGHT,
 
@@ -85,7 +82,7 @@ void main() {
     float blurCoefForEdge = (distFromCenter * distFromCenter + 1.0) * (uEdgeBlur + 1.0);
     
     // Sample using two-ring pattern for smoother bloom
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < NUM_SAMPLES; i++) {
         vec2 offset = poissonOffsets[i] * pixelSize * uRadius * blurCoefForEdge;
         vec2 sampleCoord = vTextureCoord + offset;
         
