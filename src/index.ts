@@ -45,15 +45,15 @@ export { crtFilters as createCrtFilterPipeline } from "./filters/crtFilters";
 export type { CrtFilterPipelineOptions } from "./filters/crtFilters";
 
 // Fragment shader source code exports
-export { default as bloomFragmentSource } from "./filters/bloom.frag?raw";
-export { default as colorAdjustmentFragmentSource } from "./filters/colorAdjustment.frag?raw";
-export { default as curvatureFragmentSource } from "./filters/curvature.frag?raw";
-export { default as noiseFragmentSource } from "./filters/noise.frag?raw";
-export { default as phosphorMaskFragmentSource } from "./filters/phosphorMask.frag?raw";
-export { default as roundedCornersFragmentSource } from "./filters/roundedCorners.frag?raw";
-export { default as scanlinesFragmentSource } from "./filters/scanlines.frag?raw";
-export { default as vignetteFragmentSource } from "./filters/vignette.frag?raw";
-export { default as raiseBlackPointFragmentSource } from "./filters/raiseBlackPoint.frag?raw";
+export { default as bloomFragmentSource } from "./filters/bloom.frag";
+export { default as colorAdjustmentFragmentSource } from "./filters/colorAdjustment.frag";
+export { default as curvatureFragmentSource } from "./filters/curvature.frag";
+export { default as noiseFragmentSource } from "./filters/noise.frag";
+export { default as phosphorMaskFragmentSource } from "./filters/phosphorMask.frag";
+export { default as roundedCornersFragmentSource } from "./filters/roundedCorners.frag";
+export { default as scanlinesFragmentSource } from "./filters/scanlines.frag";
+export { default as vignetteFragmentSource } from "./filters/vignette.frag";
+export { default as raiseBlackPointFragmentSource } from "./filters/raiseBlackPoint.frag";
 
 // Utility for replacing placeholders in shader source
 export { replacePlaceholders } from "./utils/replacePlaceholders";

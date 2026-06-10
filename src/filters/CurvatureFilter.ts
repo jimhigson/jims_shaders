@@ -4,7 +4,7 @@ import { Filter, GlProgram } from "pixi.js";
 
 import { defaultVertex } from "../utils/defaultVertex";
 import { replacePlaceholders } from "../utils/replacePlaceholders";
-import fragment from "./curvature.frag?raw";
+import fragment from "./curvature.frag";
 
 export type CurvatureFilterOptions = {
   /** Horizontal curvature amount (0-1, typically 0.15) */

@@ -4,7 +4,7 @@ import { Filter, GlProgram } from "pixi.js";
 
 import { defaultVertex } from "../utils/defaultVertex";
 import { replacePlaceholders } from "../utils/replacePlaceholders";
-import fragment from "./phosphorMask.frag?raw";
+import fragment from "./phosphorMask.frag";
 
 export type PhosphorMaskFilterOptions = {
   /** Width of phosphor mask pixels */

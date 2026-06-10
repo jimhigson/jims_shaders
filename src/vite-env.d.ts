@@ -1,11 +1,11 @@
 /// <reference types="vite/client" />
 
-declare module "*.frag?raw" {
+declare module "*.frag" {
   const content: string;
   export default content;
 }
 
-declare module "*.vert?raw" {
+declare module "*.vert" {
   const content: string;
   export default content;
 }
