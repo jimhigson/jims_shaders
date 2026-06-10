@@ -1,6 +1,5 @@
-import { Filter, GlProgram } from "pixi.js";
+import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
 
-import { defaultVertex } from "../utils/defaultVertex";
 import fragment from "./roundedCorners.frag";
 
 export type RoundedCornersFilterOptions = {
@@ -26,7 +25,7 @@ export class RoundedCornersFilter extends Filter {
     const finalUniforms = { ...defaultRoundedCornersUniforms, ...uniforms };
 
     const glProgram = GlProgram.from({
-      vertex: defaultVertex,
+      vertex: defaultFilterVert,
       fragment,
       name: "rounded-corners-filter",
     });

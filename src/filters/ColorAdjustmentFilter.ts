@@ -1,6 +1,5 @@
-import { Filter, GlProgram } from "pixi.js";
+import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
 
-import { defaultVertex } from "../utils/defaultVertex";
 import fragment from "./colorAdjustment.frag";
 
 export type ColorAdjustmentFilterOptions = {
@@ -42,7 +41,7 @@ export class ColorAdjustmentFilter extends Filter {
     const finalUniforms = { ...defaultColorAdjustmentUniforms, ...uniforms };
 
     const glProgram = GlProgram.from({
-      vertex: defaultVertex,
+      vertex: defaultFilterVert,
       fragment,
       name: "color-adjustment-filter",
     });

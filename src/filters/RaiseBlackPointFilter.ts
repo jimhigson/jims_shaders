@@ -1,6 +1,5 @@
-import { Filter, GlProgram } from "pixi.js";
+import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
 
-import { defaultVertex } from "../utils/defaultVertex";
 import fragment from "./raiseBlackPoint.frag";
 
 export type RaiseBlackPointFilterOptions = {
@@ -28,7 +27,7 @@ export class RaiseBlackPointFilter extends Filter {
     const finalUniforms = { ...defaultRaiseBlackPointUniforms, ...uniforms };
 
     const glProgram = GlProgram.from({
-      vertex: defaultVertex,
+      vertex: defaultFilterVert,
       fragment,
       name: "raise-black-point-filter",
     });

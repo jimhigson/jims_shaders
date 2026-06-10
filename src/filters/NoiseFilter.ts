@@ -1,8 +1,7 @@
 import type { FilterSystem, RenderTexture, Texture } from "pixi.js";
 
-import { Filter, GlProgram } from "pixi.js";
+import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
 
-import { defaultVertex } from "../utils/defaultVertex";
 import fragment from "./noise.frag";
 
 export type NoiseFilterOptions = {
@@ -37,7 +36,7 @@ export class NoiseFilter extends Filter {
     const finalUniforms = { ...defaultNoiseUniforms, ...uniforms };
 
     const glProgram = GlProgram.from({
-      vertex: defaultVertex,
+      vertex: defaultFilterVert,
       fragment,
       name: "noise-filter",
     });
