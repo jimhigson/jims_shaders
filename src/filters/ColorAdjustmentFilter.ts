@@ -1,7 +1,7 @@
 import { Filter, GlProgram } from "pixi.js";
 
 import { defaultVertex } from "../utils/defaultVertex";
-import fragment from "./colorAdjustment.frag?raw";
+import fragment from "./colorAdjustment.frag";
 
 export type ColorAdjustmentFilterOptions = {
   /** Gamma correction (0.5-2.0, 1.0 = no correction) */

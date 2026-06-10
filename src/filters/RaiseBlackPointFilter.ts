@@ -1,7 +1,7 @@
 import { Filter, GlProgram } from "pixi.js";
 
 import { defaultVertex } from "../utils/defaultVertex";
-import fragment from "./raiseBlackPoint.frag?raw";
+import fragment from "./raiseBlackPoint.frag";
 
 export type RaiseBlackPointFilterOptions = {
   /**

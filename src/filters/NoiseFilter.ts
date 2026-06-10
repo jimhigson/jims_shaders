@@ -3,7 +3,7 @@ import type { FilterSystem, RenderTexture, Texture } from "pixi.js";
 import { Filter, GlProgram } from "pixi.js";
 
 import { defaultVertex } from "../utils/defaultVertex";
-import fragment from "./noise.frag?raw";
+import fragment from "./noise.frag";
 
 export type NoiseFilterOptions = {
   /** Noise intensity */

@@ -113,6 +113,9 @@ importers:
       vite-plugin-dts:
         specifier: ^4.3.0
         version: 4.5.4(rollup@4.50.2)(typescript@5.8.3)(vite@7.1.5(jiti@1.21.7)(yaml@2.8.1))
+      vite-plugin-glsl:
+        specifier: ^1.6.0
+        version: 1.6.0(@rollup/pluginutils@5.3.0(rollup@4.50.2))(esbuild@0.25.9)(vite@7.1.5(jiti@1.21.7)(yaml@2.8.1))
 
 packages:
 
@@ -2842,6 +2845,19 @@ packages:
       vite: '*'
     peerDependenciesMeta:
       vite:
+        optional: true
+
+  vite-plugin-glsl@1.6.0:
+    resolution: {integrity: sha512-3i3ZvIVb13LhTcAXEHGTOW+cNG2jbJ++XsDFyCWUpnoFN1NPXvdtC4j66pig+i0QjDnmusOK/YCpiDWizxBY0A==}
+    engines: {node: '>= 20.17.0', npm: '>= 10.8.3'}
+    peerDependencies:
+      '@rollup/pluginutils': ^5.x
+      esbuild: '>= 0.25'
+      vite: '>= 3.x'
+    peerDependenciesMeta:
+      '@rollup/pluginutils':
+        optional: true
+      esbuild:
         optional: true
 
   vite@7.1.5:
@@ -6021,6 +6037,13 @@ snapshots:
       - '@types/node'
       - rollup
       - supports-color
+
+  vite-plugin-glsl@1.6.0(@rollup/pluginutils@5.3.0(rollup@4.50.2))(esbuild@0.25.9)(vite@7.1.5(jiti@1.21.7)(yaml@2.8.1)):
+    dependencies:
+      vite: 7.1.5(jiti@1.21.7)(yaml@2.8.1)
+    optionalDependencies:
+      '@rollup/pluginutils': 5.3.0(rollup@4.50.2)
+      esbuild: 0.25.9
 
   vite@7.1.5(jiti@1.21.7)(yaml@2.8.1):
     dependencies:

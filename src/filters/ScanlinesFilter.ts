@@ -3,7 +3,7 @@ import type { FilterSystem, RenderTexture, Texture } from "pixi.js";
 import { Filter, GlProgram } from "pixi.js";
 
 import { defaultVertex } from "../utils/defaultVertex";
-import fragment from "./scanlines.frag?raw";
+import fragment from "./scanlines.frag";
 
 export type ScanlinesFilterOptions = {
   /** Height of each scanline in pixels */

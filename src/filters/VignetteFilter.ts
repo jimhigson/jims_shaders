@@ -1,7 +1,7 @@
 import { Filter, GlProgram } from "pixi.js";
 
 import { defaultVertex } from "../utils/defaultVertex";
-import fragment from "./vignette.frag?raw";
+import fragment from "./vignette.frag";
 
 export type VignetteFilterOptions = {
   /** Vignette intensity */

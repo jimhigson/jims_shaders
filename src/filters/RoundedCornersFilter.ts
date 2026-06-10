@@ -1,7 +1,7 @@
 import { Filter, GlProgram } from "pixi.js";
 
 import { defaultVertex } from "../utils/defaultVertex";
-import fragment from "./roundedCorners.frag?raw";
+import fragment from "./roundedCorners.frag";
 
 export type RoundedCornersFilterOptions = {
   /** Corner radius as proportion of screen size (0-0.1) */

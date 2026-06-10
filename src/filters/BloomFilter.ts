@@ -3,7 +3,7 @@ import type { FilterSystem, RenderTexture, Texture } from "pixi.js";
 import { Filter, GlProgram } from "pixi.js";
 
 import { defaultVertex } from "../utils/defaultVertex";
-import fragment from "./bloom.frag?raw";
+import fragment from "./bloom.frag";
 
 export type BloomFilterOptions = {
   /** Blur radius in pixels */

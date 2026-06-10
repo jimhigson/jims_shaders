@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
+import glsl from "vite-plugin-glsl";
 
 // Library build configuration
 export default defineConfig({
@@ -22,6 +23,9 @@ export default defineConfig({
     },
   },
   plugins: [
+    glsl({
+      minify: true,
+    }),
     dts({
       insertTypesEntry: true,
       tsconfigPath: "./tsconfig.app.json",
