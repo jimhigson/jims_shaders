@@ -1,8 +1,7 @@
 import type { FilterSystem, RenderTexture, Texture } from "pixi.js";
 
-import { Filter, GlProgram } from "pixi.js";
+import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
 
-import { defaultVertex } from "../utils/defaultVertex";
 import { replacePlaceholders } from "../utils/replacePlaceholders";
 import fragment from "./curvature.frag";
 
@@ -41,7 +40,7 @@ export class CurvatureFilter extends Filter {
     });
 
     const glProgram = GlProgram.from({
-      vertex: defaultVertex,
+      vertex: defaultFilterVert,
       fragment: processedFragment,
       name: "curvature-filter",
     });

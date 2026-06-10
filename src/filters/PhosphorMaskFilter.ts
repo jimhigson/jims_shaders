@@ -1,8 +1,7 @@
 import type { FilterSystem, RenderTexture, Texture } from "pixi.js";
 
-import { Filter, GlProgram } from "pixi.js";
+import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
 
-import { defaultVertex } from "../utils/defaultVertex";
 import { replacePlaceholders } from "../utils/replacePlaceholders";
 import fragment from "./phosphorMask.frag";
 
@@ -58,7 +57,7 @@ export class PhosphorMaskFilter extends Filter {
     });
 
     const glProgram = GlProgram.from({
-      vertex: defaultVertex,
+      vertex: defaultFilterVert,
       fragment: processedFragment,
       name: "phosphor-mask-filter",
     });

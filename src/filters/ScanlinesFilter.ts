@@ -1,8 +1,7 @@
 import type { FilterSystem, RenderTexture, Texture } from "pixi.js";
 
-import { Filter, GlProgram } from "pixi.js";
+import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
 
-import { defaultVertex } from "../utils/defaultVertex";
 import fragment from "./scanlines.frag";
 
 export type ScanlinesFilterOptions = {
@@ -34,7 +33,7 @@ export class ScanlinesFilter extends Filter {
     const finalUniforms = { ...defaultScanlinesUniforms, ...uniforms };
 
     const glProgram = GlProgram.from({
-      vertex: defaultVertex,
+      vertex: defaultFilterVert,
       fragment,
       name: "scanlines-filter",
     });

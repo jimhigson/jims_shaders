@@ -1,6 +1,5 @@
-import { Filter, GlProgram } from "pixi.js";
+import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
 
-import { defaultVertex } from "../utils/defaultVertex";
 import fragment from "./vignette.frag";
 
 export type VignetteFilterOptions = {
@@ -28,7 +27,7 @@ export class VignetteFilter extends Filter {
     const finalUniforms = { ...defaultVignetteUniforms, ...uniforms };
 
     const glProgram = GlProgram.from({
-      vertex: defaultVertex,
+      vertex: defaultFilterVert,
       fragment,
       name: "vignette-filter",
     });
