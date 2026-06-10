@@ -34,7 +34,8 @@
     "check": "pnpm check:type && pnpm check:lint",
     "extract-docs": "node scripts/extractTypeDocs.mjs",
     "predeploy": "pnpm build-storybook",
-    "deploy": "gh-pages -d storybook-static"
+    "deploy": "gh-pages -d storybook-static",
+    "prepublishOnly": "pnpm build-lib"
   },
   "peerDependencies": {
     "pixi.js": "^8.0.0"
