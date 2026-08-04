@@ -8,6 +8,7 @@ import type { PhosphorMaskFilterOptions } from "./PhosphorMaskFilter";
 import type { RaiseBlackPointFilterOptions } from "./RaiseBlackPointFilter";
 import type { RoundedCornersFilterOptions } from "./RoundedCornersFilter";
 import type { ScanlinesFilterOptions } from "./ScanlinesFilter";
+import type { SharpenFilterOptions } from "./SharpenFilter";
 import type { VignetteFilterOptions } from "./VignetteFilter";
 
 import { BloomFilter } from "./BloomFilter";
@@ -18,10 +19,13 @@ import { PhosphorMaskFilter } from "./PhosphorMaskFilter";
 import { RaiseBlackPointFilter } from "./RaiseBlackPointFilter";
 import { RoundedCornersFilter } from "./RoundedCornersFilter";
 import { ScanlinesFilter } from "./ScanlinesFilter";
+import { SharpenFilter } from "./SharpenFilter";
 import { VignetteFilter } from "./VignetteFilter";
 
 export interface CrtFilterPipelineOptions {
   noise?: false | NoiseFilterOptions | undefined;
+  /** Sharpen filter options, undefined to use defaults, false to disable */
+  sharpen?: false | SharpenFilterOptions | undefined;
   /** Rounded corners filter options, undefined to use defaults, false to disable */
   roundedCorners?: false | RoundedCornersFilterOptions | undefined;
   /** Scanlines filter options, undefined to use defaults, false to disable */
@@ -42,6 +46,7 @@ export interface CrtFilterPipelineOptions {
 
 export const crtFilters = ({
   noise,
+  sharpen,
   roundedCorners,
   scanlines,
   phosphorMask,
@@ -55,6 +60,12 @@ export const crtFilters = ({
 
   if (noise !== false) {
     filters.push(new NoiseFilter(noise));
+  }
+
+  // Sharpening happens in the set's luminance amplifier, so before anything that models
+  // the beam and the phosphors
+  if (sharpen !== false) {
+    filters.push(new SharpenFilter(sharpen));
   }
 
   // Scanlines and phosphor mask (applied to flat image)

@@ -22,6 +22,7 @@ import { defaultColorAdjustmentUniforms } from "../filters/ColorAdjustmentFilter
 import { defaultCurvatureOptions } from "../filters/CurvatureFilter";
 import { defaultNoiseUniforms } from "../filters/NoiseFilter";
 import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
+import { defaultSharpenUniforms } from "../filters/SharpenFilter";
 import { Example } from "./Example";
 import { exampleMedia } from "./exampleMedia";
 import {
@@ -33,6 +34,7 @@ import {
   raiseBlackPointArgTypes,
   roundedCornersArgTypes,
   scanlinesArgTypes,
+  sharpenArgTypes,
   vignetteArgTypes,
 } from "./storyFilterArgTypes";
 
@@ -43,6 +45,12 @@ export interface CRTFiltersProps {
   noiseIntensity: number;
   noiseScale: number;
   noiseFPS: number;
+  // Sharpen filter
+  sharpen: boolean;
+  sharpenAmount: number;
+  sharpenRadius: number;
+  sharpenAsymmetry: number;
+  sharpenSignalBlur: number;
   // Scanlines filter
   scanlines: boolean;
   pixelHeight: number;
@@ -66,6 +74,14 @@ export interface CRTFiltersProps {
   // Raise black point filter
   raiseBlackPoint: boolean;
   blackPoint: number;
+  domeEdgeLift: number;
+  domeRadius: number;
+  domeFalloff: number;
+  domeSuperellipse: number;
+  domeCentreX: number;
+  domeCentreY: number;
+  liftHue: number;
+  liftSaturation: number;
   // Rounded corners filter
   roundedCorners: boolean;
   cornerRadius: number;
@@ -184,6 +200,7 @@ const meta = {
     },
 
     ...noiseArgTypes,
+    ...sharpenArgTypes,
     ...scanlinesArgTypes,
     ...phosphorMaskArgTypes,
     ...bloomArgTypes,
@@ -207,6 +224,11 @@ export const Default: Story = {
     noiseFPS: defaultNoiseUniforms.fps,
     roundedCorners: true,
     cornerRadius: 0.06, //defaultRoundedCornersUniforms.cornerRadius,
+    sharpen: true,
+    sharpenAmount: defaultSharpenUniforms.amount,
+    sharpenRadius: defaultSharpenUniforms.radius,
+    sharpenAsymmetry: defaultSharpenUniforms.asymmetry,
+    sharpenSignalBlur: defaultSharpenUniforms.signalBlur,
     scanlines: true,
     pixelHeight: 4, // defaultScanlinesUniforms.pixelHeight,
     gapBrightness: 0.3, //defaultScanlinesUniforms.gapBrightness,
@@ -229,6 +251,14 @@ export const Default: Story = {
     vignetteRadius: 1.3, // defaultVignetteUniforms.radius,
     raiseBlackPoint: true,
     blackPoint: defaultRaiseBlackPointUniforms.blackPoint,
+    domeEdgeLift: defaultRaiseBlackPointUniforms.domeEdgeLift,
+    domeRadius: defaultRaiseBlackPointUniforms.domeRadius,
+    domeFalloff: defaultRaiseBlackPointUniforms.domeFalloff,
+    domeSuperellipse: defaultRaiseBlackPointUniforms.domeSuperellipse,
+    domeCentreX: defaultRaiseBlackPointUniforms.domeCentreX,
+    domeCentreY: defaultRaiseBlackPointUniforms.domeCentreY,
+    liftHue: defaultRaiseBlackPointUniforms.liftHue,
+    liftSaturation: defaultRaiseBlackPointUniforms.liftSaturation,
     colorAdjustment: true,
     gamma: 1, //defaultColorAdjustmentUniforms.gamma,
     saturation: 1.2, // defaultColorAdjustmentUniforms.saturation,

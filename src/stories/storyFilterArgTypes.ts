@@ -10,6 +10,7 @@ import { defaultPhosphorMaskOptions } from "../filters/PhosphorMaskFilter";
 import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
 import { defaultRoundedCornersUniforms } from "../filters/RoundedCornersFilter";
 import { defaultScanlinesUniforms } from "../filters/ScanlinesFilter";
+import { defaultSharpenUniforms } from "../filters/SharpenFilter";
 import { defaultVignetteUniforms } from "../filters/VignetteFilter";
 import filterDocs from "./filterDocs.json";
 
@@ -50,6 +51,58 @@ export const noiseArgTypes = {
       category: "Noise",
       subcategory: "Settings",
       defaultValue: { summary: `${defaultNoiseUniforms.fps}` },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
+
+export const sharpenArgTypes = {
+  sharpen: {
+    control: "boolean",
+    description: filterDocs.SharpenFilter.description,
+    table: {
+      category: "Sharpen",
+    },
+  },
+  sharpenAmount: {
+    control: { type: "range", min: 0, max: 2, step: 0.05 },
+    description: filterDocs.SharpenFilterOptions.properties.amount.description,
+    if: { arg: "sharpen", truthy: true },
+    table: {
+      category: "Sharpen",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSharpenUniforms.amount}` },
+    },
+  },
+  sharpenRadius: {
+    control: { type: "range", min: 0.5, max: 8, step: 0.1 },
+    description: filterDocs.SharpenFilterOptions.properties.radius.description,
+    if: { arg: "sharpen", truthy: true },
+    table: {
+      category: "Sharpen",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSharpenUniforms.radius}` },
+    },
+  },
+  sharpenSignalBlur: {
+    control: { type: "range", min: 0, max: 1, step: 0.05 },
+    description:
+      filterDocs.SharpenFilterOptions.properties.signalBlur.description,
+    if: { arg: "sharpen", truthy: true },
+    table: {
+      category: "Sharpen",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSharpenUniforms.signalBlur}` },
+    },
+  },
+  sharpenAsymmetry: {
+    control: { type: "range", min: 0, max: 1, step: 0.05 },
+    description:
+      filterDocs.SharpenFilterOptions.properties.asymmetry.description,
+    if: { arg: "sharpen", truthy: true },
+    table: {
+      category: "Sharpen",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSharpenUniforms.asymmetry}` },
     },
   },
 } as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
@@ -245,6 +298,116 @@ export const raiseBlackPointArgTypes = {
       subcategory: "Settings",
       defaultValue: {
         summary: `${defaultRaiseBlackPointUniforms.blackPoint}`,
+      },
+    },
+  },
+  domeEdgeLift: {
+    control: { type: "range", min: 0, max: 0.2, step: 0.005 },
+    description:
+      filterDocs.RaiseBlackPointFilterOptions.properties.domeEdgeLift
+        .description,
+    if: { arg: "raiseBlackPoint", truthy: true },
+    table: {
+      category: "Raise Black Point",
+      subcategory: "Dome",
+      defaultValue: {
+        summary: `${defaultRaiseBlackPointUniforms.domeEdgeLift}`,
+      },
+    },
+  },
+  domeRadius: {
+    control: { type: "range", min: 0.1, max: 2, step: 0.05 },
+    description:
+      filterDocs.RaiseBlackPointFilterOptions.properties.domeRadius.description,
+    if: { arg: "raiseBlackPoint", truthy: true },
+    table: {
+      category: "Raise Black Point",
+      subcategory: "Dome",
+      defaultValue: {
+        summary: `${defaultRaiseBlackPointUniforms.domeRadius}`,
+      },
+    },
+  },
+  domeFalloff: {
+    control: { type: "range", min: 0.5, max: 6, step: 0.1 },
+    description:
+      filterDocs.RaiseBlackPointFilterOptions.properties.domeFalloff
+        .description,
+    if: { arg: "raiseBlackPoint", truthy: true },
+    table: {
+      category: "Raise Black Point",
+      subcategory: "Dome",
+      defaultValue: {
+        summary: `${defaultRaiseBlackPointUniforms.domeFalloff}`,
+      },
+    },
+  },
+  domeSuperellipse: {
+    control: { type: "range", min: 2, max: 10, step: 0.1 },
+    description:
+      filterDocs.RaiseBlackPointFilterOptions.properties.domeSuperellipse
+        .description,
+    if: { arg: "raiseBlackPoint", truthy: true },
+    table: {
+      category: "Raise Black Point",
+      subcategory: "Dome",
+      defaultValue: {
+        summary: `${defaultRaiseBlackPointUniforms.domeSuperellipse}`,
+      },
+    },
+  },
+  liftHue: {
+    control: { type: "range", min: 0, max: 360, step: 1 },
+    description:
+      filterDocs.RaiseBlackPointFilterOptions.properties.liftHue.description,
+    if: { arg: "raiseBlackPoint", truthy: true },
+    table: {
+      category: "Raise Black Point",
+      subcategory: "Tint",
+      defaultValue: {
+        summary: `${defaultRaiseBlackPointUniforms.liftHue}`,
+      },
+    },
+  },
+  liftSaturation: {
+    control: { type: "range", min: 0, max: 1, step: 0.05 },
+    description:
+      filterDocs.RaiseBlackPointFilterOptions.properties.liftSaturation
+        .description,
+    if: { arg: "raiseBlackPoint", truthy: true },
+    table: {
+      category: "Raise Black Point",
+      subcategory: "Tint",
+      defaultValue: {
+        summary: `${defaultRaiseBlackPointUniforms.liftSaturation}`,
+      },
+    },
+  },
+  domeCentreX: {
+    control: { type: "range", min: 0, max: 1, step: 0.01 },
+    description:
+      filterDocs.RaiseBlackPointFilterOptions.properties.domeCentreX
+        .description,
+    if: { arg: "raiseBlackPoint", truthy: true },
+    table: {
+      category: "Raise Black Point",
+      subcategory: "Dome",
+      defaultValue: {
+        summary: `${defaultRaiseBlackPointUniforms.domeCentreX}`,
+      },
+    },
+  },
+  domeCentreY: {
+    control: { type: "range", min: 0, max: 1, step: 0.01 },
+    description:
+      filterDocs.RaiseBlackPointFilterOptions.properties.domeCentreY
+        .description,
+    if: { arg: "raiseBlackPoint", truthy: true },
+    table: {
+      category: "Raise Black Point",
+      subcategory: "Dome",
+      defaultValue: {
+        summary: `${defaultRaiseBlackPointUniforms.domeCentreY}`,
       },
     },
   },

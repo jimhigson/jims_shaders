@@ -115,6 +115,12 @@
         "type": "union",
         "description": "Scanlines filter options, undefined to use defaults, false to disable"
       },
+      "sharpen": {
+        "name": "sharpen",
+        "optional": true,
+        "type": "union",
+        "description": "Sharpen filter options, undefined to use defaults, false to disable"
+      },
       "vignette": {
         "name": "vignette",
         "optional": true,
@@ -212,7 +218,7 @@
   },
   "RaiseBlackPointFilter": {
     "name": "RaiseBlackPointFilter",
-    "description": "Raises the black point of the image, simulating how older CRT screens couldn't produce perfect blacks"
+    "description": "Raises the black point of the image, simulating how older CRT screens couldn't produce perfect\nblacks. The lift is domed - weakest in the middle and strongest towards the edges - as if looking\nthrough the glass of a curved tube - and slightly warm, like the brown tint of a switched-off\nscreen. Alpha is passed through unchanged."
   },
   "RaiseBlackPointFilterOptions": {
     "name": "RaiseBlackPointFilterOptions",
@@ -221,7 +227,55 @@
         "name": "blackPoint",
         "optional": true,
         "type": "number",
-        "description": "Simulates how older screens couldn't make perfect blacks by compressing the dynamic range slightly.\n0 means no effect (same as not having the filter, whereas a value like 0.1 would be a very strong effect"
+        "description": "Simulates how older screens couldn't make perfect blacks by compressing the dynamic range slightly.\n0 means no effect (same as not having the filter, whereas a value like 0.1 would be a very strong effect.\nThis is the lift in the middle of the dome, ie the least the image is lifted anywhere"
+      },
+      "domeCentreX": {
+        "name": "domeCentreX",
+        "optional": true,
+        "type": "number",
+        "description": "Horizontal centre of the dome, as a fraction of the screen's width"
+      },
+      "domeCentreY": {
+        "name": "domeCentreY",
+        "optional": true,
+        "type": "number",
+        "description": "Vertical centre of the dome, as a fraction of the screen's height"
+      },
+      "domeEdgeLift": {
+        "name": "domeEdgeLift",
+        "optional": true,
+        "type": "number",
+        "description": "How much more than blackPoint the image is lifted at domeRadius, as if looking through the\nthicker glass towards the edge of a curved tube. 0 lifts evenly everywhere, ie no dome"
+      },
+      "domeFalloff": {
+        "name": "domeFalloff",
+        "optional": true,
+        "type": "number",
+        "description": "How the extra lift ramps up from the centre out to domeRadius. 1 is linear, 2 is quadratic,\nand higher values keep the middle flatter while turning up more sharply near the edge"
+      },
+      "domeRadius": {
+        "name": "domeRadius",
+        "optional": true,
+        "type": "number",
+        "description": "Distance from the centre at which the full domeEdgeLift is reached, where 1 is the middle\nof the screen's edges and the corners are further out by an amount that depends on\ndomeSuperellipse. The dome follows the shape of the screen, so this is not corrected for\nthe aspect ratio."
+      },
+      "domeSuperellipse": {
+        "name": "domeSuperellipse",
+        "optional": true,
+        "type": "number",
+        "description": "Shape of the dome's contours, as the exponent of a superellipse. 2 gives an ellipse, and\nhigher values push the corners outwards towards a rectangle with rounded corners, so that\nthe lift hugs the edges of the screen rather than bulging out of the middle of them"
+      },
+      "liftHue": {
+        "name": "liftHue",
+        "optional": true,
+        "type": "number",
+        "description": "Hue of the lift in degrees around the colour wheel, so 0 is red, 30 orange, 120 green and\n240 blue. Only has an effect while liftSaturation is above 0"
+      },
+      "liftSaturation": {
+        "name": "liftSaturation",
+        "optional": true,
+        "type": "number",
+        "description": "How strongly the lift is tinted towards liftHue, from 0 for a neutral grey lift up to 1.\nSince the lift's brightest channel is unchanged, saturating darkens the other two, so a\nstrongly saturated lift is dimmer as well as more colourful"
       }
     }
   },
@@ -258,6 +312,39 @@
         "optional": true,
         "type": "number",
         "description": "Height of each scanline in pixels"
+      }
+    }
+  },
+  "SharpenFilter": {
+    "name": "SharpenFilter",
+    "description": "Sharpens along the scan direction only, in the manner of the peaking (aperture correction) in a\nCRT set's luminance amplifier, and of the scan velocity modulation that many sets of the same era\nadded on top of it. Both put a dark preshoot before a luminance edge and a bright overshoot after\nit. Only the luminance is sharpened, and the overshoot clips at white. The signal is optionally\nband-limited along the same axis first, standing in for what the chain rolled off before the\npeaking got to it."
+  },
+  "SharpenFilterOptions": {
+    "name": "SharpenFilterOptions",
+    "properties": {
+      "amount": {
+        "name": "amount",
+        "optional": true,
+        "type": "number",
+        "description": "How strongly the high frequencies are boosted. 0 is no sharpening at all, around 0.5 is the\nmoderate peaking of a late-80s consumer set, and much above 1 gives the hard white fringes of\na set with its sharpness control wound all the way up"
+      },
+      "asymmetry": {
+        "name": "asymmetry",
+        "optional": true,
+        "type": "number",
+        "description": "How much of the ringing falls on the trailing side of an edge rather than the leading side,\nfrom 0 for an evenly balanced preshoot and overshoot up to 1 for all overshoot"
+      },
+      "radius": {
+        "name": "radius",
+        "optional": true,
+        "type": "number",
+        "description": "How far from each pixel the peaking taps are taken, in output pixels. This stands in for the\nluminance bandwidth of the set - a wider radius resolves less detail and rings more broadly"
+      },
+      "signalBlur": {
+        "name": "signalBlur",
+        "optional": true,
+        "type": "number",
+        "description": "How far the signal is band-limited before the boost is applied, from 0 to leave it alone up to\n1 for a full 1-2-1 roll-off over the same taps the peaking uses. This is the loss of high\nfrequencies through the signal chain that the peaking exists to compensate for, so a little of\nit keeps the sharpening from looking like it is acting on an impossibly perfect signal"
       }
     }
   },

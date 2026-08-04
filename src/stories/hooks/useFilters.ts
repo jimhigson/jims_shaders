@@ -9,6 +9,11 @@ export const useFilters = ({
   noiseIntensity,
   noiseScale,
   noiseFPS,
+  sharpen,
+  sharpenAmount,
+  sharpenRadius,
+  sharpenAsymmetry,
+  sharpenSignalBlur,
   roundedCorners,
   cornerRadius,
   scanlines,
@@ -33,6 +38,14 @@ export const useFilters = ({
   vignetteRadius,
   raiseBlackPoint,
   blackPoint,
+  domeEdgeLift,
+  domeRadius,
+  domeFalloff,
+  domeSuperellipse,
+  domeCentreX,
+  domeCentreY,
+  liftHue,
+  liftSaturation,
   colorAdjustment,
   gamma,
   saturation,
@@ -44,6 +57,15 @@ export const useFilters = ({
       noise:
         noise ?
           { intensity: noiseIntensity, scale: noiseScale, fps: noiseFPS }
+        : false,
+      sharpen:
+        sharpen ?
+          {
+            amount: sharpenAmount,
+            radius: sharpenRadius,
+            asymmetry: sharpenAsymmetry,
+            signalBlur: sharpenSignalBlur,
+          }
         : false,
       roundedCorners: roundedCorners ? { cornerRadius } : false,
       scanlines: scanlines ? { pixelHeight, gapBrightness } : false,
@@ -63,7 +85,20 @@ export const useFilters = ({
         vignette ?
           { intensity: vignetteIntensity, radius: vignetteRadius }
         : false,
-      raiseBlackPoint: raiseBlackPoint ? { blackPoint } : false,
+      raiseBlackPoint:
+        raiseBlackPoint ?
+          {
+            blackPoint,
+            domeEdgeLift,
+            domeRadius,
+            domeFalloff,
+            domeSuperellipse,
+            domeCentreX,
+            domeCentreY,
+            liftHue,
+            liftSaturation,
+          }
+        : false,
       colorAdjustment:
         colorAdjustment ?
           { gamma, saturation, brightness, brightnessBottom }
@@ -74,6 +109,11 @@ export const useFilters = ({
     noiseIntensity,
     noiseScale,
     noiseFPS,
+    sharpen,
+    sharpenAmount,
+    sharpenRadius,
+    sharpenAsymmetry,
+    sharpenSignalBlur,
     roundedCorners,
     cornerRadius,
     scanlines,
@@ -98,6 +138,14 @@ export const useFilters = ({
     vignetteRadius,
     raiseBlackPoint,
     blackPoint,
+    domeEdgeLift,
+    domeRadius,
+    domeFalloff,
+    domeSuperellipse,
+    domeCentreX,
+    domeCentreY,
+    liftHue,
+    liftSaturation,
     colorAdjustment,
     gamma,
     saturation,
