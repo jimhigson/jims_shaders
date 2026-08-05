@@ -35,9 +35,13 @@ export const useFilters = ({
   radius,
   cutoff,
   edgeBlur,
-  curvature,
+  screenGeometry,
   curvatureX,
   curvatureY,
+  screenOverscan,
+  rowStretch,
+  lineLag,
+  sagLines,
   multisampling,
   vignette,
   vignetteIntensity,
@@ -96,7 +100,18 @@ export const useFilters = ({
         : false,
       bloom:
         bloom ? { intensity: bloomIntensity, radius, cutoff, edgeBlur } : false,
-      curvature: curvature ? { curvatureX, curvatureY, multisampling } : false,
+      screenGeometry:
+        screenGeometry ?
+          {
+            curvatureX,
+            curvatureY,
+            overscan: screenOverscan,
+            rowStretch,
+            lineLag,
+            sagLines,
+            multisampling,
+          }
+        : false,
       vignette:
         vignette ?
           { intensity: vignetteIntensity, radius: vignetteRadius }
@@ -156,9 +171,13 @@ export const useFilters = ({
     radius,
     cutoff,
     edgeBlur,
-    curvature,
+    screenGeometry,
     curvatureX,
     curvatureY,
+    screenOverscan,
+    rowStretch,
+    lineLag,
+    sagLines,
     multisampling,
     vignette,
     vignetteIntensity,

@@ -80,12 +80,6 @@
         "type": "union",
         "description": "Color adjustment filter options, undefined to use defaults, false to disable"
       },
-      "curvature": {
-        "name": "curvature",
-        "optional": true,
-        "type": "union",
-        "description": "Curvature filter options, undefined to use defaults, false to disable"
-      },
       "noise": {
         "name": "noise",
         "optional": true,
@@ -114,6 +108,12 @@
         "optional": true,
         "type": "union",
         "description": "Scanlines filter options, undefined to use defaults, false to disable"
+      },
+      "screenGeometry": {
+        "name": "screenGeometry",
+        "optional": true,
+        "type": "union",
+        "description": "Screen geometry filter options, undefined to use defaults, false to disable"
       },
       "sharpen": {
         "name": "sharpen",
@@ -318,6 +318,63 @@
         "optional": true,
         "type": "number",
         "description": "Height of each scanline in pixels"
+      }
+    }
+  },
+  "ScreenGeometryFilter": {
+    "name": "ScreenGeometryFilter",
+    "description": "Puts the picture where the beam would actually have drawn it: oversized by however far the raster\novershoots the glass, stretched by the sag of the high voltage under the beam current the picture\nitself is drawing, and curved by the shape of the screen.\n\nThese are one filter rather than three because they are all the same kind of thing - a change to\nwhere a point of the picture is sampled from - and composing them into a single coordinate costs\none resample instead of three, which matters on an upscaled picture that each resample softens."
+  },
+  "ScreenGeometryFilterOptions": {
+    "name": "ScreenGeometryFilterOptions",
+    "properties": {
+      "curvatureX": {
+        "name": "curvatureX",
+        "optional": true,
+        "type": "number",
+        "description": "Horizontal curvature amount (0-1, typically 0.15)"
+      },
+      "curvatureY": {
+        "name": "curvatureY",
+        "optional": true,
+        "type": "number",
+        "description": "Vertical curvature amount (0-1, typically 0.15)"
+      },
+      "lineLag": {
+        "name": "lineLag",
+        "optional": true,
+        "type": "number",
+        "description": "How far bright material shifts the rest of its own line along, as a fraction of the screen's\nwidth. The supply sags as the line is drawn, so this builds up left to right rather than\napplying to the line evenly"
+      },
+      "loadTaps": {
+        "name": "loadTaps",
+        "optional": true,
+        "type": "number",
+        "description": "How many points along each line the beam current is measured at. More follows the picture more\nclosely at the cost of that many texture reads per pixel; the supply is slow enough that a\ncoarse measurement is close to the truth"
+      },
+      "multisampling": {
+        "name": "multisampling",
+        "optional": true,
+        "type": "boolean",
+        "description": "Enable multisampling (FSAA) for smoother curvature, but also slower rendering.\nAlso add some blurring."
+      },
+      "overscan": {
+        "name": "overscan",
+        "optional": true,
+        "type": "number",
+        "description": "How far oversized the raster is drawn, as a fraction of the screen, so that the edges of the\npicture fall outside the glass. Animate this to open the picture out onto the screen"
+      },
+      "rowStretch": {
+        "name": "rowStretch",
+        "optional": true,
+        "type": "number",
+        "description": "How much wider a fully lit line is drawn than a black one. The beam current of a bright line\nloads the high voltage supply, and a beam accelerated by less voltage is thrown further by the\nsame deflection current, so the raster expands with the brightness of what is on it"
+      },
+      "sagLines": {
+        "name": "sagLines",
+        "optional": true,
+        "type": "number",
+        "description": "How many lines back the supply is still recovering over, which sets how quickly the stretch can\nchange down the picture. Too few and the picture jitters line to line on fine detail, which no\nreal supply is quick enough to do"
       }
     }
   },

@@ -20,6 +20,9 @@ export type { PhosphorMaskFilterOptions } from "./filters/PhosphorMaskFilter";
 export { RoundedCornersFilter } from "./filters/RoundedCornersFilter";
 export type { RoundedCornersFilterOptions } from "./filters/RoundedCornersFilter";
 
+export { ScreenGeometryFilter } from "./filters/ScreenGeometryFilter";
+export type { ScreenGeometryFilterOptions } from "./filters/ScreenGeometryFilter";
+
 export { ScanlinesFilter } from "./filters/ScanlinesFilter";
 export type { ScanlinesFilterOptions } from "./filters/ScanlinesFilter";
 
@@ -43,6 +46,7 @@ export { defaultNoiseUniforms } from "./filters/NoiseFilter";
 export { defaultPhosphorMaskOptions } from "./filters/PhosphorMaskFilter";
 export { defaultRoundedCornersUniforms } from "./filters/RoundedCornersFilter";
 export { defaultScanlinesUniforms } from "./filters/ScanlinesFilter";
+export { defaultScreenGeometryOptions } from "./filters/ScreenGeometryFilter";
 export { defaultSharpenUniforms } from "./filters/SharpenFilter";
 export { defaultSwitchOnOptions } from "./filters/SwitchOnFilter";
 export { defaultVignetteUniforms } from "./filters/VignetteFilter";
@@ -60,6 +64,7 @@ export { default as noiseFragmentSource } from "./filters/noise.frag";
 export { default as phosphorMaskFragmentSource } from "./filters/phosphorMask.frag";
 export { default as roundedCornersFragmentSource } from "./filters/roundedCorners.frag";
 export { default as scanlinesFragmentSource } from "./filters/scanlines.frag";
+export { default as screenGeometryFragmentSource } from "./filters/screenGeometry.frag";
 export { default as sharpenFragmentSource } from "./filters/sharpen.frag";
 export { default as switchOnFragmentSource } from "./filters/switchOn.frag";
 export { default as vignetteFragmentSource } from "./filters/vignette.frag";

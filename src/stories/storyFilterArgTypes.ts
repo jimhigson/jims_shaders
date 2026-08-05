@@ -4,12 +4,12 @@ import type { CRTFiltersProps } from "./CRTFilters.stories";
 
 import { defaultBloomUniforms } from "../filters/BloomFilter";
 import { defaultColorAdjustmentUniforms } from "../filters/ColorAdjustmentFilter";
-import { defaultCurvatureOptions } from "../filters/CurvatureFilter";
 import { defaultNoiseUniforms } from "../filters/NoiseFilter";
 import { defaultPhosphorMaskOptions } from "../filters/PhosphorMaskFilter";
 import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
 import { defaultRoundedCornersUniforms } from "../filters/RoundedCornersFilter";
 import { defaultScanlinesUniforms } from "../filters/ScanlinesFilter";
+import { defaultScreenGeometryOptions } from "../filters/ScreenGeometryFilter";
 import { defaultSharpenUniforms } from "../filters/SharpenFilter";
 import { defaultSwitchOnOptions } from "../filters/SwitchOnFilter";
 import { defaultVignetteUniforms } from "../filters/VignetteFilter";
@@ -438,45 +438,92 @@ export const roundedCornersArgTypes = {
   },
 } as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
 
-export const curvatureArgTypes = {
-  curvature: {
+export const screenGeometryArgTypes = {
+  screenGeometry: {
     control: "boolean",
-    description: filterDocs.CurvatureFilter.description,
+    description: filterDocs.ScreenGeometryFilter.description,
     table: {
-      category: "Screen Curvature",
+      category: "Screen Geometry",
     },
   },
   curvatureX: {
     control: { type: "range", min: 0, max: 0.6, step: 0.01 },
     description:
-      filterDocs.CurvatureFilterOptions.properties.curvatureX.description,
-    if: { arg: "curvature", truthy: true },
+      filterDocs.ScreenGeometryFilterOptions.properties.curvatureX.description,
+    if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Curvature",
+      category: "Screen Geometry",
       subcategory: "Settings",
-      defaultValue: { summary: `${defaultCurvatureOptions.curvatureX}` },
+      defaultValue: { summary: `${defaultScreenGeometryOptions.curvatureX}` },
     },
   },
   curvatureY: {
     control: { type: "range", min: 0, max: 0.6, step: 0.01 },
     description:
-      filterDocs.CurvatureFilterOptions.properties.curvatureY.description,
-    if: { arg: "curvature", truthy: true },
+      filterDocs.ScreenGeometryFilterOptions.properties.curvatureY.description,
+    if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Curvature",
+      category: "Screen Geometry",
       subcategory: "Settings",
-      defaultValue: { summary: `${defaultCurvatureOptions.curvatureY}` },
+      defaultValue: { summary: `${defaultScreenGeometryOptions.curvatureY}` },
+    },
+  },
+  screenOverscan: {
+    control: { type: "range", min: 0, max: 0.2, step: 0.005 },
+    description:
+      filterDocs.ScreenGeometryFilterOptions.properties.overscan.description,
+    if: { arg: "screenGeometry", truthy: true },
+    table: {
+      category: "Screen Geometry",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultScreenGeometryOptions.overscan}` },
+    },
+  },
+  rowStretch: {
+    control: { type: "range", min: 0, max: 0.1, step: 0.001 },
+    description:
+      filterDocs.ScreenGeometryFilterOptions.properties.rowStretch.description,
+    if: { arg: "screenGeometry", truthy: true },
+    table: {
+      category: "Screen Geometry",
+      subcategory: "High voltage sag",
+      defaultValue: { summary: `${defaultScreenGeometryOptions.rowStretch}` },
+    },
+  },
+  lineLag: {
+    control: { type: "range", min: 0, max: 0.05, step: 0.001 },
+    description:
+      filterDocs.ScreenGeometryFilterOptions.properties.lineLag.description,
+    if: { arg: "screenGeometry", truthy: true },
+    table: {
+      category: "Screen Geometry",
+      subcategory: "High voltage sag",
+      defaultValue: { summary: `${defaultScreenGeometryOptions.lineLag}` },
+    },
+  },
+  sagLines: {
+    control: { type: "range", min: 1, max: 100, step: 1 },
+    description:
+      filterDocs.ScreenGeometryFilterOptions.properties.sagLines.description,
+    if: { arg: "screenGeometry", truthy: true },
+    table: {
+      category: "Screen Geometry",
+      subcategory: "High voltage sag",
+      defaultValue: { summary: `${defaultScreenGeometryOptions.sagLines}` },
     },
   },
   multisampling: {
     control: "boolean",
     description:
-      filterDocs.CurvatureFilterOptions.properties.multisampling.description,
-    if: { arg: "curvature", truthy: true },
+      filterDocs.ScreenGeometryFilterOptions.properties.multisampling
+        .description,
+    if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Curvature",
+      category: "Screen Geometry",
       subcategory: "Settings",
-      defaultValue: { summary: `${defaultCurvatureOptions.multisampling}` },
+      defaultValue: {
+        summary: `${defaultScreenGeometryOptions.multisampling}`,
+      },
     },
   },
 } as const satisfies Partial<ArgTypes<CRTFiltersProps>>;

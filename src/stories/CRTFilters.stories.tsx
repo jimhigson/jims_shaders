@@ -19,9 +19,9 @@ extend({
 
 import { defaultBloomUniforms } from "../filters/BloomFilter";
 import { defaultColorAdjustmentUniforms } from "../filters/ColorAdjustmentFilter";
-import { defaultCurvatureOptions } from "../filters/CurvatureFilter";
 import { defaultNoiseUniforms } from "../filters/NoiseFilter";
 import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
+import { defaultScreenGeometryOptions } from "../filters/ScreenGeometryFilter";
 import { defaultSharpenUniforms } from "../filters/SharpenFilter";
 import { defaultSwitchOnOptions } from "../filters/SwitchOnFilter";
 import { Example } from "./Example";
@@ -29,12 +29,12 @@ import { exampleMedia } from "./exampleMedia";
 import {
   bloomArgTypes,
   colorAdjustmentArgTypes,
-  curvatureArgTypes,
   noiseArgTypes,
   phosphorMaskArgTypes,
   raiseBlackPointArgTypes,
   roundedCornersArgTypes,
   scanlinesArgTypes,
+  screenGeometryArgTypes,
   sharpenArgTypes,
   switchOnArgTypes,
   vignetteArgTypes,
@@ -87,10 +87,14 @@ export interface CRTFiltersProps {
   // Rounded corners filter
   roundedCorners: boolean;
   cornerRadius: number;
-  // Curvature filter
-  curvature: boolean;
+  // Screen geometry filter
+  screenGeometry: boolean;
   curvatureX: number;
   curvatureY: number;
+  screenOverscan: number;
+  rowStretch: number;
+  lineLag: number;
+  sagLines: number;
   multisampling: boolean;
   // Switch on filter
   switchOn: boolean;
@@ -239,7 +243,7 @@ const meta = {
     ...vignetteArgTypes,
     ...raiseBlackPointArgTypes,
     ...roundedCornersArgTypes,
-    ...curvatureArgTypes,
+    ...screenGeometryArgTypes,
     ...switchOnArgTypes,
     ...colorAdjustmentArgTypes,
   },
@@ -275,10 +279,14 @@ export const Default: Story = {
     radius: 1.2, // defaultBloomUniforms.radius,
     cutoff: defaultBloomUniforms.cutoff,
     edgeBlur: defaultBloomUniforms.edgeBlur,
-    curvature: true,
-    curvatureX: 0.35, // defaultCurvatureOptions.curvatureX,
-    curvatureY: 0.35, // defaultCurvatureOptions.curvatureY,
-    multisampling: defaultCurvatureOptions.multisampling,
+    screenGeometry: true,
+    curvatureX: 0.35, // defaultScreenGeometryOptions.curvatureX,
+    curvatureY: 0.35, // defaultScreenGeometryOptions.curvatureY,
+    screenOverscan: defaultScreenGeometryOptions.overscan,
+    rowStretch: defaultScreenGeometryOptions.rowStretch,
+    lineLag: defaultScreenGeometryOptions.lineLag,
+    sagLines: defaultScreenGeometryOptions.sagLines,
+    multisampling: defaultScreenGeometryOptions.multisampling,
     vignette: true,
     vignetteIntensity: 0.6, //defaultVignetteUniforms.intensity,
     vignetteRadius: 1.3, // defaultVignetteUniforms.radius,

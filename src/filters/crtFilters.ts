@@ -2,24 +2,24 @@ import type { Filter } from "pixi.js";
 
 import type { BloomFilterOptions } from "./BloomFilter";
 import type { ColorAdjustmentFilterOptions } from "./ColorAdjustmentFilter";
-import type { CurvatureFilterOptions } from "./CurvatureFilter";
 import type { NoiseFilterOptions } from "./NoiseFilter";
 import type { PhosphorMaskFilterOptions } from "./PhosphorMaskFilter";
 import type { RaiseBlackPointFilterOptions } from "./RaiseBlackPointFilter";
 import type { RoundedCornersFilterOptions } from "./RoundedCornersFilter";
 import type { ScanlinesFilterOptions } from "./ScanlinesFilter";
+import type { ScreenGeometryFilterOptions } from "./ScreenGeometryFilter";
 import type { SharpenFilterOptions } from "./SharpenFilter";
 import type { SwitchOnFilterOptions } from "./SwitchOnFilter";
 import type { VignetteFilterOptions } from "./VignetteFilter";
 
 import { BloomFilter } from "./BloomFilter";
 import { ColorAdjustmentFilter } from "./ColorAdjustmentFilter";
-import { CurvatureFilter } from "./CurvatureFilter";
 import { NoiseFilter } from "./NoiseFilter";
 import { PhosphorMaskFilter } from "./PhosphorMaskFilter";
 import { RaiseBlackPointFilter } from "./RaiseBlackPointFilter";
 import { RoundedCornersFilter } from "./RoundedCornersFilter";
 import { ScanlinesFilter } from "./ScanlinesFilter";
+import { ScreenGeometryFilter } from "./ScreenGeometryFilter";
 import { SharpenFilter } from "./SharpenFilter";
 import { SwitchOnFilter } from "./SwitchOnFilter";
 import { VignetteFilter } from "./VignetteFilter";
@@ -36,8 +36,8 @@ export interface CrtFilterPipelineOptions {
   phosphorMask?: false | PhosphorMaskFilterOptions | undefined;
   /** Bloom filter options, undefined to use defaults, false to disable */
   bloom?: BloomFilterOptions | false | undefined;
-  /** Curvature filter options, undefined to use defaults, false to disable */
-  curvature?: CurvatureFilterOptions | false | undefined;
+  /** Screen geometry filter options, undefined to use defaults, false to disable */
+  screenGeometry?: false | ScreenGeometryFilterOptions | undefined;
   /** Vignette filter options, undefined to use defaults, false to disable */
   vignette?: false | undefined | VignetteFilterOptions;
   /** Raise black point filter options, undefined to use defaults, false to disable */
@@ -55,7 +55,7 @@ export const crtFilters = ({
   scanlines,
   phosphorMask,
   bloom,
-  curvature,
+  screenGeometry,
   vignette,
   raiseBlackPoint,
   switchOn,
@@ -111,9 +111,10 @@ export const crtFilters = ({
     filters.push(new RoundedCornersFilter(roundedCorners));
   }
 
-  // Then curvature (curves everything including scanlines)
-  if (curvature !== false) {
-    filters.push(new CurvatureFilter(curvature));
+  // Then all of the geometry at once - overscan, the sag of the high voltage, and the curve of
+  // the glass - which curves everything including the scanlines
+  if (screenGeometry !== false) {
+    filters.push(new ScreenGeometryFilter(screenGeometry));
   }
 
   // Color adjustment at the end
