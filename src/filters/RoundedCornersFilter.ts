@@ -3,7 +3,12 @@ import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
 import fragment from "./roundedCorners.frag";
 
 export type RoundedCornersFilterOptions = {
-  /** Corner radius as proportion of screen size (0-0.1) */
+  /**
+   * Corner radius as proportion of screen size (0-0.1). The shape drawn is a superellipse rather
+   * than a rectangle with circular corners, which is both closer to the face of a real tube and
+   * lets the whole edge be one contour - so the fade can follow the corners as well as the sides.
+   * The radius given is approximated by the superellipse that reaches as far into the corner
+   */
   cornerRadius?: number;
   /**
    * How far in from every edge the picture fades up from black, as a proportion of the screen, so
@@ -13,6 +18,23 @@ export type RoundedCornersFilterOptions = {
   edgeFade?: number;
 };
 
+/**
+ * The screen's shape is drawn as a superellipse, which has an exponent where a rounded rectangle
+ * has a corner radius - so the radius asked for is matched by the exponent whose corner reaches
+ * the same distance from the centre along the diagonal, which holds the two shapes close over the
+ * whole corner.
+ */
+const cornerExponentFor = (
+  /** Corner radius over the whole screen, as the option gives it */
+  cornerRadius: number,
+): number => {
+  // the superellipse is drawn in a space running from -1 to 1, so it spans twice the radius
+  const radius = Math.min(Math.max(cornerRadius * 2, 0.0001), 1);
+  const reach = 1 - radius * (1 - Math.SQRT1_2);
+
+  return Math.min(Math.max(Math.LN2 / -Math.log(reach), 2), 64);
+};
+
 export const defaultRoundedCornersUniforms: Required<RoundedCornersFilterOptions> =
   {
     cornerRadius: 0.025,
@@ -20,13 +42,14 @@ export const defaultRoundedCornersUniforms: Required<RoundedCornersFilterOptions
   };
 
 /**
- * Adds rounded corners to the screen edges to simulate the physical shape of CRT displays, fading
- * the picture up from black over a band just inside every edge so that curving it afterwards does
- * not leave a hard, aliased line.
+ * Cuts the picture to the shape of a CRT's face, fading it up from black over a band just inside
+ * the edge so that curving it afterwards does not leave a hard, aliased line. The shape and the
+ * fade are contours of one superellipse, so the fade follows the corners as evenly as it does the
+ * sides.
  */
 export class RoundedCornersFilter extends Filter {
   public uniforms: {
-    uCornerRadius: number;
+    uCornerExponent: number;
     uEdgeFade: number;
   };
 
@@ -43,8 +66,8 @@ export class RoundedCornersFilter extends Filter {
       glProgram,
       resources: {
         roundedCornersUniforms: {
-          uCornerRadius: {
-            value: finalUniforms.cornerRadius,
+          uCornerExponent: {
+            value: cornerExponentFor(finalUniforms.cornerRadius),
             type: "f32",
           },
           uEdgeFade: {

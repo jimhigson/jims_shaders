@@ -320,7 +320,7 @@
   },
   "RoundedCornersFilter": {
     "name": "RoundedCornersFilter",
-    "description": "Adds rounded corners to the screen edges to simulate the physical shape of CRT displays, fading\nthe picture up from black over a band just inside every edge so that curving it afterwards does\nnot leave a hard, aliased line."
+    "description": "Cuts the picture to the shape of a CRT's face, fading it up from black over a band just inside\nthe edge so that curving it afterwards does not leave a hard, aliased line. The shape and the\nfade are contours of one superellipse, so the fade follows the corners as evenly as it does the\nsides."
   },
   "RoundedCornersFilterOptions": {
     "name": "RoundedCornersFilterOptions",
@@ -329,7 +329,7 @@
         "name": "cornerRadius",
         "optional": true,
         "type": "number",
-        "description": "Corner radius as proportion of screen size (0-0.1)"
+        "description": "Corner radius as proportion of screen size (0-0.1). The shape drawn is a superellipse rather\nthan a rectangle with circular corners, which is both closer to the face of a real tube and\nlets the whole edge be one contour - so the fade can follow the corners as well as the sides.\nThe radius given is approximated by the superellipse that reaches as far into the corner"
       },
       "edgeFade": {
         "name": "edgeFade",
