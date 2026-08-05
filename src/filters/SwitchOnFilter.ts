@@ -139,6 +139,14 @@ export class SwitchOnFilter extends Filter {
   }
 
   /**
+   * Whether the picture has finished coming up, after which this filter does nothing to it and can
+   * be taken out of the chain
+   */
+  get finished(): boolean {
+    return this.elapsed >= this.uniforms.uWarmUpDelay + this.uniforms.uDuration;
+  }
+
+  /**
    * Plays the switch-on again from the beginning, advancing on its own again if it had been held
    */
   restart(): void {
