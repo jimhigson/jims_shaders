@@ -1,8 +1,14 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import type { CRTFiltersProps } from "../CRTFilters.stories";
 
+export type UseFiltersProps = CRTFiltersProps & {
+  /** Changing this rebuilds the filters, restarting the switch-on animation */
+  switchOnKey: number;
+};
+
 import { crtFilters } from "../../filters/crtFilters";
+import { SwitchOnFilter } from "../../filters/SwitchOnFilter";
 
 export const useFilters = ({
   noise,
@@ -36,6 +42,16 @@ export const useFilters = ({
   vignette,
   vignetteIntensity,
   vignetteRadius,
+  switchOn,
+  switchOnPaused,
+  switchOnElapsed,
+  switchOnWarmUpDelay,
+  switchOnDuration,
+  switchOnOvershoot,
+  switchOnCastHue,
+  switchOnCastStrength,
+  switchOnOverscan,
+  switchOnKey,
   raiseBlackPoint,
   blackPoint,
   domeEdgeLift,
@@ -51,8 +67,8 @@ export const useFilters = ({
   saturation,
   brightness,
   brightnessBottom,
-}: CRTFiltersProps) => {
-  return useMemo(() => {
+}: UseFiltersProps) => {
+  const filters = useMemo(() => {
     return crtFilters({
       noise:
         noise ?
@@ -99,6 +115,17 @@ export const useFilters = ({
             liftSaturation,
           }
         : false,
+      switchOn:
+        switchOn ?
+          {
+            warmUpDelay: switchOnWarmUpDelay,
+            duration: switchOnDuration,
+            overshoot: switchOnOvershoot,
+            castHue: switchOnCastHue,
+            castStrength: switchOnCastStrength,
+            overscan: switchOnOverscan,
+          }
+        : false,
       colorAdjustment:
         colorAdjustment ?
           { gamma, saturation, brightness, brightnessBottom }
@@ -136,6 +163,13 @@ export const useFilters = ({
     vignette,
     vignetteIntensity,
     vignetteRadius,
+    switchOn,
+    switchOnWarmUpDelay,
+    switchOnDuration,
+    switchOnOvershoot,
+    switchOnCastHue,
+    switchOnCastStrength,
+    switchOnOverscan,
     raiseBlackPoint,
     blackPoint,
     domeEdgeLift,
@@ -152,4 +186,18 @@ export const useFilters = ({
     brightness,
     brightnessBottom,
   ]);
+
+  useEffect(() => {
+    for (const filter of filters) {
+      if (filter instanceof SwitchOnFilter) {
+        if (switchOnPaused) {
+          filter.elapsed = switchOnElapsed;
+        } else {
+          filter.restart();
+        }
+      }
+    }
+  }, [filters, switchOnKey, switchOnPaused, switchOnElapsed]);
+
+  return filters;
 };

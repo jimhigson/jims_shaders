@@ -121,6 +121,12 @@
         "type": "union",
         "description": "Sharpen filter options, undefined to use defaults, false to disable"
       },
+      "switchOn": {
+        "name": "switchOn",
+        "optional": true,
+        "type": "union",
+        "description": "Switch on filter options, undefined to use defaults, false to disable"
+      },
       "vignette": {
         "name": "vignette",
         "optional": true,
@@ -345,6 +351,51 @@
         "optional": true,
         "type": "number",
         "description": "How far the signal is band-limited before the boost is applied, from 0 to leave it alone up to\n1 for a full 1-2-1 roll-off over the same taps the peaking uses. This is the loss of high\nfrequencies through the signal chain that the peaking exists to compensate for, so a little of\nit keeps the sharpening from looking like it is acting on an impossibly perfect signal"
+      }
+    }
+  },
+  "SwitchOnFilter": {
+    "name": "SwitchOnFilter",
+    "description": "Brings the picture up the way a CRT does when it is switched on: nothing at all while the heaters\nwarm, then an eased fade-up that overshoots and settles, tinted while the guns are still coming\nup to temperature, with the raster shrinking onto the screen as the EHT rises.\n\nThis is not a switch-off played backwards - a set being switched off collapses to a line and then\na dot, which has no counterpart here.\n\nThe animation runs from the moment the filter is constructed. Call `restart` to play it again."
+  },
+  "SwitchOnFilterOptions": {
+    "name": "SwitchOnFilterOptions",
+    "properties": {
+      "castHue": {
+        "name": "castHue",
+        "optional": true,
+        "type": "number",
+        "description": "Hue in degrees of the cast the picture has while the guns are still warming, since they do not\nall reach temperature together. Around 150 gives the green cast of a set that is still cold"
+      },
+      "castStrength": {
+        "name": "castStrength",
+        "optional": true,
+        "type": "number",
+        "description": "How strong that cast is when the picture first appears, from 0 for none to 1 for a fully\nsaturated one. It works its way back to neutral over the rest of the switch-on"
+      },
+      "duration": {
+        "name": "duration",
+        "optional": true,
+        "type": "number",
+        "description": "How long the picture then takes to come up, in milliseconds"
+      },
+      "overscan": {
+        "name": "overscan",
+        "optional": true,
+        "type": "number",
+        "description": "How far oversized the raster starts, as a fraction of the screen, shrinking onto it as the EHT\ncomes up"
+      },
+      "overshoot": {
+        "name": "overshoot",
+        "optional": true,
+        "type": "number",
+        "description": "How far past its final brightness the picture goes before falling back, as the beam limiter and\nthe supplies settle. 0 comes up cleanly with no bloom at all"
+      },
+      "warmUpDelay": {
+        "name": "warmUpDelay",
+        "optional": true,
+        "type": "number",
+        "description": "How long the heaters take to reach emission temperature, in milliseconds, during which the\nscreen stays black. A set switched on from cold takes longer than one switched straight back on"
       }
     }
   },

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { extend, Application as PixiApplication } from "@pixi/react";
 import { useArgs } from "@storybook/preview-api";
 import { Container, Graphics, Sprite } from "pixi.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { ExampleMediaId } from "./exampleMedia";
 
@@ -23,6 +23,7 @@ import { defaultCurvatureOptions } from "../filters/CurvatureFilter";
 import { defaultNoiseUniforms } from "../filters/NoiseFilter";
 import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
 import { defaultSharpenUniforms } from "../filters/SharpenFilter";
+import { defaultSwitchOnOptions } from "../filters/SwitchOnFilter";
 import { Example } from "./Example";
 import { exampleMedia } from "./exampleMedia";
 import {
@@ -35,6 +36,7 @@ import {
   roundedCornersArgTypes,
   scanlinesArgTypes,
   sharpenArgTypes,
+  switchOnArgTypes,
   vignetteArgTypes,
 } from "./storyFilterArgTypes";
 
@@ -90,6 +92,16 @@ export interface CRTFiltersProps {
   curvatureX: number;
   curvatureY: number;
   multisampling: boolean;
+  // Switch on filter
+  switchOn: boolean;
+  switchOnPaused: boolean;
+  switchOnElapsed: number;
+  switchOnWarmUpDelay: number;
+  switchOnDuration: number;
+  switchOnOvershoot: number;
+  switchOnCastHue: number;
+  switchOnCastStrength: number;
+  switchOnOverscan: number;
   // Color adjustment filter
   colorAdjustment: boolean;
   gamma: number;
@@ -102,6 +114,15 @@ const CRTFiltersDemo = (props: CRTFiltersProps) => {
   const [container, setContainer] = useState<HTMLDivElement | null>();
   const [splitPosition, setSplitPosition] = useState(0);
 
+  // Bumping this rebuilds the filters, which starts the switch-on animation from the top
+  const [switchOnKey, setSwitchOnKey] = useState(0);
+  const turnOn = () => setSwitchOnKey((key) => key + 1);
+
+  const { imageSource } = props;
+  useEffect(() => {
+    setSwitchOnKey((key) => key + 1);
+  }, [imageSource]);
+
   return (
     <div className="w-full h-full relative" ref={setContainer}>
       {container && (
@@ -113,12 +134,23 @@ const CRTFiltersDemo = (props: CRTFiltersProps) => {
             autoStart
             roundPixels
           >
-            <Example {...props} splitPosition={splitPosition} />
+            <Example
+              {...props}
+              splitPosition={splitPosition}
+              switchOnKey={switchOnKey}
+            />
           </PixiApplication>
           <DraggableSplitter
             onPositionChange={setSplitPosition}
             initialPosition={0}
           />
+          <button
+            type="button"
+            onClick={turnOn}
+            className="absolute left-0 top-0 z-splitter m-4 px-6 py-3 text-2xl text-white bg-black border-2 border-white cursor-pointer"
+          >
+            Turn on
+          </button>
           <div className="absolute right-0 bottom-0 text-white text-4xl [&_a]:text-primary [&_a]:underline">
             {exampleMedia[props.imageSource].description}
           </div>
@@ -208,6 +240,7 @@ const meta = {
     ...raiseBlackPointArgTypes,
     ...roundedCornersArgTypes,
     ...curvatureArgTypes,
+    ...switchOnArgTypes,
     ...colorAdjustmentArgTypes,
   },
 } satisfies Meta<typeof CRTFiltersDemo>;
@@ -259,6 +292,15 @@ export const Default: Story = {
     domeCentreY: defaultRaiseBlackPointUniforms.domeCentreY,
     liftHue: defaultRaiseBlackPointUniforms.liftHue,
     liftSaturation: defaultRaiseBlackPointUniforms.liftSaturation,
+    switchOn: true,
+    switchOnPaused: false,
+    switchOnElapsed: 0,
+    switchOnWarmUpDelay: defaultSwitchOnOptions.warmUpDelay,
+    switchOnDuration: defaultSwitchOnOptions.duration,
+    switchOnOvershoot: defaultSwitchOnOptions.overshoot,
+    switchOnCastHue: defaultSwitchOnOptions.castHue,
+    switchOnCastStrength: defaultSwitchOnOptions.castStrength,
+    switchOnOverscan: defaultSwitchOnOptions.overscan,
     colorAdjustment: true,
     gamma: 1, //defaultColorAdjustmentUniforms.gamma,
     saturation: 1.2, // defaultColorAdjustmentUniforms.saturation,

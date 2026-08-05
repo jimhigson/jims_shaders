@@ -26,6 +26,9 @@ export type { ScanlinesFilterOptions } from "./filters/ScanlinesFilter";
 export { SharpenFilter } from "./filters/SharpenFilter";
 export type { SharpenFilterOptions } from "./filters/SharpenFilter";
 
+export { SwitchOnFilter } from "./filters/SwitchOnFilter";
+export type { SwitchOnFilterOptions } from "./filters/SwitchOnFilter";
+
 export { VignetteFilter } from "./filters/VignetteFilter";
 export type { VignetteFilterOptions } from "./filters/VignetteFilter";
 
@@ -41,6 +44,7 @@ export { defaultPhosphorMaskOptions } from "./filters/PhosphorMaskFilter";
 export { defaultRoundedCornersUniforms } from "./filters/RoundedCornersFilter";
 export { defaultScanlinesUniforms } from "./filters/ScanlinesFilter";
 export { defaultSharpenUniforms } from "./filters/SharpenFilter";
+export { defaultSwitchOnOptions } from "./filters/SwitchOnFilter";
 export { defaultVignetteUniforms } from "./filters/VignetteFilter";
 export { defaultRaiseBlackPointUniforms } from "./filters/RaiseBlackPointFilter";
 
@@ -57,6 +61,7 @@ export { default as phosphorMaskFragmentSource } from "./filters/phosphorMask.fr
 export { default as roundedCornersFragmentSource } from "./filters/roundedCorners.frag";
 export { default as scanlinesFragmentSource } from "./filters/scanlines.frag";
 export { default as sharpenFragmentSource } from "./filters/sharpen.frag";
+export { default as switchOnFragmentSource } from "./filters/switchOn.frag";
 export { default as vignetteFragmentSource } from "./filters/vignette.frag";
 export { default as raiseBlackPointFragmentSource } from "./filters/raiseBlackPoint.frag";
 

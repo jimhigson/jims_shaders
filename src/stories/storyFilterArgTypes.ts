@@ -11,6 +11,7 @@ import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter
 import { defaultRoundedCornersUniforms } from "../filters/RoundedCornersFilter";
 import { defaultScanlinesUniforms } from "../filters/ScanlinesFilter";
 import { defaultSharpenUniforms } from "../filters/SharpenFilter";
+import { defaultSwitchOnOptions } from "../filters/SwitchOnFilter";
 import { defaultVignetteUniforms } from "../filters/VignetteFilter";
 import filterDocs from "./filterDocs.json";
 
@@ -537,6 +538,101 @@ export const colorAdjustmentArgTypes = {
       defaultValue: {
         summary: `${defaultColorAdjustmentUniforms.brightnessBottom}`,
       },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
+
+export const switchOnArgTypes = {
+  switchOn: {
+    control: "boolean",
+    description: filterDocs.SwitchOnFilter.description,
+    table: {
+      category: "Switch On",
+    },
+  },
+  switchOnPaused: {
+    control: "boolean",
+    description:
+      "Hold the switch-on still instead of letting it play, so it can be scrubbed through with the elapsed control",
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Scrub",
+    },
+  },
+  switchOnElapsed: {
+    control: { type: "range", min: 0, max: 6_000, step: 10 },
+    description: "Point in the switch-on to hold, in milliseconds",
+    if: { arg: "switchOnPaused", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Scrub",
+    },
+  },
+  switchOnWarmUpDelay: {
+    control: { type: "range", min: 0, max: 4_000, step: 50 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.warmUpDelay.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.warmUpDelay}` },
+    },
+  },
+  switchOnDuration: {
+    control: { type: "range", min: 100, max: 6_000, step: 50 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.duration.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.duration}` },
+    },
+  },
+  switchOnOvershoot: {
+    control: { type: "range", min: 0, max: 1, step: 0.01 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.overshoot.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.overshoot}` },
+    },
+  },
+  switchOnCastHue: {
+    control: { type: "range", min: 0, max: 360, step: 1 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.castHue.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.castHue}` },
+    },
+  },
+  switchOnCastStrength: {
+    control: { type: "range", min: 0, max: 1, step: 0.05 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.castStrength.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.castStrength}` },
+    },
+  },
+  switchOnOverscan: {
+    control: { type: "range", min: 0, max: 0.3, step: 0.005 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.overscan.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.overscan}` },
     },
   },
 } as const satisfies Partial<ArgTypes<CRTFiltersProps>>;

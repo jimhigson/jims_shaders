@@ -9,6 +9,7 @@ import type { RaiseBlackPointFilterOptions } from "./RaiseBlackPointFilter";
 import type { RoundedCornersFilterOptions } from "./RoundedCornersFilter";
 import type { ScanlinesFilterOptions } from "./ScanlinesFilter";
 import type { SharpenFilterOptions } from "./SharpenFilter";
+import type { SwitchOnFilterOptions } from "./SwitchOnFilter";
 import type { VignetteFilterOptions } from "./VignetteFilter";
 
 import { BloomFilter } from "./BloomFilter";
@@ -20,6 +21,7 @@ import { RaiseBlackPointFilter } from "./RaiseBlackPointFilter";
 import { RoundedCornersFilter } from "./RoundedCornersFilter";
 import { ScanlinesFilter } from "./ScanlinesFilter";
 import { SharpenFilter } from "./SharpenFilter";
+import { SwitchOnFilter } from "./SwitchOnFilter";
 import { VignetteFilter } from "./VignetteFilter";
 
 export interface CrtFilterPipelineOptions {
@@ -40,6 +42,8 @@ export interface CrtFilterPipelineOptions {
   vignette?: false | undefined | VignetteFilterOptions;
   /** Raise black point filter options, undefined to use defaults, false to disable */
   raiseBlackPoint?: false | RaiseBlackPointFilterOptions | undefined;
+  /** Switch on filter options, undefined to use defaults, false to disable */
+  switchOn?: false | SwitchOnFilterOptions | undefined;
   /** Color adjustment filter options, undefined to use defaults, false to disable */
   colorAdjustment?: ColorAdjustmentFilterOptions | false | undefined;
 }
@@ -54,6 +58,7 @@ export const crtFilters = ({
   curvature,
   vignette,
   raiseBlackPoint,
+  switchOn,
   colorAdjustment,
 }: CrtFilterPipelineOptions): Filter[] => {
   const filters = [];
@@ -91,6 +96,13 @@ export const crtFilters = ({
   // screen is effected too
   if (raiseBlackPoint !== false) {
     filters.push(new RaiseBlackPointFilter(raiseBlackPoint));
+  }
+
+  // The tube coming up to temperature dims and tints everything the signal chain has
+  // produced, including the glow of the black point, but happens inside the screen's
+  // shape so it comes before the corners are clipped and the picture is curved
+  if (switchOn !== false) {
+    filters.push(new SwitchOnFilter(switchOn));
   }
 
   // Rounded corners first to clip the input - must be after raising the black point

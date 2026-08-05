@@ -106,6 +106,7 @@ const VideoExample = ({ src, filters }: VideoExampleProps) => {
 
 interface ExampleProps extends CRTFiltersProps {
   splitPosition: number;
+  switchOnKey: number;
 }
 
 export const Example = (props: ExampleProps) => {
