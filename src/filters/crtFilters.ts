@@ -2,6 +2,7 @@ import type { Filter } from "pixi.js";
 
 import type { BloomFilterOptions } from "./BloomFilter";
 import type { ColorAdjustmentFilterOptions } from "./ColorAdjustmentFilter";
+import type { FlickerFilterOptions } from "./FlickerFilter";
 import type { NoiseFilterOptions } from "./NoiseFilter";
 import type { PhosphorMaskFilterOptions } from "./PhosphorMaskFilter";
 import type { RaiseBlackPointFilterOptions } from "./RaiseBlackPointFilter";
@@ -14,6 +15,7 @@ import type { VignetteFilterOptions } from "./VignetteFilter";
 
 import { BloomFilter } from "./BloomFilter";
 import { ColorAdjustmentFilter } from "./ColorAdjustmentFilter";
+import { FlickerFilter } from "./FlickerFilter";
 import { NoiseFilter } from "./NoiseFilter";
 import { PhosphorMaskFilter } from "./PhosphorMaskFilter";
 import { RaiseBlackPointFilter } from "./RaiseBlackPointFilter";
@@ -34,6 +36,8 @@ export interface CrtFilterPipelineOptions {
   scanlines?: false | ScanlinesFilterOptions | undefined;
   /** Phosphor mask filter options, undefined to use defaults, false to disable */
   phosphorMask?: false | PhosphorMaskFilterOptions | undefined;
+  /** Flicker filter options, undefined to use defaults, false to disable */
+  flicker?: false | FlickerFilterOptions | undefined;
   /** Bloom filter options, undefined to use defaults, false to disable */
   bloom?: BloomFilterOptions | false | undefined;
   /** Screen geometry filter options, undefined to use defaults, false to disable */
@@ -54,6 +58,7 @@ export const crtFilters = ({
   roundedCorners,
   scanlines,
   phosphorMask,
+  flicker,
   bloom,
   screenGeometry,
   vignette,
@@ -80,6 +85,12 @@ export const crtFilters = ({
 
   if (phosphorMask !== false) {
     filters.push(new PhosphorMaskFilter(phosphorMask));
+  }
+
+  // The fade between refreshes is the phosphors' own light dying away, so it comes before the
+  // bloom that light scatters into
+  if (flicker !== false) {
+    filters.push(new FlickerFilter(flicker));
   }
 
   // Bloom

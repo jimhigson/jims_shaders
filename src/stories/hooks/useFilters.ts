@@ -30,6 +30,10 @@ export const useFilters = ({
   maskBrightness,
   phosphorMaskNumSamples,
   transitionWidth,
+  flicker,
+  flickerHz,
+  flickerDepth,
+  flickerPersistence,
   bloom,
   bloomIntensity,
   radius,
@@ -96,6 +100,14 @@ export const useFilters = ({
             maskBrightness,
             numSamples: phosphorMaskNumSamples,
             transitionWidth,
+          }
+        : false,
+      flicker:
+        flicker ?
+          {
+            hz: flickerHz,
+            depth: flickerDepth,
+            persistence: flickerPersistence,
           }
         : false,
       bloom:
@@ -166,6 +178,10 @@ export const useFilters = ({
     maskBrightness,
     phosphorMaskNumSamples,
     transitionWidth,
+    flicker,
+    flickerHz,
+    flickerDepth,
+    flickerPersistence,
     bloom,
     bloomIntensity,
     radius,

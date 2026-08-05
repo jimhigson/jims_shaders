@@ -80,6 +80,12 @@
         "type": "union",
         "description": "Color adjustment filter options, undefined to use defaults, false to disable"
       },
+      "flicker": {
+        "name": "flicker",
+        "optional": true,
+        "type": "union",
+        "description": "Flicker filter options, undefined to use defaults, false to disable"
+      },
       "noise": {
         "name": "noise",
         "optional": true,
@@ -159,6 +165,33 @@
         "optional": true,
         "type": "boolean",
         "description": "Enable multisampling (FSAA) for smoother curvature, but also slower rendering.\nAlso add some blurring."
+      }
+    }
+  },
+  "FlickerFilter": {
+    "name": "FlickerFilter",
+    "description": "Fades the picture between refreshes, the way a phosphor does between the passes of the beam that\nrelight it.\n\nEvery frame is still drawn - this does not hold the frame rate down to the rate being emulated,\nit only dims the frames that fall between refreshes. Because the pattern has to repeat over a\nwhole number of the display's frames, the rate actually shown is the display's own refresh\ndivided by however many frames come closest to the rate asked for: a 120Hz display asked for 30Hz\nflickers every 4th frame, and asked for 24Hz every 5th. Rates that do not divide are not\napproximated, since a pattern that does not repeat evenly beats against the display and looks far\nworse than no flicker at all. The display's refresh is not something the page can ask for, so it\nis measured from the time between frames."
+  },
+  "FlickerFilterOptions": {
+    "name": "FlickerFilterOptions",
+    "properties": {
+      "depth": {
+        "name": "depth",
+        "optional": true,
+        "type": "number",
+        "description": "How far the picture fades between refreshes, from 0 for no flicker at all up to 1 for frames\nthat go fully black. The fade is deliberately partial - a full blank is far harsher than any\nset ever looked, and painful at the rates this runs at"
+      },
+      "hz": {
+        "name": "hz",
+        "optional": true,
+        "type": "number",
+        "description": "The refresh rate to flicker at, in hertz. This is only ever approached, never met exactly: the\nflicker has to land on a whole number of the display's own frames, so 50 on a 60Hz display\ncannot be shown at all and 50 on a 120Hz one comes out at 60"
+      },
+      "persistence": {
+        "name": "persistence",
+        "optional": true,
+        "type": "number",
+        "description": "How long the phosphors hold their light, as a fraction of the gap between refreshes. Small\nvalues drop away sharply after each refresh, larger ones hold most of their brightness\nacross the whole gap"
       }
     }
   },

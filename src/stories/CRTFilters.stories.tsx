@@ -19,6 +19,7 @@ extend({
 
 import { defaultBloomUniforms } from "../filters/BloomFilter";
 import { defaultColorAdjustmentUniforms } from "../filters/ColorAdjustmentFilter";
+import { defaultFlickerOptions } from "../filters/FlickerFilter";
 import { defaultNoiseUniforms } from "../filters/NoiseFilter";
 import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
 import { defaultScreenGeometryOptions } from "../filters/ScreenGeometryFilter";
@@ -29,6 +30,7 @@ import { exampleMedia } from "./exampleMedia";
 import {
   bloomArgTypes,
   colorAdjustmentArgTypes,
+  flickerArgTypes,
   noiseArgTypes,
   phosphorMaskArgTypes,
   raiseBlackPointArgTypes,
@@ -63,6 +65,11 @@ export interface CRTFiltersProps {
   maskBrightness: number;
   phosphorMaskNumSamples: number;
   transitionWidth: number;
+  // Flicker filter
+  flicker: boolean;
+  flickerHz: number;
+  flickerDepth: number;
+  flickerPersistence: number;
   // Bloom filter
   bloom: boolean;
   bloomIntensity: number;
@@ -239,6 +246,7 @@ const meta = {
     ...sharpenArgTypes,
     ...scanlinesArgTypes,
     ...phosphorMaskArgTypes,
+    ...flickerArgTypes,
     ...bloomArgTypes,
     ...vignetteArgTypes,
     ...raiseBlackPointArgTypes,
@@ -274,6 +282,10 @@ export const Default: Story = {
     maskBrightness: 0.3, // defaultPhosphorMaskUniforms.maskBrightness,
     phosphorMaskNumSamples: 6, // defaultPhosphorMaskOptions.numSamples,
     transitionWidth: 0.3, // defaultPhosphorMaskOptions.transitionWidth,
+    flicker: true,
+    flickerHz: defaultFlickerOptions.hz,
+    flickerDepth: defaultFlickerOptions.depth,
+    flickerPersistence: defaultFlickerOptions.persistence,
     bloom: true,
     bloomIntensity: defaultBloomUniforms.intensity,
     radius: 1.2, // defaultBloomUniforms.radius,

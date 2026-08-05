@@ -4,6 +4,7 @@ import type { CRTFiltersProps } from "./CRTFilters.stories";
 
 import { defaultBloomUniforms } from "../filters/BloomFilter";
 import { defaultColorAdjustmentUniforms } from "../filters/ColorAdjustmentFilter";
+import { defaultFlickerOptions } from "../filters/FlickerFilter";
 import { defaultNoiseUniforms } from "../filters/NoiseFilter";
 import { defaultPhosphorMaskOptions } from "../filters/PhosphorMaskFilter";
 import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
@@ -104,6 +105,47 @@ export const sharpenArgTypes = {
       category: "Sharpen",
       subcategory: "Settings",
       defaultValue: { summary: `${defaultSharpenUniforms.asymmetry}` },
+    },
+  },
+} as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
+
+export const flickerArgTypes = {
+  flicker: {
+    control: "boolean",
+    description: filterDocs.FlickerFilter.description,
+    table: {
+      category: "Flicker",
+    },
+  },
+  flickerHz: {
+    control: { type: "range", min: 10, max: 100, step: 1 },
+    description: filterDocs.FlickerFilterOptions.properties.hz.description,
+    if: { arg: "flicker", truthy: true },
+    table: {
+      category: "Flicker",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultFlickerOptions.hz}` },
+    },
+  },
+  flickerDepth: {
+    control: { type: "range", min: 0, max: 1, step: 0.05 },
+    description: filterDocs.FlickerFilterOptions.properties.depth.description,
+    if: { arg: "flicker", truthy: true },
+    table: {
+      category: "Flicker",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultFlickerOptions.depth}` },
+    },
+  },
+  flickerPersistence: {
+    control: { type: "range", min: 0.05, max: 2, step: 0.05 },
+    description:
+      filterDocs.FlickerFilterOptions.properties.persistence.description,
+    if: { arg: "flicker", truthy: true },
+    table: {
+      category: "Flicker",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultFlickerOptions.persistence}` },
     },
   },
 } as const satisfies Partial<ArgTypes<CRTFiltersProps>>;

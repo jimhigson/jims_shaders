@@ -11,6 +11,9 @@ export type { ColorAdjustmentFilterOptions } from "./filters/ColorAdjustmentFilt
 export { CurvatureFilter } from "./filters/CurvatureFilter";
 export type { CurvatureFilterOptions } from "./filters/CurvatureFilter";
 
+export { FlickerFilter } from "./filters/FlickerFilter";
+export type { FlickerFilterOptions } from "./filters/FlickerFilter";
+
 export { NoiseFilter } from "./filters/NoiseFilter";
 export type { NoiseFilterOptions } from "./filters/NoiseFilter";
 
@@ -42,6 +45,7 @@ export type { RaiseBlackPointFilterOptions } from "./filters/RaiseBlackPointFilt
 export { defaultBloomUniforms } from "./filters/BloomFilter";
 export { defaultColorAdjustmentUniforms } from "./filters/ColorAdjustmentFilter";
 export { defaultCurvatureOptions } from "./filters/CurvatureFilter";
+export { defaultFlickerOptions } from "./filters/FlickerFilter";
 export { defaultNoiseUniforms } from "./filters/NoiseFilter";
 export { defaultPhosphorMaskOptions } from "./filters/PhosphorMaskFilter";
 export { defaultRoundedCornersUniforms } from "./filters/RoundedCornersFilter";
@@ -60,6 +64,7 @@ export type { CrtFilterPipelineOptions } from "./filters/crtFilters";
 export { default as bloomFragmentSource } from "./filters/bloom.frag";
 export { default as colorAdjustmentFragmentSource } from "./filters/colorAdjustment.frag";
 export { default as curvatureFragmentSource } from "./filters/curvature.frag";
+export { default as flickerFragmentSource } from "./filters/flicker.frag";
 export { default as noiseFragmentSource } from "./filters/noise.frag";
 export { default as phosphorMaskFragmentSource } from "./filters/phosphorMask.frag";
 export { default as roundedCornersFragmentSource } from "./filters/roundedCorners.frag";
