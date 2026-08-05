@@ -22,6 +22,7 @@ export const useFilters = ({
   sharpenSignalBlur,
   roundedCorners,
   cornerRadius,
+  edgeFade,
   scanlines,
   pixelHeight,
   gapBrightness,
@@ -91,7 +92,7 @@ export const useFilters = ({
             signalBlur: sharpenSignalBlur,
           }
         : false,
-      roundedCorners: roundedCorners ? { cornerRadius } : false,
+      roundedCorners: roundedCorners ? { cornerRadius, edgeFade } : false,
       scanlines: scanlines ? { pixelHeight, gapBrightness } : false,
       phosphorMask:
         phosphorMask ?
@@ -170,6 +171,7 @@ export const useFilters = ({
     sharpenSignalBlur,
     roundedCorners,
     cornerRadius,
+    edgeFade,
     scanlines,
     pixelHeight,
     gapBrightness,

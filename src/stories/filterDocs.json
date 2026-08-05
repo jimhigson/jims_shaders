@@ -320,7 +320,7 @@
   },
   "RoundedCornersFilter": {
     "name": "RoundedCornersFilter",
-    "description": "Adds rounded corners to the screen edges to simulate the physical shape of CRT displays.\nThis is separate from, but related to, the CurvatureFilter, which distorts the image to simulate the curved glass screen."
+    "description": "Adds rounded corners to the screen edges to simulate the physical shape of CRT displays, fading\nthe picture up from black over a band just inside every edge so that curving it afterwards does\nnot leave a hard, aliased line."
   },
   "RoundedCornersFilterOptions": {
     "name": "RoundedCornersFilterOptions",
@@ -330,6 +330,12 @@
         "optional": true,
         "type": "number",
         "description": "Corner radius as proportion of screen size (0-0.1)"
+      },
+      "edgeFade": {
+        "name": "edgeFade",
+        "optional": true,
+        "type": "number",
+        "description": "How far in from every edge the picture fades up from black, as a proportion of the screen, so\n0.01 is a band of a hundredth of the way in. Small values are enough: the point is only to stop\nthe edge being a hard line, which shows up as aliasing once the picture is curved"
       }
     }
   },

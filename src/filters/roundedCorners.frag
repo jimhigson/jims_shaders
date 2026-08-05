@@ -5,6 +5,7 @@ in vec2 vTextureCoord;
 uniform sampler2D uTexture;
 
 uniform float uCornerRadius; // Corner radius as proportion (0.0-0.1 of image size)
+uniform float uEdgeFade;     // How far in from every edge the picture fades up from black
 
 // Pixi built-in uniforms (provided automatically)
 uniform vec4 uInputClamp;  // xy: min texture coords, zw: max texture coords of visible area
@@ -37,12 +38,18 @@ void main() {
     minX = mix(minX, uCornerRadius - dx_bottom, bottomCornerFactor);
     maxX = mix(maxX, 1.0 - uCornerRadius + dx_bottom, bottomCornerFactor);
     
-    // Check if current X is within bounds with smooth edges
-    float edgeSoftness = 0.002; // Adjust for softer/harder edges
-    float leftEdge = smoothstep(minX - edgeSoftness, minX + edgeSoftness, normalizedPos.x);
-    float rightEdge = 1.0 - smoothstep(maxX - edgeSoftness, maxX + edgeSoftness, normalizedPos.x);
-    float cornerMask = leftEdge * rightEdge;
-    
+    // Fade up from black over a band just inside every edge, rather than stopping at one.
+    // Curving a hard edge afterwards leaves it aliased along the curve, and a band of even a
+    // fraction of the screen is enough to take that away
+    float fadeWidth = max(uEdgeFade, 0.0001);
+
+    float leftEdge = smoothstep(minX, minX + fadeWidth, normalizedPos.x);
+    float rightEdge = 1.0 - smoothstep(maxX - fadeWidth, maxX, normalizedPos.x);
+    float topEdge = smoothstep(0.0, fadeWidth, normalizedPos.y);
+    float bottomEdge = 1.0 - smoothstep(1.0 - fadeWidth, 1.0, normalizedPos.y);
+
+    float cornerMask = leftEdge * rightEdge * topEdge * bottomEdge;
+
     // Apply the mask to the original color
     finalColor = vec4(color.rgb * cornerMask, color.a);
 }

@@ -22,6 +22,7 @@ import { defaultColorAdjustmentUniforms } from "../filters/ColorAdjustmentFilter
 import { defaultFlickerOptions } from "../filters/FlickerFilter";
 import { defaultNoiseUniforms } from "../filters/NoiseFilter";
 import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
+import { defaultRoundedCornersUniforms } from "../filters/RoundedCornersFilter";
 import { defaultScreenGeometryOptions } from "../filters/ScreenGeometryFilter";
 import { defaultSharpenUniforms } from "../filters/SharpenFilter";
 import { defaultSwitchOnOptions } from "../filters/SwitchOnFilter";
@@ -94,6 +95,7 @@ export interface CRTFiltersProps {
   // Rounded corners filter
   roundedCorners: boolean;
   cornerRadius: number;
+  edgeFade: number;
   // Screen geometry filter
   screenGeometry: boolean;
   curvatureX: number;
@@ -269,6 +271,7 @@ export const Default: Story = {
     noiseFPS: defaultNoiseUniforms.fps,
     roundedCorners: true,
     cornerRadius: 0.06, //defaultRoundedCornersUniforms.cornerRadius,
+    edgeFade: defaultRoundedCornersUniforms.edgeFade,
     sharpen: true,
     sharpenAmount: defaultSharpenUniforms.amount,
     sharpenRadius: defaultSharpenUniforms.radius,

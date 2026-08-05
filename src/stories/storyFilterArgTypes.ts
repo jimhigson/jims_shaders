@@ -478,6 +478,19 @@ export const roundedCornersArgTypes = {
       },
     },
   },
+  edgeFade: {
+    control: { type: "range", min: 0, max: 0.1, step: 0.002 },
+    description:
+      filterDocs.RoundedCornersFilterOptions.properties.edgeFade.description,
+    if: { arg: "roundedCorners", truthy: true },
+    table: {
+      category: "Screen Shape",
+      subcategory: "Settings",
+      defaultValue: {
+        summary: `${defaultRoundedCornersUniforms.edgeFade}`,
+      },
+    },
+  },
 } as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
 
 export const screenGeometryArgTypes = {
