@@ -38,7 +38,7 @@ const cornerExponentFor = (
 export const defaultRoundedCornersUniforms: Required<RoundedCornersFilterOptions> =
   {
     cornerRadius: 0.025,
-    edgeFade: 0.01,
+    edgeFade: 0.015,
   };
 
 /**
