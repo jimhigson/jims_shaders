@@ -628,6 +628,45 @@ export const colorAdjustmentArgTypes = {
       },
     },
   },
+  phosphorExpansion: {
+    control: { type: "range", min: 0, max: 0.6, step: 0.01 },
+    description:
+      filterDocs.ColorAdjustmentFilterOptions.properties.phosphorExpansion
+        .description,
+    if: { arg: "colorAdjustment", truthy: true },
+    table: {
+      category: "Color Adjustment",
+      subcategory: "Phosphor primaries",
+      defaultValue: {
+        summary: `${defaultColorAdjustmentUniforms.phosphorExpansion}`,
+      },
+    },
+  },
+  phosphorRedExtra: {
+    control: { type: "range", min: 0, max: 1, step: 0.01 },
+    description:
+      filterDocs.ColorAdjustmentFilterOptions.properties.phosphorRedExtra
+        .description,
+    if: { arg: "colorAdjustment", truthy: true },
+    table: {
+      category: "Color Adjustment",
+      subcategory: "Phosphor primaries",
+      defaultValue: {
+        summary: `${defaultColorAdjustmentUniforms.phosphorRedExtra}`,
+      },
+    },
+  },
+  warmth: {
+    control: { type: "range", min: -0.2, max: 0.2, step: 0.005 },
+    description:
+      filterDocs.ColorAdjustmentFilterOptions.properties.warmth.description,
+    if: { arg: "colorAdjustment", truthy: true },
+    table: {
+      category: "Color Adjustment",
+      subcategory: "Phosphor primaries",
+      defaultValue: { summary: `${defaultColorAdjustmentUniforms.warmth}` },
+    },
+  },
   brightnessBottom: {
     control: { type: "range", min: -1, max: 1, step: 0.05 },
     description:

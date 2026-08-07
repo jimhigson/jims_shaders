@@ -120,6 +120,9 @@ export interface CRTFiltersProps {
   gamma: number;
   saturation: number;
   brightness: number;
+  phosphorExpansion: number;
+  phosphorRedExtra: number;
+  warmth: number;
   brightnessBottom: number;
 }
 
@@ -328,6 +331,9 @@ export const Default: Story = {
     gamma: 1, //defaultColorAdjustmentUniforms.gamma,
     saturation: 1.2, // defaultColorAdjustmentUniforms.saturation,
     brightness: 1.5, //defaultColorAdjustmentUniforms.brightness,
+    phosphorExpansion: defaultColorAdjustmentUniforms.phosphorExpansion,
+    phosphorRedExtra: defaultColorAdjustmentUniforms.phosphorRedExtra,
+    warmth: defaultColorAdjustmentUniforms.warmth,
     brightnessBottom: defaultColorAdjustmentUniforms.brightnessBottom,
   },
 };

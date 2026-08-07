@@ -76,6 +76,9 @@ export const useFilters = ({
   saturation,
   brightness,
   brightnessBottom,
+  phosphorExpansion,
+  phosphorRedExtra,
+  warmth,
 }: UseFiltersProps) => {
   const filters = useMemo(() => {
     return crtFilters({
@@ -156,7 +159,15 @@ export const useFilters = ({
         : false,
       colorAdjustment:
         colorAdjustment ?
-          { gamma, saturation, brightness, brightnessBottom }
+          {
+            gamma,
+            saturation,
+            brightness,
+            brightnessBottom,
+            phosphorExpansion,
+            phosphorRedExtra,
+            warmth,
+          }
         : false,
     });
   }, [
@@ -222,6 +233,9 @@ export const useFilters = ({
     saturation,
     brightness,
     brightnessBottom,
+    phosphorExpansion,
+    phosphorRedExtra,
+    warmth,
   ]);
 
   useEffect(() => {

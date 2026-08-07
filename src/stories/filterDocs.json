@@ -57,11 +57,29 @@
         "type": "number",
         "description": "Gamma correction (0.5-2.0, 1.0 = no correction)"
       },
+      "phosphorExpansion": {
+        "name": "phosphorExpansion",
+        "optional": true,
+        "type": "number",
+        "description": "How far colours are pushed away from the neutral axis, standing in for a tube's phosphor\nprimaries sitting outside sRGB. Anchored on that axis, so white and grey are untouched and a\ncolour moves in proportion to how saturated it already is"
+      },
+      "phosphorRedExtra": {
+        "name": "phosphorRedExtra",
+        "optional": true,
+        "type": "number",
+        "description": "How much further than the others the red channel is pushed. The red phosphor is a narrow\nemission line far outside sRGB, so saturated reds on a tube are more extreme than anything the\nsignal asked for - which is what makes them look boosted against a cool black"
+      },
       "saturation": {
         "name": "saturation",
         "optional": true,
         "type": "number",
         "description": "Color saturation (0-2, 0 = grayscale, 1 = normal)"
+      },
+      "warmth": {
+        "name": "warmth",
+        "optional": true,
+        "type": "number",
+        "description": "How far the white point is tilted towards red and away from blue. The cool floor and the\nout-of-gamut red primary both drag a picture cool, more so the less red the content already\nhas, so a little of this brings the balance back across a range of material. It warms greys\nas well, which is unavoidable in anything that adds red regardless of what is on screen"
       }
     }
   },
@@ -257,7 +275,7 @@
   },
   "RaiseBlackPointFilter": {
     "name": "RaiseBlackPointFilter",
-    "description": "Raises the black point of the image, simulating how older CRT screens couldn't produce perfect\nblacks. The lift is domed - weakest in the middle and strongest towards the edges - as if looking\nthrough the glass of a curved tube - and slightly warm, like the brown tint of a switched-off\nscreen. Alpha is passed through unchanged."
+    "description": "Raises the black point of the image, simulating how older CRT screens couldn't produce perfect\nblacks. The lift is domed - weakest in the middle and strongest towards the edges - as if looking\nthrough the glass of a curved tube - and slightly cool, as the scattered light of a running tube\nis. Alpha is passed through unchanged."
   },
   "RaiseBlackPointFilterOptions": {
     "name": "RaiseBlackPointFilterOptions",
@@ -308,7 +326,7 @@
         "name": "liftHue",
         "optional": true,
         "type": "number",
-        "description": "Hue of the lift in degrees around the colour wheel, so 0 is red, 30 orange, 120 green and\n240 blue. Only has an effect while liftSaturation is above 0"
+        "description": "Hue of the lift in degrees around the colour wheel, so 0 is red, 30 orange, 120 green and\n240 blue. A running tube's floor is cool - it is ambient light scattering off the phosphor\nlayer and halation from a blue-white raster, not the brown of the dead glass. Only has an\neffect while liftSaturation is above 0"
       },
       "liftSaturation": {
         "name": "liftSaturation",

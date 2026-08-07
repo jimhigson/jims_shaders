@@ -42,7 +42,9 @@ export type RaiseBlackPointFilterOptions = {
   domeSuperellipse?: number;
   /**
    * Hue of the lift in degrees around the colour wheel, so 0 is red, 30 orange, 120 green and
-   * 240 blue. Only has an effect while liftSaturation is above 0
+   * 240 blue. A running tube's floor is cool - it is ambient light scattering off the phosphor
+   * layer and halation from a blue-white raster, not the brown of the dead glass. Only has an
+   * effect while liftSaturation is above 0
    */
   liftHue?: number;
   /**
@@ -62,15 +64,15 @@ export const defaultRaiseBlackPointUniforms: Required<RaiseBlackPointFilterOptio
     domeEdgeLift: 0.07,
     domeFalloff: 2,
     domeSuperellipse: 4,
-    liftHue: 25,
+    liftHue: 220,
     liftSaturation: 0.2,
   };
 
 /**
  * Raises the black point of the image, simulating how older CRT screens couldn't produce perfect
  * blacks. The lift is domed - weakest in the middle and strongest towards the edges - as if looking
- * through the glass of a curved tube - and slightly warm, like the brown tint of a switched-off
- * screen. Alpha is passed through unchanged.
+ * through the glass of a curved tube - and slightly cool, as the scattered light of a running tube
+ * is. Alpha is passed through unchanged.
  */
 export class RaiseBlackPointFilter extends Filter {
   public uniforms: {
