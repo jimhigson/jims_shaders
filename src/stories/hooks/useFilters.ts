@@ -61,6 +61,7 @@ export const useFilters = ({
   switchOnCastStrength,
   switchOnOverscan,
   switchOnScaleOvershoot,
+  switchOnScaleSettleDuration,
   switchOnKey,
   raiseBlackPoint,
   blackPoint,
@@ -157,6 +158,7 @@ export const useFilters = ({
             castStrength: switchOnCastStrength,
             overscan: switchOnOverscan,
             scaleOvershoot: switchOnScaleOvershoot,
+            scaleSettleDuration: switchOnScaleSettleDuration,
           }
         : false,
       colorAdjustment:
@@ -221,6 +223,7 @@ export const useFilters = ({
     switchOnCastStrength,
     switchOnOverscan,
     switchOnScaleOvershoot,
+    switchOnScaleSettleDuration,
     raiseBlackPoint,
     blackPoint,
     domeEdgeLift,

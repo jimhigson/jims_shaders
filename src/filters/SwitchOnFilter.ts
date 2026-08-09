@@ -39,6 +39,12 @@ export type SwitchOnFilterOptions = {
    * overshoots before the supplies regulate it. 0 shrinks in cleanly with no undershoot at all
    */
   scaleOvershoot?: number;
+  /**
+   * How long the raster then takes to ease from that dip onto its final size, in milliseconds. A
+   * size mismatch reads as a much harder cut than a lingering brightness wobble, so this eases out
+   * gently rather than settling on the same fast timing as the brightness overshoot
+   */
+  scaleSettleDuration?: number;
 };
 
 export const defaultSwitchOnOptions: Required<SwitchOnFilterOptions> = {
@@ -49,7 +55,14 @@ export const defaultSwitchOnOptions: Required<SwitchOnFilterOptions> = {
   castStrength: 0.3,
   overscan: 0.04,
   scaleOvershoot: 0,
+  scaleSettleDuration: 150,
 };
+
+/**
+ * Where, as a fraction of `duration`, the raster reaches its smallest size - the same point the
+ * brightness overshoot peaks. Mirrored in switchOn.frag's `dipProgress`; keep the two in sync
+ */
+const scaleDipProgress = 0.7;
 
 /**
  * Brings the picture up the way a CRT does when it is switched on: nothing at all while the heaters
@@ -71,6 +84,7 @@ export class SwitchOnFilter extends Filter {
     uCastStrength: number;
     uOverscan: number;
     uScaleOvershoot: number;
+    uScaleSettleDuration: number;
   };
 
   #startTime: number;
@@ -122,6 +136,10 @@ export class SwitchOnFilter extends Filter {
             value: finalUniforms.scaleOvershoot,
             type: "f32",
           },
+          uScaleSettleDuration: {
+            value: finalUniforms.scaleSettleDuration,
+            type: "f32",
+          },
         },
       },
     });
@@ -154,7 +172,10 @@ export class SwitchOnFilter extends Filter {
    * be taken out of the chain
    */
   get finished(): boolean {
-    return this.elapsed >= this.uniforms.uWarmUpDelay + this.uniforms.uDuration;
+    const { uWarmUpDelay, uDuration, uScaleSettleDuration } = this.uniforms;
+    const scaleSettled = scaleDipProgress * uDuration + uScaleSettleDuration;
+
+    return this.elapsed >= uWarmUpDelay + Math.max(uDuration, scaleSettled);
   }
 
   /**

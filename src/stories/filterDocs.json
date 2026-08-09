@@ -511,6 +511,12 @@
         "type": "number",
         "description": "How far below its final size the raster dips before settling back onto the screen, as the EHT\novershoots before the supplies regulate it. 0 shrinks in cleanly with no undershoot at all"
       },
+      "scaleSettleDuration": {
+        "name": "scaleSettleDuration",
+        "optional": true,
+        "type": "number",
+        "description": "How long the raster then takes to ease from that dip onto its final size, in milliseconds. A\nsize mismatch reads as a much harder cut than a lingering brightness wobble, so this eases out\ngently rather than settling on the same fast timing as the brightness overshoot"
+      },
       "warmUpDelay": {
         "name": "warmUpDelay",
         "optional": true,

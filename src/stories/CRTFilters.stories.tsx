@@ -116,6 +116,7 @@ export interface CRTFiltersProps {
   switchOnCastStrength: number;
   switchOnOverscan: number;
   switchOnScaleOvershoot: number;
+  switchOnScaleSettleDuration: number;
   // Color adjustment filter
   colorAdjustment: boolean;
   gamma: number;
@@ -329,6 +330,7 @@ export const Default: Story = {
     switchOnCastStrength: defaultSwitchOnOptions.castStrength,
     switchOnOverscan: defaultSwitchOnOptions.overscan,
     switchOnScaleOvershoot: defaultSwitchOnOptions.scaleOvershoot,
+    switchOnScaleSettleDuration: defaultSwitchOnOptions.scaleSettleDuration,
     colorAdjustment: true,
     gamma: 1, //defaultColorAdjustmentUniforms.gamma,
     saturation: 1.2, // defaultColorAdjustmentUniforms.saturation,

@@ -787,4 +787,18 @@ export const switchOnArgTypes = {
       defaultValue: { summary: `${defaultSwitchOnOptions.scaleOvershoot}` },
     },
   },
+  switchOnScaleSettleDuration: {
+    control: { type: "range", min: 0, max: 2_000, step: 10 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.scaleSettleDuration
+        .description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: {
+        summary: `${defaultSwitchOnOptions.scaleSettleDuration}`,
+      },
+    },
+  },
 } as const satisfies Partial<ArgTypes<CRTFiltersProps>>;
