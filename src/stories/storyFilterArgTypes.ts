@@ -776,4 +776,15 @@ export const switchOnArgTypes = {
       defaultValue: { summary: `${defaultSwitchOnOptions.overscan}` },
     },
   },
+  switchOnScaleOvershoot: {
+    control: { type: "range", min: 0, max: 0.3, step: 0.005 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.scaleOvershoot.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.scaleOvershoot}` },
+    },
+  },
 } as const satisfies Partial<ArgTypes<CRTFiltersProps>>;

@@ -505,6 +505,12 @@
         "type": "number",
         "description": "How far past its final brightness the picture goes before falling back, as the beam limiter and\nthe supplies settle. 0 comes up cleanly with no bloom at all"
       },
+      "scaleOvershoot": {
+        "name": "scaleOvershoot",
+        "optional": true,
+        "type": "number",
+        "description": "How far below its final size the raster dips before settling back onto the screen, as the EHT\novershoots before the supplies regulate it. 0 shrinks in cleanly with no undershoot at all"
+      },
       "warmUpDelay": {
         "name": "warmUpDelay",
         "optional": true,

@@ -11,6 +11,7 @@ uniform float uOvershoot;    // How far past its final brightness the picture go
 uniform float uCastHue;      // Hue of the colour cast while the guns are still warming
 uniform float uCastStrength; // How strong that cast is when the picture first appears
 uniform float uOverscan;     // How far oversized the raster starts, as a fraction of the screen
+uniform float uScaleOvershoot; // How far below final size the raster dips before settling
 
 // Pixi built-in uniforms (provided automatically)
 uniform vec4 uInputClamp;  // xy: min texture coords, zw: max texture coords of visible area
@@ -35,8 +36,10 @@ void main() {
     float settling = exp(-(fromPeak * fromPeak));
     float gain = emission + (uOvershoot * settling);
 
-    // Until the EHT is up the raster is oversized, shrinking onto the screen as it settles
-    float scale = 1.0 + (uOverscan * (1.0 - emission));
+    // Until the EHT is up the raster is oversized, shrinking onto the screen as it settles - then,
+    // like the brightness, the EHT overshoots before the supplies regulate it, so the raster dips
+    // below its final size before settling back
+    float scale = 1.0 + (uOverscan * (1.0 - emission)) - (uScaleOvershoot * settling);
     vec2 visibleCentre = (uInputClamp.xy + uInputClamp.zw) * 0.5;
     vec2 coord = visibleCentre + ((vTextureCoord - visibleCentre) / scale);
 

@@ -34,6 +34,11 @@ export type SwitchOnFilterOptions = {
    * comes up
    */
   overscan?: number;
+  /**
+   * How far below its final size the raster dips before settling back onto the screen, as the EHT
+   * overshoots before the supplies regulate it. 0 shrinks in cleanly with no undershoot at all
+   */
+  scaleOvershoot?: number;
 };
 
 export const defaultSwitchOnOptions: Required<SwitchOnFilterOptions> = {
@@ -43,6 +48,7 @@ export const defaultSwitchOnOptions: Required<SwitchOnFilterOptions> = {
   castHue: 150,
   castStrength: 0.3,
   overscan: 0.04,
+  scaleOvershoot: 0,
 };
 
 /**
@@ -64,6 +70,7 @@ export class SwitchOnFilter extends Filter {
     uCastHue: number;
     uCastStrength: number;
     uOverscan: number;
+    uScaleOvershoot: number;
   };
 
   #startTime: number;
@@ -109,6 +116,10 @@ export class SwitchOnFilter extends Filter {
           },
           uOverscan: {
             value: finalUniforms.overscan,
+            type: "f32",
+          },
+          uScaleOvershoot: {
+            value: finalUniforms.scaleOvershoot,
             type: "f32",
           },
         },
