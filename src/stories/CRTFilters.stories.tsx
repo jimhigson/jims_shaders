@@ -110,13 +110,19 @@ export interface CRTFiltersProps {
   switchOnPaused: boolean;
   switchOnElapsed: number;
   switchOnWarmUpDelay: number;
-  switchOnDuration: number;
+  switchOnRiseDuration: number;
+  switchOnDecayDuration: number;
   switchOnOvershoot: number;
   switchOnCastHue: number;
   switchOnCastStrength: number;
   switchOnOverscan: number;
-  switchOnScaleOvershoot: number;
-  switchOnScaleSettleDuration: number;
+  switchOnBloomAmount: number;
+  switchOnScanlinesPixelHeight: number;
+  switchOnScanlinesGapBrightness: number;
+  switchOnDegaussAmount: number;
+  switchOnDegaussDecay: number;
+  switchOnRollAmount: number;
+  switchOnRollDecay: number;
   // Color adjustment filter
   colorAdjustment: boolean;
   gamma: number;
@@ -324,13 +330,20 @@ export const Default: Story = {
     switchOnPaused: false,
     switchOnElapsed: 0,
     switchOnWarmUpDelay: defaultSwitchOnOptions.warmUpDelay,
-    switchOnDuration: defaultSwitchOnOptions.duration,
+    switchOnRiseDuration: defaultSwitchOnOptions.riseDuration,
+    switchOnDecayDuration: defaultSwitchOnOptions.decayDuration,
     switchOnOvershoot: defaultSwitchOnOptions.overshoot,
     switchOnCastHue: defaultSwitchOnOptions.castHue,
     switchOnCastStrength: defaultSwitchOnOptions.castStrength,
     switchOnOverscan: defaultSwitchOnOptions.overscan,
-    switchOnScaleOvershoot: defaultSwitchOnOptions.scaleOvershoot,
-    switchOnScaleSettleDuration: defaultSwitchOnOptions.scaleSettleDuration,
+    switchOnBloomAmount: defaultSwitchOnOptions.bloomAmount,
+    switchOnScanlinesPixelHeight: defaultSwitchOnOptions.scanlinesPixelHeight,
+    switchOnScanlinesGapBrightness:
+      defaultSwitchOnOptions.scanlinesGapBrightness,
+    switchOnDegaussAmount: defaultSwitchOnOptions.degaussAmount,
+    switchOnDegaussDecay: defaultSwitchOnOptions.degaussDecay,
+    switchOnRollAmount: defaultSwitchOnOptions.rollAmount,
+    switchOnRollDecay: defaultSwitchOnOptions.rollDecay,
     colorAdjustment: true,
     gamma: 1, //defaultColorAdjustmentUniforms.gamma,
     saturation: 1.2, // defaultColorAdjustmentUniforms.saturation,

@@ -721,15 +721,26 @@ export const switchOnArgTypes = {
       defaultValue: { summary: `${defaultSwitchOnOptions.warmUpDelay}` },
     },
   },
-  switchOnDuration: {
+  switchOnRiseDuration: {
     control: { type: "range", min: 100, max: 6_000, step: 50 },
     description:
-      filterDocs.SwitchOnFilterOptions.properties.duration.description,
+      filterDocs.SwitchOnFilterOptions.properties.riseDuration.description,
     if: { arg: "switchOn", truthy: true },
     table: {
       category: "Switch On",
       subcategory: "Settings",
-      defaultValue: { summary: `${defaultSwitchOnOptions.duration}` },
+      defaultValue: { summary: `${defaultSwitchOnOptions.riseDuration}` },
+    },
+  },
+  switchOnDecayDuration: {
+    control: { type: "range", min: 0, max: 6_000, step: 50 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.decayDuration.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.decayDuration}` },
     },
   },
   switchOnOvershoot: {
@@ -776,29 +787,87 @@ export const switchOnArgTypes = {
       defaultValue: { summary: `${defaultSwitchOnOptions.overscan}` },
     },
   },
-  switchOnScaleOvershoot: {
+  switchOnBloomAmount: {
     control: { type: "range", min: 0, max: 0.3, step: 0.005 },
     description:
-      filterDocs.SwitchOnFilterOptions.properties.scaleOvershoot.description,
+      filterDocs.SwitchOnFilterOptions.properties.bloomAmount.description,
     if: { arg: "switchOn", truthy: true },
     table: {
       category: "Switch On",
       subcategory: "Settings",
-      defaultValue: { summary: `${defaultSwitchOnOptions.scaleOvershoot}` },
+      defaultValue: { summary: `${defaultSwitchOnOptions.bloomAmount}` },
     },
   },
-  switchOnScaleSettleDuration: {
-    control: { type: "range", min: 0, max: 2_000, step: 10 },
+  switchOnScanlinesPixelHeight: {
+    control: { type: "range", min: 1, max: 12, step: 0.5 },
     description:
-      filterDocs.SwitchOnFilterOptions.properties.scaleSettleDuration
+      filterDocs.SwitchOnFilterOptions.properties.scanlinesPixelHeight
         .description,
     if: { arg: "switchOn", truthy: true },
     table: {
       category: "Switch On",
       subcategory: "Settings",
       defaultValue: {
-        summary: `${defaultSwitchOnOptions.scaleSettleDuration}`,
+        summary: `${defaultSwitchOnOptions.scanlinesPixelHeight}`,
       },
+    },
+  },
+  switchOnScanlinesGapBrightness: {
+    control: { type: "range", min: 0, max: 1, step: 0.05 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.scanlinesGapBrightness
+        .description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: {
+        summary: `${defaultSwitchOnOptions.scanlinesGapBrightness}`,
+      },
+    },
+  },
+  switchOnDegaussAmount: {
+    control: { type: "range", min: 0, max: 0.05, step: 0.001 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.degaussAmount.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.degaussAmount}` },
+    },
+  },
+  switchOnDegaussDecay: {
+    control: { type: "range", min: 0, max: 2_000, step: 10 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.degaussDecay.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.degaussDecay}` },
+    },
+  },
+  switchOnRollAmount: {
+    control: { type: "range", min: 0, max: 0.05, step: 0.001 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.rollAmount.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.rollAmount}` },
+    },
+  },
+  switchOnRollDecay: {
+    control: { type: "range", min: 0, max: 2_000, step: 10 },
+    description:
+      filterDocs.SwitchOnFilterOptions.properties.rollDecay.description,
+    if: { arg: "switchOn", truthy: true },
+    table: {
+      category: "Switch On",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultSwitchOnOptions.rollDecay}` },
     },
   },
 } as const satisfies Partial<ArgTypes<CRTFiltersProps>>;

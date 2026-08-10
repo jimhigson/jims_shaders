@@ -11,9 +11,14 @@ export type SwitchOnFilterOptions = {
    */
   warmUpDelay?: number;
   /**
-   * How long the picture then takes to come up, in milliseconds
+   * How long the picture then takes to reach its brightest, most bloomed point, in milliseconds
    */
-  duration?: number;
+  riseDuration?: number;
+  /**
+   * How long the picture then takes to settle from that peak down to its steady state, in
+   * milliseconds
+   */
+  decayDuration?: number;
   /**
    * How far past its final brightness the picture goes before falling back, as the beam limiter and
    * the supplies settle. 0 comes up cleanly with no bloom at all
@@ -35,39 +40,67 @@ export type SwitchOnFilterOptions = {
    */
   overscan?: number;
   /**
-   * How far below its final size the raster dips before settling back onto the screen, as the EHT
-   * overshoots before the supplies regulate it. 0 shrinks in cleanly with no undershoot at all
+   * How much further the raster grows at the brightness peak, as the same rising beam current that
+   * overshoots the brightness also loads the high voltage and blooms the raster. 0 has the raster
+   * shrink straight onto its resting size with no bloom at all
    */
-  scaleOvershoot?: number;
+  bloomAmount?: number;
   /**
-   * How long the raster then takes to ease from that dip onto its final size, in milliseconds. A
-   * size mismatch reads as a much harder cut than a lingering brightness wobble, so this eases out
-   * gently rather than settling on the same fast timing as the brightness overshoot
+   * Height of scanline virtual pixels while this filter is active - pass the same value given to
+   * ScanlinesFilter elsewhere in the chain, since that filter is left out while this one plays
    */
-  scaleSettleDuration?: number;
+  scanlinesPixelHeight?: number;
+  /**
+   * Brightness of scanline gaps while this filter is active - pass the same value given to
+   * ScanlinesFilter elsewhere in the chain, since that filter is left out while this one plays
+   */
+  scanlinesGapBrightness?: number;
+  /**
+   * How far the degaussing coil's decaying field displaces the picture just after switch-on. 0
+   * plays no degauss ripple at all
+   */
+  degaussAmount?: number;
+  /**
+   * How long the degauss ripple takes to decay away, in milliseconds
+   */
+  degaussDecay?: number;
+  /**
+   * How far the vertical oscillator's hunting for lock displaces the picture while the set is cold.
+   * 0 plays no vertical roll at all
+   */
+  rollAmount?: number;
+  /**
+   * How long the vertical roll takes to settle as the oscillator reaches thermal lock, in
+   * milliseconds
+   */
+  rollDecay?: number;
 };
 
 export const defaultSwitchOnOptions: Required<SwitchOnFilterOptions> = {
   warmUpDelay: 700,
-  duration: 1_800,
+  riseDuration: 1_200,
+  decayDuration: 1_800,
   overshoot: 0.18,
   castHue: 150,
   castStrength: 0.3,
   overscan: 0.04,
-  scaleOvershoot: 0,
-  scaleSettleDuration: 150,
+  bloomAmount: 0.03,
+  scanlinesPixelHeight: 4,
+  scanlinesGapBrightness: 0.7,
+  degaussAmount: 0.008,
+  degaussDecay: 400,
+  rollAmount: 0.004,
+  rollDecay: 600,
 };
 
 /**
- * Where, as a fraction of `duration`, the raster reaches its smallest size - the same point the
- * brightness overshoot peaks. Mirrored in switchOn.frag's `dipProgress`; keep the two in sync
- */
-const scaleDipProgress = 0.7;
-
-/**
  * Brings the picture up the way a CRT does when it is switched on: nothing at all while the heaters
- * warm, then an eased fade-up that overshoots and settles, tinted while the guns are still coming
- * up to temperature, with the raster shrinking onto the screen as the EHT rises.
+ * warm, then an eased brightness rise that overshoots and settles, tinted while the guns are still
+ * coming up to temperature, with the raster shrinking onto the screen as the EHT rises and blooming
+ * again at the brightness peak. Also plays a fast degauss-coil ripple and a slower cold-vertical-
+ * oscillator roll, and renders scanlines itself (in the raster's own scaled coordinate space) so
+ * they shrink and wobble onto the screen with the picture rather than staying screen-space-fixed -
+ * leave ScanlinesFilter out of the chain elsewhere while this filter is active.
  *
  * This is not a switch-off played backwards - a set being switched off collapses to a line and then
  * a dot, which has no counterpart here.
@@ -78,13 +111,20 @@ export class SwitchOnFilter extends Filter {
   public uniforms: {
     uElapsed: number;
     uWarmUpDelay: number;
-    uDuration: number;
+    uRiseDuration: number;
+    uDecayDuration: number;
     uOvershoot: number;
     uCastHue: number;
     uCastStrength: number;
     uOverscan: number;
-    uScaleOvershoot: number;
-    uScaleSettleDuration: number;
+    uBloomAmount: number;
+    uScanlinesPixelHeight: number;
+    uScanlinesGapBrightness: number;
+    uResolution: Float32Array;
+    uDegaussAmount: number;
+    uDegaussDecay: number;
+    uRollAmount: number;
+    uRollDecay: number;
   };
 
   #startTime: number;
@@ -112,8 +152,12 @@ export class SwitchOnFilter extends Filter {
             value: finalUniforms.warmUpDelay,
             type: "f32",
           },
-          uDuration: {
-            value: finalUniforms.duration,
+          uRiseDuration: {
+            value: finalUniforms.riseDuration,
+            type: "f32",
+          },
+          uDecayDuration: {
+            value: finalUniforms.decayDuration,
             type: "f32",
           },
           uOvershoot: {
@@ -132,12 +176,33 @@ export class SwitchOnFilter extends Filter {
             value: finalUniforms.overscan,
             type: "f32",
           },
-          uScaleOvershoot: {
-            value: finalUniforms.scaleOvershoot,
+          uBloomAmount: {
+            value: finalUniforms.bloomAmount,
             type: "f32",
           },
-          uScaleSettleDuration: {
-            value: finalUniforms.scaleSettleDuration,
+          uScanlinesPixelHeight: {
+            value: finalUniforms.scanlinesPixelHeight,
+            type: "f32",
+          },
+          uScanlinesGapBrightness: {
+            value: finalUniforms.scanlinesGapBrightness,
+            type: "f32",
+          },
+          uResolution: { value: new Float32Array(2), type: "vec2<f32>" },
+          uDegaussAmount: {
+            value: finalUniforms.degaussAmount,
+            type: "f32",
+          },
+          uDegaussDecay: {
+            value: finalUniforms.degaussDecay,
+            type: "f32",
+          },
+          uRollAmount: {
+            value: finalUniforms.rollAmount,
+            type: "f32",
+          },
+          uRollDecay: {
+            value: finalUniforms.rollDecay,
             type: "f32",
           },
         },
@@ -172,10 +237,8 @@ export class SwitchOnFilter extends Filter {
    * be taken out of the chain
    */
   get finished(): boolean {
-    const { uWarmUpDelay, uDuration, uScaleSettleDuration } = this.uniforms;
-    const scaleSettled = scaleDipProgress * uDuration + uScaleSettleDuration;
-
-    return this.elapsed >= uWarmUpDelay + Math.max(uDuration, scaleSettled);
+    const { uWarmUpDelay, uRiseDuration, uDecayDuration } = this.uniforms;
+    return this.elapsed >= uWarmUpDelay + uRiseDuration + uDecayDuration;
   }
 
   /**
@@ -193,6 +256,8 @@ export class SwitchOnFilter extends Filter {
     clearMode: boolean,
   ): void {
     this.uniforms.uElapsed = this.elapsed;
+    this.uniforms.uResolution[0] = input.frame.width;
+    this.uniforms.uResolution[1] = input.frame.height;
     super.apply(filterSystem, input, output, clearMode);
   }
 }
