@@ -18,6 +18,17 @@ uniform vec4 uInputClamp;  // xy: min texture coords, zw: max texture coords of 
 
 out vec4 finalColor;
 
+/**
+ * Half a step of 8-bit colour either way, fixed to each screen pixel, so the slow gradient of
+ * the lift is broken up rather than stepping into bands - and, being fixed, it never shimmers.
+ * Interleaved gradient noise, worked at high precision since screen coordinates run large.
+ */
+float ditherOffset() {
+    highp vec2 pixel = gl_FragCoord.xy;
+    highp float noise = fract(52.9829189 * fract(dot(pixel, vec2(0.06711056, 0.00583715))));
+    return (noise - 0.5) / 255.0;
+}
+
 vec3 hsvToRgb(vec3 hsv) {
     vec3 k = mod(vec3(5.0, 3.0, 1.0) + (hsv.x * 6.0), 6.0);
     return hsv.z - (hsv.z * hsv.y * clamp(min(k, 4.0 - k), 0.0, 1.0));
@@ -52,5 +63,8 @@ void main() {
 
     // Scaling the lift by alpha keeps the result valid premultiplied-alpha colour
     // (rgb never exceeds a) so that alpha itself can be passed through untouched
-    finalColor = vec4(colour.rgb * (1.0 - lift) + (lift * tint * colour.a), colour.a);
+    vec3 lifted = colour.rgb * (1.0 - lift) + (lift * tint * colour.a);
+    // dithered by alpha too, staying valid premultiplied colour
+    vec3 dithered = clamp(lifted + (ditherOffset() * colour.a), 0.0, colour.a);
+    finalColor = vec4(dithered, colour.a);
 }

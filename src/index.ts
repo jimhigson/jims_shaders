@@ -23,8 +23,15 @@ export type { PhosphorMaskFilterOptions } from "./filters/PhosphorMaskFilter";
 export { RoundedCornersFilter } from "./filters/RoundedCornersFilter";
 export type { RoundedCornersFilterOptions } from "./filters/RoundedCornersFilter";
 
-export { ScreenGeometryFilter } from "./filters/ScreenGeometryFilter";
-export type { ScreenGeometryFilterOptions } from "./filters/ScreenGeometryFilter";
+export {
+  pixelAspectRatios,
+  ScreenGeometryFilter,
+} from "./filters/ScreenGeometryFilter";
+export type {
+  PixelAspect,
+  PixelAspectRatioName,
+  ScreenGeometryFilterOptions,
+} from "./filters/ScreenGeometryFilter";
 
 export { ScanlinesFilter } from "./filters/ScanlinesFilter";
 export type { ScanlinesFilterOptions } from "./filters/ScanlinesFilter";

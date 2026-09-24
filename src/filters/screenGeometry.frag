@@ -10,7 +10,9 @@ uniform sampler2D uTexture;
 
 uniform float uCurvatureX;  // Screen curvature - horizontal
 uniform float uCurvatureY;  // Screen curvature - vertical
+uniform float uCurvatureExponent; // Superellipse exponent of the curve - 2 bows edges evenly
 uniform float uOverscan;    // Uniform oversizing of the raster, as a fraction of the screen
+uniform float uPixelAspect; // Width over height of one source pixel as the tube draws it
 uniform float uRowStretch;  // How much wider a fully lit line is drawn than a black one
 uniform float uLineLag;     // How far bright material pushes the rest of its own line along
 uniform float uSagLines;    // How many lines back the supply is still recovering over
@@ -34,6 +36,16 @@ vec2 toVisible(vec2 coord) {
 
 vec2 fromVisible(vec2 visible) {
     return (visible * visibleSize()) + uInputClamp.xy;
+}
+
+/**
+ * How much smaller than the screen the picture is drawn on each axis to give its pixels their
+ * aspect. Only ever shrinks, so the whole picture stays on the glass.
+ */
+vec2 aspectShrink() {
+    return uPixelAspect >= 1.0 ?
+        vec2(1.0, 1.0 / uPixelAspect) :
+        vec2(uPixelAspect, 1.0);
 }
 
 /**
@@ -76,8 +88,9 @@ vec2 beamCoord(vec2 coord, vec2 load) {
     // Less high voltage means a less stiff beam, which the same deflection current throws
     // further, so a heavily loaded line is drawn wider than a dark one
     float stretch = 1.0 + (uRowStretch * load.x) + uOverscan;
-    visible.x = 0.5 + ((visible.x - 0.5) / stretch);
-    visible.y = 0.5 + ((visible.y - 0.5) / (1.0 + uOverscan));
+    vec2 shrink = aspectShrink();
+    visible.x = 0.5 + ((visible.x - 0.5) / (stretch * shrink.x));
+    visible.y = 0.5 + ((visible.y - 0.5) / ((1.0 + uOverscan) * shrink.y));
 
     // The sag builds up as the line is drawn, so everything after bright material sits
     // further along the line than it should
@@ -86,7 +99,13 @@ vec2 beamCoord(vec2 coord, vec2 load) {
     // Barrel distortion for the curve of the glass
     vec2 curvature = vec2(uCurvatureX, uCurvatureY);
     vec2 centred = visible - vec2(0.5);
-    float rsq = dot(centred, centred);
+    // superellipse radius, 1 at the middle of each edge - at exponent 2 this is a circle
+    vec2 fromCentre = abs(centred) * 2.0;
+    float radius = pow(
+        pow(fromCentre.x, uCurvatureExponent) + pow(fromCentre.y, uCurvatureExponent),
+        1.0 / uCurvatureExponent
+    );
+    float rsq = radius * radius * 0.25;
     centred += centred * (curvature * rsq);
     centred *= 1.0 - (0.23 * curvature);
 
@@ -103,7 +122,9 @@ vec3 sampleAt(vec2 coord) {
 void main() {
     // Taken once for the whole fragment: the load varies over a line, not over half a pixel
     vec2 here = toVisible(vTextureCoord);
-    vec2 load = lineLoad(here.y, here.x);
+    // where this point falls in the picture, once it is shrunk to its pixel aspect
+    vec2 inPicture = vec2(0.5) + ((here - vec2(0.5)) / aspectShrink());
+    vec2 load = lineLoad(inPicture.y, inPicture.x);
 
     #if MULTISAMPLE
         // Quincunx pattern: centre plus the four diagonal corners at half a pixel

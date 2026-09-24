@@ -385,6 +385,12 @@
   "ScreenGeometryFilterOptions": {
     "name": "ScreenGeometryFilterOptions",
     "properties": {
+      "curvatureExponent": {
+        "name": "curvatureExponent",
+        "optional": true,
+        "type": "number",
+        "description": "Superellipse exponent of the curve. 2 bows each edge evenly along its length; higher keeps\nthe edges straighter through the middle and bends them mostly at the corners, matching a\nscreen whose outline is itself a superellipse. Very high values crease along the diagonals"
+      },
       "curvatureX": {
         "name": "curvatureX",
         "optional": true,
@@ -420,6 +426,12 @@
         "optional": true,
         "type": "number",
         "description": "How far oversized the raster is drawn, as a fraction of the screen, so that the edges of the\npicture fall outside the glass. Animate this to open the picture out onto the screen"
+      },
+      "pixelAspect": {
+        "name": "pixelAspect",
+        "optional": true,
+        "type": "PixelAspect",
+        "description": "How wide one source pixel is drawn relative to its height: named hardware such as\n\"pal-spectrum-amiga\", or a number. The picture only ever shrinks to fit, so nothing is lost\noff the edge of the screen - add overscan to crop instead"
       },
       "rowStretch": {
         "name": "rowStretch",
@@ -470,7 +482,7 @@
   },
   "SwitchOnFilter": {
     "name": "SwitchOnFilter",
-    "description": "Brings the picture up the way a CRT does when it is switched on: nothing at all while the heaters\nwarm, then an eased fade-up that overshoots and settles, tinted while the guns are still coming\nup to temperature, with the raster shrinking onto the screen as the EHT rises.\n\nThis is not a switch-off played backwards - a set being switched off collapses to a line and then\na dot, which has no counterpart here.\n\nThe animation runs from the moment the filter is constructed. Call `restart` to play it again."
+    "description": "Brings the picture up the way a CRT does when it is switched on: nothing at all while the heaters\nwarm, then an eased brightness rise that overshoots and settles, tinted while the guns are still\ncoming up to temperature, with the raster shrinking onto the screen as the EHT rises and blooming\nagain at the brightness peak. Also plays a fast degauss-coil ripple and a slower cold-vertical-\noscillator roll, and renders scanlines itself (in the raster's own scaled coordinate space) so\nthey shrink and wobble onto the screen with the picture rather than staying screen-space-fixed -\nleave ScanlinesFilter out of the chain elsewhere while this filter is active.\n\nThis is not a switch-off played backwards - a set being switched off collapses to a line and then\na dot, which has no counterpart here.\n\nThe animation runs from the moment the filter is constructed. Call `restart` to play it again."
   },
   "SwitchOnFilterOptions": {
     "name": "SwitchOnFilterOptions",

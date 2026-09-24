@@ -5,6 +5,7 @@ import { useArgs } from "@storybook/preview-api";
 import { Container, Graphics, Sprite } from "pixi.js";
 import { useEffect, useState } from "react";
 
+import type { PixelAspect } from "../filters/ScreenGeometryFilter";
 import type { ExampleMediaId } from "./exampleMedia";
 
 import { DraggableSplitter } from "./DraggableSplitter";
@@ -100,7 +101,9 @@ export interface CRTFiltersProps {
   screenGeometry: boolean;
   curvatureX: number;
   curvatureY: number;
+  curvatureExponent: number;
   screenOverscan: number;
+  pixelAspect: PixelAspect;
   rowStretch: number;
   lineLag: number;
   sagLines: number;
@@ -308,7 +311,9 @@ export const Default: Story = {
     screenGeometry: true,
     curvatureX: 0.35, // defaultScreenGeometryOptions.curvatureX,
     curvatureY: 0.35, // defaultScreenGeometryOptions.curvatureY,
+    curvatureExponent: defaultScreenGeometryOptions.curvatureExponent,
     screenOverscan: defaultScreenGeometryOptions.overscan,
+    pixelAspect: defaultScreenGeometryOptions.pixelAspect,
     rowStretch: defaultScreenGeometryOptions.rowStretch,
     lineLag: defaultScreenGeometryOptions.lineLag,
     sagLines: defaultScreenGeometryOptions.sagLines,

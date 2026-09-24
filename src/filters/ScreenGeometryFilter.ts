@@ -5,11 +5,42 @@ import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
 import { replacePlaceholders } from "../utils/replacePlaceholders";
 import fragment from "./screenGeometry.frag";
 
+/**
+ * Width over height of one source pixel as the tube draws it. This depends on both the video
+ * standard and the pixel clock of whatever generated the picture, so each standard has a name
+ * per clock.
+ */
+export const pixelAspectRatios = {
+  square: 1,
+  // standard definition digital video (DVD, DV, broadcast): ITU-R BT.601 13.5 MHz sampling
+  "pal-dvd": 59 / 54,
+  "ntsc-dvd": 10 / 11,
+  // home computers with a ~7 MHz pixel clock and one line per pixel row
+  "pal-spectrum-amiga": 59 / 56,
+  "ntsc-timex-amiga": 135 / 154,
+} as const satisfies Record<string, number>;
+
+export type PixelAspectRatioName = keyof typeof pixelAspectRatios;
+
+/** a named pixel aspect ratio, or width over height of one source pixel */
+export type PixelAspect = number | PixelAspectRatioName;
+
+const resolvePixelAspect = (pixelAspect: PixelAspect): number =>
+  typeof pixelAspect === "number" ? pixelAspect : (
+    pixelAspectRatios[pixelAspect]
+  );
+
 export type ScreenGeometryFilterOptions = {
   /** Horizontal curvature amount (0-1, typically 0.15) */
   curvatureX?: number;
   /** Vertical curvature amount (0-1, typically 0.15) */
   curvatureY?: number;
+  /**
+   * Superellipse exponent of the curve. 2 bows each edge evenly along its length; higher keeps
+   * the edges straighter through the middle and bends them mostly at the corners, matching a
+   * screen whose outline is itself a superellipse. Very high values crease along the diagonals
+   */
+  curvatureExponent?: number;
   /**
    * Enable multisampling (FSAA) for smoother curvature, but also slower rendering.
    * Also add some blurring.
@@ -20,6 +51,12 @@ export type ScreenGeometryFilterOptions = {
    * picture fall outside the glass. Animate this to open the picture out onto the screen
    */
   overscan?: number;
+  /**
+   * How wide one source pixel is drawn relative to its height: named hardware such as
+   * "pal-spectrum-amiga", or a number. The picture only ever shrinks to fit, so nothing is lost
+   * off the edge of the screen - add overscan to crop instead
+   */
+  pixelAspect?: PixelAspect;
   /**
    * How much wider a fully lit line is drawn than a black one. The beam current of a bright line
    * loads the high voltage supply, and a beam accelerated by less voltage is thrown further by the
@@ -50,8 +87,10 @@ export const defaultScreenGeometryOptions: Required<ScreenGeometryFilterOptions>
   {
     curvatureX: 0.15,
     curvatureY: 0.15,
+    curvatureExponent: 2,
     multisampling: true,
     overscan: 0,
+    pixelAspect: "square",
     rowStretch: 0.012,
     lineLag: 0.004,
     sagLines: 24,
@@ -71,7 +110,9 @@ export class ScreenGeometryFilter extends Filter {
   public uniforms: {
     uCurvatureX: number;
     uCurvatureY: number;
+    uCurvatureExponent: number;
     uOverscan: number;
+    uPixelAspect: number;
     uRowStretch: number;
     uLineLag: number;
     uSagLines: number;
@@ -104,8 +145,16 @@ export class ScreenGeometryFilter extends Filter {
             value: finalOptions.curvatureY,
             type: "f32",
           },
+          uCurvatureExponent: {
+            value: finalOptions.curvatureExponent,
+            type: "f32",
+          },
           uOverscan: {
             value: finalOptions.overscan,
+            type: "f32",
+          },
+          uPixelAspect: {
+            value: resolvePixelAspect(finalOptions.pixelAspect),
             type: "f32",
           },
           uRowStretch: {

@@ -10,7 +10,10 @@ import { defaultPhosphorMaskOptions } from "../filters/PhosphorMaskFilter";
 import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
 import { defaultRoundedCornersUniforms } from "../filters/RoundedCornersFilter";
 import { defaultScanlinesUniforms } from "../filters/ScanlinesFilter";
-import { defaultScreenGeometryOptions } from "../filters/ScreenGeometryFilter";
+import {
+  defaultScreenGeometryOptions,
+  pixelAspectRatios,
+} from "../filters/ScreenGeometryFilter";
 import { defaultSharpenUniforms } from "../filters/SharpenFilter";
 import { defaultSwitchOnOptions } from "../filters/SwitchOnFilter";
 import { defaultVignetteUniforms } from "../filters/VignetteFilter";
@@ -523,6 +526,20 @@ export const screenGeometryArgTypes = {
       defaultValue: { summary: `${defaultScreenGeometryOptions.curvatureY}` },
     },
   },
+  curvatureExponent: {
+    control: { type: "range", min: 1.6, max: 16, step: 0.1 },
+    description:
+      filterDocs.ScreenGeometryFilterOptions.properties.curvatureExponent
+        .description,
+    if: { arg: "screenGeometry", truthy: true },
+    table: {
+      category: "Screen Geometry",
+      subcategory: "Settings",
+      defaultValue: {
+        summary: `${defaultScreenGeometryOptions.curvatureExponent}`,
+      },
+    },
+  },
   screenOverscan: {
     control: { type: "range", min: 0, max: 0.2, step: 0.005 },
     description:
@@ -532,6 +549,18 @@ export const screenGeometryArgTypes = {
       category: "Screen Geometry",
       subcategory: "Settings",
       defaultValue: { summary: `${defaultScreenGeometryOptions.overscan}` },
+    },
+  },
+  pixelAspect: {
+    control: { type: "select" },
+    options: Object.keys(pixelAspectRatios),
+    description:
+      filterDocs.ScreenGeometryFilterOptions.properties.pixelAspect.description,
+    if: { arg: "screenGeometry", truthy: true },
+    table: {
+      category: "Screen Geometry",
+      subcategory: "Settings",
+      defaultValue: { summary: `${defaultScreenGeometryOptions.pixelAspect}` },
     },
   },
   rowStretch: {
