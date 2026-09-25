@@ -13,7 +13,8 @@ import { TubeFilter } from "../../filters/TubeFilter";
 export const useFilters = ({
   noise,
   noiseIntensity,
-  noiseScale,
+  noisePixelHeight,
+  noiseWidthRatio,
   noiseFPS,
   sharpen,
   sharpenAmount,
@@ -94,7 +95,12 @@ export const useFilters = ({
     return crtFilters({
       noise:
         noise ?
-          { intensity: noiseIntensity, scale: noiseScale, fps: noiseFPS }
+          {
+            intensity: noiseIntensity,
+            pixelHeight: noisePixelHeight,
+            widthRatio: noiseWidthRatio,
+            fps: noiseFPS,
+          }
         : false,
       sharpen:
         sharpen ?
@@ -193,7 +199,8 @@ export const useFilters = ({
   }, [
     noise,
     noiseIntensity,
-    noiseScale,
+    noisePixelHeight,
+    noiseWidthRatio,
     noiseFPS,
     sharpen,
     sharpenAmount,

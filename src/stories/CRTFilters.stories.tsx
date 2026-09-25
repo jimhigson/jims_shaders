@@ -49,7 +49,8 @@ export interface CRTFiltersProps {
   // Noise filter (first)
   noise: boolean;
   noiseIntensity: number;
-  noiseScale: number;
+  noisePixelHeight: number;
+  noiseWidthRatio: number;
   noiseFPS: number;
   // Sharpen filter
   sharpen: boolean;
@@ -281,7 +282,8 @@ export const Default: Story = {
     imageSource: "moonbase",
     noise: true,
     noiseIntensity: defaultNoiseUniforms.intensity,
-    noiseScale: defaultNoiseUniforms.scale,
+    noisePixelHeight: defaultNoiseUniforms.pixelHeight,
+    noiseWidthRatio: defaultNoiseUniforms.widthRatio,
     noiseFPS: defaultNoiseUniforms.fps,
     roundedCorners: true,
     cornerRadius: 0.06, //defaultRoundedCornersUniforms.cornerRadius,

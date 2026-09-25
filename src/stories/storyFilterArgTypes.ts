@@ -38,14 +38,26 @@ export const noiseArgTypes = {
       defaultValue: { summary: `${defaultNoiseUniforms.intensity}` },
     },
   },
-  noiseScale: {
-    control: { type: "range", min: 1, max: 10, step: 1 },
-    description: "Noise scale - larger values create bigger noise pixels",
+  noisePixelHeight: {
+    control: { type: "range", min: 1, max: 16, step: 0.5 },
+    description:
+      filterDocs.NoiseFilterOptions.properties.pixelHeight.description,
     if: { arg: "noise", truthy: true },
     table: {
       category: "Signal",
       subcategory: "Noise",
-      defaultValue: { summary: `${defaultNoiseUniforms.scale}` },
+      defaultValue: { summary: `${defaultNoiseUniforms.pixelHeight}` },
+    },
+  },
+  noiseWidthRatio: {
+    control: { type: "range", min: 0.25, max: 32, step: 0.25 },
+    description:
+      filterDocs.NoiseFilterOptions.properties.widthRatio.description,
+    if: { arg: "noise", truthy: true },
+    table: {
+      category: "Signal",
+      subcategory: "Noise",
+      defaultValue: { summary: `${defaultNoiseUniforms.widthRatio}` },
     },
   },
   noiseFPS: {

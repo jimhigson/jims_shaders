@@ -309,11 +309,17 @@
         "type": "number",
         "description": "Noise intensity"
       },
-      "scale": {
-        "name": "scale",
+      "pixelHeight": {
+        "name": "pixelHeight",
         "optional": true,
         "type": "number",
-        "description": "Noise scale - larger values create bigger noise pixels"
+        "description": "Height of each grain of noise in pixels - one scanline, so match the scanlines' pixelHeight"
+      },
+      "widthRatio": {
+        "name": "widthRatio",
+        "optional": true,
+        "type": "number",
+        "description": "Width of each grain as a multiple of its height - how far a speck streaks along the beam"
       }
     }
   },

@@ -1,5 +1,6 @@
 uniform float uNoiseIntensity;
-uniform float uNoiseScale;
+uniform float uNoisePixelHeight;
+uniform float uNoiseWidthRatio;
 uniform float uNoiseFPS;
 uniform float uNoiseTime;
 
@@ -16,16 +17,15 @@ vec3 addNoise(vec3 colour, vec2 coord) {
     float period = (1000.0/uNoiseFPS);
     float uFrameNumber = floor(uNoiseTime / period) * period;
 
-    vec2 uv = coord * (uInputClamp.zw - uInputClamp.xy); // Scale to texture size
-    // adjust the scale uniform given to be half the size for every unit increase
-    float scale10 = pow(0.5, (uNoiseScale + 7.0));
-    // change the square pixels to be wider than they are tall (scanlines)
-    vec2 scale10BiasedHoriz = vec2(scale10 * 16.0, scale10);
-    // round the uv coords to the nearest "pixel" center. Adding fract(uTime) randomises
-    // where the pixels start so it isn't on a strict grid:
-    vec2 uvRounded = floor(uv / scale10BiasedHoriz + fract(uFrameNumber)) * scale10BiasedHoriz;
+    // position within the visible area, in output pixels - the same space the scanlines use
+    vec2 pixel = (coord - uInputClamp.xy) / (uInputClamp.zw - uInputClamp.xy) * uResolution;
+    // one scanline tall, streaked along the beam's direction of travel
+    vec2 grainSize = vec2(uNoisePixelHeight * uNoiseWidthRatio, uNoisePixelHeight);
+    // rows stay on the scanline grid; only where streaks start along a row moves each frame
+    float streakOffset = fract(uFrameNumber * 0.618) * grainSize.x;
+    vec2 grain = floor((pixel + vec2(streakOffset, 0.0)) / grainSize);
 
-    vec3 rgbNoise = hash32( uvRounded * (uFrameNumber + 1000.0));
+    vec3 rgbNoise = hash32(grain + mod(uFrameNumber, 1000.0) * vec2(1.618, 2.718));
 
     // Keep original value if >= 0.7, otherwise set to 0 (not all pixels have noise in all channels)
     rgbNoise = rgbNoise * step(vec3(0.7), rgbNoise);

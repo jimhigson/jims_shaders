@@ -6,15 +6,18 @@ import type { UniformData } from "pixi.js";
 export type NoiseFilterOptions = {
   /** Noise intensity */
   intensity?: number;
-  /** Noise scale - larger values create bigger noise pixels */
-  scale?: number;
+  /** Height of each grain of noise in pixels - one scanline, so match the scanlines' pixelHeight */
+  pixelHeight?: number;
+  /** Width of each grain as a multiple of its height - how far a speck streaks along the beam */
+  widthRatio?: number;
   /** Noise FPS - frequency at which the noise updates per second */
   fps?: number;
 };
 
 export const defaultNoiseUniforms: Required<NoiseFilterOptions> = {
   intensity: 0.04,
-  scale: 6,
+  pixelHeight: 4,
+  widthRatio: 2,
   fps: 30,
 };
 
@@ -25,7 +28,8 @@ export const noiseUniforms = (
   const finalOptions = { ...defaultNoiseUniforms, ...options };
   return {
     uNoiseIntensity: { value: finalOptions.intensity, type: "f32" },
-    uNoiseScale: { value: finalOptions.scale, type: "f32" },
+    uNoisePixelHeight: { value: finalOptions.pixelHeight, type: "f32" },
+    uNoiseWidthRatio: { value: finalOptions.widthRatio, type: "f32" },
     uNoiseFPS: { value: finalOptions.fps, type: "f32" },
     uNoiseTime: { value: 0, type: "f32" },
   };
