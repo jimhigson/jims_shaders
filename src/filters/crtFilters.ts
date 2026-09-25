@@ -1,58 +1,59 @@
 import type { Filter } from "pixi.js";
 
-import type { BloomFilterOptions } from "./BloomFilter";
-import type { ColorAdjustmentFilterOptions } from "./ColorAdjustmentFilter";
-import type { FlickerFilterOptions } from "./FlickerFilter";
-import type { NoiseFilterOptions } from "./NoiseFilter";
-import type { PhosphorMaskFilterOptions } from "./PhosphorMaskFilter";
-import type { RaiseBlackPointFilterOptions } from "./RaiseBlackPointFilter";
-import type { RoundedCornersFilterOptions } from "./RoundedCornersFilter";
-import type { ScanlinesFilterOptions } from "./ScanlinesFilter";
-import type { ScreenGeometryFilterOptions } from "./ScreenGeometryFilter";
-import type { SharpenFilterOptions } from "./SharpenFilter";
-import type { SwitchOnFilterOptions } from "./SwitchOnFilter";
-import type { VignetteFilterOptions } from "./VignetteFilter";
+import type { BloomFilterOptions } from "./stages/BloomFilterOptions";
+import type { ColorAdjustmentFilterOptions } from "./stages/ColorAdjustmentFilterOptions";
+import type { FlickerFilterOptions } from "./stages/FlickerFilterOptions";
+import type { NoiseFilterOptions } from "./stages/NoiseFilterOptions";
+import type { PhosphorMaskFilterOptions } from "./stages/PhosphorMaskFilterOptions";
+import type { RaiseBlackPointFilterOptions } from "./stages/RaiseBlackPointFilterOptions";
+import type { RoundedCornersFilterOptions } from "./stages/RoundedCornersFilterOptions";
+import type { ScanlinesFilterOptions } from "./stages/ScanlinesFilterOptions";
+import type { ScreenGeometryFilterOptions } from "./stages/ScreenGeometryFilterOptions";
+import type { SharpenFilterOptions } from "./stages/SharpenFilterOptions";
+import type { SwitchOnFilterOptions } from "./stages/SwitchOnFilterOptions";
+import type { VignetteFilterOptions } from "./stages/VignetteFilterOptions";
 
-import { BloomFilter } from "./BloomFilter";
-import { ColorAdjustmentFilter } from "./ColorAdjustmentFilter";
-import { FlickerFilter } from "./FlickerFilter";
-import { NoiseFilter } from "./NoiseFilter";
-import { PhosphorMaskFilter } from "./PhosphorMaskFilter";
-import { RaiseBlackPointFilter } from "./RaiseBlackPointFilter";
-import { RoundedCornersFilter } from "./RoundedCornersFilter";
-import { ScanlinesFilter } from "./ScanlinesFilter";
-import { ScreenGeometryFilter } from "./ScreenGeometryFilter";
-import { SharpenFilter } from "./SharpenFilter";
-import { SwitchOnFilter } from "./SwitchOnFilter";
-import { VignetteFilter } from "./VignetteFilter";
+import { GlowFilter } from "./GlowFilter";
+import { RasterFilter } from "./RasterFilter";
+import { SignalFilter } from "./SignalFilter";
+import { TubeFilter } from "./TubeFilter";
 
 export interface CrtFilterPipelineOptions {
+  /** Colour adjustment at the start of the signal, undefined or false to leave out */
+  signalColorAdjustment?: ColorAdjustmentFilterOptions | false | undefined;
+  /** Noise stage options, undefined to use defaults, false to disable */
   noise?: false | NoiseFilterOptions | undefined;
-  /** Sharpen filter options, undefined to use defaults, false to disable */
+  /** Sharpen stage options, undefined to use defaults, false to disable */
   sharpen?: false | SharpenFilterOptions | undefined;
-  /** Rounded corners filter options, undefined to use defaults, false to disable */
+  /** Rounded corners stage options, undefined to use defaults, false to disable */
   roundedCorners?: false | RoundedCornersFilterOptions | undefined;
-  /** Scanlines filter options, undefined to use defaults, false to disable */
+  /** Scanlines stage options, undefined to use defaults, false to disable */
   scanlines?: false | ScanlinesFilterOptions | undefined;
-  /** Phosphor mask filter options, undefined to use defaults, false to disable */
+  /** Phosphor mask stage options, undefined to use defaults, false to disable */
   phosphorMask?: false | PhosphorMaskFilterOptions | undefined;
-  /** Flicker filter options, undefined to use defaults, false to disable */
+  /** Flicker stage options, undefined to use defaults, false to disable */
   flicker?: false | FlickerFilterOptions | undefined;
-  /** Bloom filter options, undefined to use defaults, false to disable */
+  /** Bloom stage options, undefined to use defaults, false to disable */
   bloom?: BloomFilterOptions | false | undefined;
-  /** Screen geometry filter options, undefined to use defaults, false to disable */
+  /** Screen geometry stage options, undefined to use defaults, false to disable */
   screenGeometry?: false | ScreenGeometryFilterOptions | undefined;
-  /** Vignette filter options, undefined to use defaults, false to disable */
+  /** Vignette stage options, undefined to use defaults, false to disable */
   vignette?: false | undefined | VignetteFilterOptions;
-  /** Raise black point filter options, undefined to use defaults, false to disable */
+  /** Raise black point stage options, undefined to use defaults, false to disable */
   raiseBlackPoint?: false | RaiseBlackPointFilterOptions | undefined;
-  /** Switch on filter options, undefined to use defaults, false to disable */
+  /** Switch on stage options, undefined to use defaults, false to disable */
   switchOn?: false | SwitchOnFilterOptions | undefined;
-  /** Color adjustment filter options, undefined to use defaults, false to disable */
+  /** Colour adjustment at the end of the tube, undefined to use defaults, false to disable */
   colorAdjustment?: ColorAdjustmentFilterOptions | false | undefined;
 }
 
+/** a stage's options as the phases take them: undefined here means the stage's defaults */
+const withDefaults = <Options extends object>(
+  options: false | Options | undefined,
+): false | Options => options ?? ({} as Options);
+
 export const crtFilters = ({
+  signalColorAdjustment,
   noise,
   sharpen,
   roundedCorners,
@@ -66,71 +67,50 @@ export const crtFilters = ({
   switchOn,
   colorAdjustment,
 }: CrtFilterPipelineOptions): Filter[] => {
-  const filters = [];
+  const filters: Filter[] = [];
 
-  if (noise !== false) {
-    filters.push(new NoiseFilter(noise));
+  // The signal first: its levels, the noise it picks up, and the peaking of the set's luminance
+  // amplifier all happen before anything that models the beam and the phosphors
+  const signal = {
+    colorAdjustment: signalColorAdjustment ?? false,
+    noise: withDefaults(noise),
+    sharpen: withDefaults(sharpen),
+  };
+  if (Object.values(signal).some(Boolean)) {
+    filters.push(new SignalFilter(signal));
   }
 
-  // Sharpening happens in the set's luminance amplifier, so before anything that models
-  // the beam and the phosphors
-  if (sharpen !== false) {
-    filters.push(new SharpenFilter(sharpen));
+  // Then the beam laying the picture onto the phosphors, on the flat image
+  const raster = {
+    scanlines: withDefaults(scanlines),
+    phosphorMask: withDefaults(phosphorMask),
+    flicker: withDefaults(flicker),
+  };
+  if (Object.values(raster).some(Boolean)) {
+    filters.push(new RasterFilter(raster));
   }
 
-  // Scanlines and phosphor mask (applied to flat image)
-  if (scanlines !== false) {
-    filters.push(new ScanlinesFilter(scanlines));
+  // The light of the phosphors - the black point is raised before the picture is curved, or the
+  // area outside the curved screen is lifted too
+  const glow = {
+    bloom: withDefaults(bloom),
+    vignette: withDefaults(vignette),
+    raiseBlackPoint: withDefaults(raiseBlackPoint),
+  };
+  if (Object.values(glow).some(Boolean)) {
+    filters.push(new GlowFilter(glow));
   }
 
-  if (phosphorMask !== false) {
-    filters.push(new PhosphorMaskFilter(phosphorMask));
-  }
-
-  // The fade between refreshes is the phosphors' own light dying away, so it comes before the
-  // bloom that light scatters into
-  if (flicker !== false) {
-    filters.push(new FlickerFilter(flicker));
-  }
-
-  // Bloom
-  if (bloom !== false) {
-    filters.push(new BloomFilter(bloom));
-  }
-
-  // Vignette
-  if (vignette !== false) {
-    filters.push(new VignetteFilter(vignette));
-  }
-
-  // Raise black point - must come before curvature or the area outside the curved
-  // screen is effected too
-  if (raiseBlackPoint !== false) {
-    filters.push(new RaiseBlackPointFilter(raiseBlackPoint));
-  }
-
-  // The tube coming up to temperature dims and tints everything the signal chain has
-  // produced, including the glow of the black point, but happens inside the screen's
-  // shape so it comes before the corners are clipped and the picture is curved
-  if (switchOn !== false) {
-    filters.push(new SwitchOnFilter(switchOn));
-  }
-
-  // Rounded corners first to clip the input - must be after raising the black point
-  // or the drawn-on corners will be dark grey, not black
-  if (roundedCorners !== false) {
-    filters.push(new RoundedCornersFilter(roundedCorners));
-  }
-
-  // Then all of the geometry at once - overscan, the sag of the high voltage, and the curve of
-  // the glass - which curves everything including the scanlines
-  if (screenGeometry !== false) {
-    filters.push(new ScreenGeometryFilter(screenGeometry));
-  }
-
-  // Color adjustment at the end
-  if (colorAdjustment !== false) {
-    filters.push(new ColorAdjustmentFilter(colorAdjustment));
+  // The tube: switch-on within the screen's shape, then the corners, then all of the geometry at
+  // once - which curves everything including the scanlines - and the colour adjustment at the end
+  const tube = {
+    switchOn: withDefaults(switchOn),
+    roundedCorners: withDefaults(roundedCorners),
+    screenGeometry: withDefaults(screenGeometry),
+    colorAdjustment: withDefaults(colorAdjustment),
+  };
+  if (Object.values(tube).some(Boolean)) {
+    filters.push(new TubeFilter(tube));
   }
 
   return filters;

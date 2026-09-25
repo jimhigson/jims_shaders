@@ -1,86 +1,69 @@
 // CRT Filter library for Pixi.js v8
 // Export all filters and their types
 
-// Filters
-export { BloomFilter } from "./filters/BloomFilter";
-export type { BloomFilterOptions } from "./filters/BloomFilter";
+// The four phases of the CRT effect, each one pass carrying out several stages
+export { SignalFilter } from "./filters/SignalFilter";
+export type { SignalFilterOptions } from "./filters/SignalFilter";
 
-export { ColorAdjustmentFilter } from "./filters/ColorAdjustmentFilter";
-export type { ColorAdjustmentFilterOptions } from "./filters/ColorAdjustmentFilter";
+export { RasterFilter } from "./filters/RasterFilter";
+export type { RasterFilterOptions } from "./filters/RasterFilter";
 
-export { CurvatureFilter } from "./filters/CurvatureFilter";
-export type { CurvatureFilterOptions } from "./filters/CurvatureFilter";
+export { GlowFilter } from "./filters/GlowFilter";
+export type { GlowFilterOptions } from "./filters/GlowFilter";
 
-export { FlickerFilter } from "./filters/FlickerFilter";
-export type { FlickerFilterOptions } from "./filters/FlickerFilter";
+export { TubeFilter } from "./filters/TubeFilter";
+export type { TubeFilterOptions } from "./filters/TubeFilter";
 
-export { NoiseFilter } from "./filters/NoiseFilter";
-export type { NoiseFilterOptions } from "./filters/NoiseFilter";
+export { CrtPhaseFilter } from "./filters/CrtPhaseFilter";
+export type { CrtPhaseFilterOptions } from "./filters/CrtPhaseFilter";
 
-export { PhosphorMaskFilter } from "./filters/PhosphorMaskFilter";
-export type { PhosphorMaskFilterOptions } from "./filters/PhosphorMaskFilter";
-
-export { RoundedCornersFilter } from "./filters/RoundedCornersFilter";
-export type { RoundedCornersFilterOptions } from "./filters/RoundedCornersFilter";
-
-export {
-  pixelAspectRatios,
-  ScreenGeometryFilter,
-} from "./filters/ScreenGeometryFilter";
+// Each stage's options
+export type { BloomFilterOptions } from "./filters/stages/BloomFilterOptions";
+export type { ColorAdjustmentFilterOptions } from "./filters/stages/ColorAdjustmentFilterOptions";
+export type { FlickerFilterOptions } from "./filters/stages/FlickerFilterOptions";
+export type { NoiseFilterOptions } from "./filters/stages/NoiseFilterOptions";
+export type { PhosphorMaskFilterOptions } from "./filters/stages/PhosphorMaskFilterOptions";
+export type { RaiseBlackPointFilterOptions } from "./filters/stages/RaiseBlackPointFilterOptions";
+export type { RoundedCornersFilterOptions } from "./filters/stages/RoundedCornersFilterOptions";
+export type { ScanlinesFilterOptions } from "./filters/stages/ScanlinesFilterOptions";
 export type {
   PixelAspect,
   PixelAspectRatioName,
   ScreenGeometryFilterOptions,
-} from "./filters/ScreenGeometryFilter";
+} from "./filters/stages/ScreenGeometryFilterOptions";
+export type { SharpenFilterOptions } from "./filters/stages/SharpenFilterOptions";
+export type { SwitchOnFilterOptions } from "./filters/stages/SwitchOnFilterOptions";
+export type { VignetteFilterOptions } from "./filters/stages/VignetteFilterOptions";
 
-export { ScanlinesFilter } from "./filters/ScanlinesFilter";
-export type { ScanlinesFilterOptions } from "./filters/ScanlinesFilter";
+export { pixelAspectRatios } from "./filters/stages/ScreenGeometryFilterOptions";
 
-export { SharpenFilter } from "./filters/SharpenFilter";
-export type { SharpenFilterOptions } from "./filters/SharpenFilter";
-
-export { SwitchOnFilter } from "./filters/SwitchOnFilter";
-export type { SwitchOnFilterOptions } from "./filters/SwitchOnFilter";
-
-export { VignetteFilter } from "./filters/VignetteFilter";
-export type { VignetteFilterOptions } from "./filters/VignetteFilter";
-
-export { RaiseBlackPointFilter } from "./filters/RaiseBlackPointFilter";
-export type { RaiseBlackPointFilterOptions } from "./filters/RaiseBlackPointFilter";
+// Timing for the stages that change from frame to frame
+export { FlickerClock } from "./filters/stages/FlickerClock";
+export { SwitchOnClock } from "./filters/stages/SwitchOnClock";
 
 // Default uniforms/options
-export { defaultBloomUniforms } from "./filters/BloomFilter";
-export { defaultColorAdjustmentUniforms } from "./filters/ColorAdjustmentFilter";
-export { defaultCurvatureOptions } from "./filters/CurvatureFilter";
-export { defaultFlickerOptions } from "./filters/FlickerFilter";
-export { defaultNoiseUniforms } from "./filters/NoiseFilter";
-export { defaultPhosphorMaskOptions } from "./filters/PhosphorMaskFilter";
-export { defaultRoundedCornersUniforms } from "./filters/RoundedCornersFilter";
-export { defaultScanlinesUniforms } from "./filters/ScanlinesFilter";
-export { defaultScreenGeometryOptions } from "./filters/ScreenGeometryFilter";
-export { defaultSharpenUniforms } from "./filters/SharpenFilter";
-export { defaultSwitchOnOptions } from "./filters/SwitchOnFilter";
-export { defaultVignetteUniforms } from "./filters/VignetteFilter";
-export { defaultRaiseBlackPointUniforms } from "./filters/RaiseBlackPointFilter";
+export { defaultBloomUniforms } from "./filters/stages/BloomFilterOptions";
+export { defaultColorAdjustmentUniforms } from "./filters/stages/ColorAdjustmentFilterOptions";
+export { defaultFlickerOptions } from "./filters/stages/FlickerFilterOptions";
+export { defaultNoiseUniforms } from "./filters/stages/NoiseFilterOptions";
+export { defaultPhosphorMaskOptions } from "./filters/stages/PhosphorMaskFilterOptions";
+export { defaultRoundedCornersUniforms } from "./filters/stages/RoundedCornersFilterOptions";
+export { defaultScanlinesUniforms } from "./filters/stages/ScanlinesFilterOptions";
+export { defaultScreenGeometryOptions } from "./filters/stages/ScreenGeometryFilterOptions";
+export { defaultSharpenUniforms } from "./filters/stages/SharpenFilterOptions";
+export { defaultSwitchOnOptions } from "./filters/stages/SwitchOnFilterOptions";
+export { defaultVignetteUniforms } from "./filters/stages/VignetteFilterOptions";
+export { defaultRaiseBlackPointUniforms } from "./filters/stages/RaiseBlackPointFilterOptions";
 
 // Utility functions
 export { crtFilters as createCrtFilterPipeline } from "./filters/crtFilters";
 export type { CrtFilterPipelineOptions } from "./filters/crtFilters";
 
-// Fragment shader source code exports
-export { default as bloomFragmentSource } from "./filters/bloom.frag";
-export { default as colorAdjustmentFragmentSource } from "./filters/colorAdjustment.frag";
-export { default as curvatureFragmentSource } from "./filters/curvature.frag";
-export { default as flickerFragmentSource } from "./filters/flicker.frag";
-export { default as noiseFragmentSource } from "./filters/noise.frag";
-export { default as phosphorMaskFragmentSource } from "./filters/phosphorMask.frag";
-export { default as roundedCornersFragmentSource } from "./filters/roundedCorners.frag";
-export { default as scanlinesFragmentSource } from "./filters/scanlines.frag";
-export { default as screenGeometryFragmentSource } from "./filters/screenGeometry.frag";
-export { default as sharpenFragmentSource } from "./filters/sharpen.frag";
-export { default as switchOnFragmentSource } from "./filters/switchOn.frag";
-export { default as vignetteFragmentSource } from "./filters/vignette.frag";
-export { default as raiseBlackPointFragmentSource } from "./filters/raiseBlackPoint.frag";
+// Fragment shader source code exports, with {{PLACEHOLDERS}} for each phase's defines
+export { default as signalFragmentSource } from "./filters/signal.frag";
+export { default as rasterFragmentSource } from "./filters/raster.frag";
+export { default as glowFragmentSource } from "./filters/glow.frag";
+export { default as tubeFragmentSource } from "./filters/tube.frag";
 
 // Utility for replacing placeholders in shader source
 export { replacePlaceholders } from "./utils/replacePlaceholders";

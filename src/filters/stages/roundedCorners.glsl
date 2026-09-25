@@ -1,28 +1,16 @@
-#version 300 es
-precision mediump float;
+uniform float uRoundedCornersCornerExponent; // Superellipse exponent - 2 is an ellipse, higher squarer
+uniform float uRoundedCornersEdgeFade;       // How far in from the edge the picture fades up from black
 
-in vec2 vTextureCoord;
-uniform sampler2D uTexture;
-
-uniform float uCornerExponent; // Superellipse exponent - 2 is an ellipse, higher squarer
-uniform float uEdgeFade;       // How far in from the edge the picture fades up from black
-
-// Pixi built-in uniforms (provided automatically)
-uniform vec4 uInputClamp;  // xy: min texture coords, zw: max texture coords of visible area
-
-out vec4 finalColor;
-
-void main() {
-    vec4 colour = texture(uTexture, vTextureCoord);
-
+// How much of the picture shows at coord: 0 outside the screen's shape, fading up to 1 inside it
+float roundedCornersMask(vec2 coord) {
     vec2 visibleSize = uInputClamp.zw - uInputClamp.xy;
-    vec2 normalised = (vTextureCoord - uInputClamp.xy) / visibleSize;
+    vec2 normalised = (coord - uInputClamp.xy) / visibleSize;
 
     // -1 to 1 across the screen, so that the screen's shape is the unit superellipse and
     // the whole edge - corners and sides alike - is the single contour where this reaches 1
     vec2 fromCentre = abs((normalised - 0.5) * 2.0);
 
-    float exponent = uCornerExponent;
+    float exponent = uRoundedCornersCornerExponent;
     float sum = max(
         pow(fromCentre.x, exponent) + pow(fromCentre.y, exponent),
         0.000001
@@ -41,9 +29,7 @@ void main() {
     float fromEdge = (edge - 1.0) / gradient;
 
     // the fade is given over the whole screen, and this space is half of it either side
-    float fade = max(uEdgeFade * 2.0, 0.0001);
+    float fade = max(uRoundedCornersEdgeFade * 2.0, 0.0001);
 
-    float mask = 1.0 - smoothstep(-fade, 0.0, fromEdge);
-
-    finalColor = vec4(colour.rgb * mask, colour.a);
+    return 1.0 - smoothstep(-fade, 0.0, fromEdge);
 }

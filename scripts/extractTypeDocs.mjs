@@ -12,8 +12,8 @@ const OUTPUT_FILE = join(ROOT_DIR, "src/stories/filterDocs.json");
 // Generate TypeDoc JSON
 console.log("Extracting type documentation...");
 execSync(
-  `npx typedoc --json ${TEMP_FILE} --entryPoints src/filters/*.ts --excludePrivate --excludeInternal`,
-  { stdio: "inherit", cwd: ROOT_DIR }
+  `npx typedoc --json ${TEMP_FILE} --entryPoints src/filters/*.ts src/filters/stages/*.ts --skipErrorChecking --excludePrivate --excludeInternal`,
+  { stdio: "inherit", cwd: ROOT_DIR },
 );
 
 // Read the generated JSON
@@ -49,7 +49,9 @@ function extractTypeInfo(reflection) {
         if (prop.type.type === "literal") {
           propInfo.type = `${prop.type.value}`;
         } else if (prop.type.type === "union") {
-          propInfo.type = prop.type.types?.map(t => t.value || t.name).join(" | ");
+          propInfo.type = prop.type.types
+            ?.map((t) => t.value || t.name)
+            .join(" | ");
         } else {
           propInfo.type = prop.type.name || prop.type.type || "unknown";
         }
@@ -106,7 +108,10 @@ if (docs.children) {
     if (module.children) {
       module.children.forEach((item) => {
         // Extract filter classes (description only, no properties)
-        if (item.kind === ReflectionKind.Class && item.name.endsWith("Filter")) {
+        if (
+          item.kind === ReflectionKind.Class &&
+          item.name.endsWith("Filter")
+        ) {
           const info = {
             name: item.name,
           };
@@ -136,7 +141,8 @@ console.log(`Documentation extracted to ${OUTPUT_FILE}`);
 // Log summary
 const typeCount = Object.keys(typeDocs).length;
 const propCount = Object.values(typeDocs).reduce(
-  (acc, type) => acc + (type.properties ? Object.keys(type.properties).length : 0),
-  0
+  (acc, type) =>
+    acc + (type.properties ? Object.keys(type.properties).length : 0),
+  0,
 );
 console.log(`Extracted ${typeCount} types with ${propCount} total properties`);

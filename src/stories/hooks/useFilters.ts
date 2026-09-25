@@ -8,7 +8,7 @@ export type UseFiltersProps = CRTFiltersProps & {
 };
 
 import { crtFilters } from "../../filters/crtFilters";
-import { SwitchOnFilter } from "../../filters/SwitchOnFilter";
+import { TubeFilter } from "../../filters/TubeFilter";
 
 export const useFilters = ({
   noise,
@@ -270,11 +270,11 @@ export const useFilters = ({
 
   useEffect(() => {
     for (const filter of filters) {
-      if (filter instanceof SwitchOnFilter) {
+      if (filter instanceof TubeFilter && filter.switchOnClock !== undefined) {
         if (switchOnPaused) {
-          filter.elapsed = switchOnElapsed;
+          filter.switchOnClock.elapsed = switchOnElapsed;
         } else {
-          filter.restart();
+          filter.switchOnClock.restart();
         }
       }
     }

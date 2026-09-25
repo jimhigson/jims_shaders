@@ -1,9 +1,4 @@
-import type { FilterSystem, RenderTexture, Texture } from "pixi.js";
-
-import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
-
-import { replacePlaceholders } from "../utils/replacePlaceholders";
-import fragment from "./screenGeometry.frag";
+import type { UniformData } from "pixi.js";
 
 /**
  * Width over height of one source pixel as the tube draws it. This depends on both the video
@@ -30,6 +25,15 @@ const resolvePixelAspect = (pixelAspect: PixelAspect): number =>
     pixelAspectRatios[pixelAspect]
   );
 
+/**
+ * Puts the picture where the beam would actually have drawn it: oversized by however far the raster
+ * overshoots the glass, stretched by the sag of the high voltage under the beam current the picture
+ * itself is drawing, and curved by the shape of the screen.
+ *
+ * These are one stage rather than three because they are all the same kind of thing - a change to
+ * where a point of the picture is sampled from - and composing them into a single coordinate costs
+ * one resample instead of three, which matters on an upscaled picture that each resample softens.
+ */
 export type ScreenGeometryFilterOptions = {
   /** Horizontal curvature amount (0-1, typically 0.15) */
   curvatureX?: number;
@@ -97,94 +101,25 @@ export const defaultScreenGeometryOptions: Required<ScreenGeometryFilterOptions>
     loadTaps: 16,
   };
 
-/**
- * Puts the picture where the beam would actually have drawn it: oversized by however far the raster
- * overshoots the glass, stretched by the sag of the high voltage under the beam current the picture
- * itself is drawing, and curved by the shape of the screen.
- *
- * These are one filter rather than three because they are all the same kind of thing - a change to
- * where a point of the picture is sampled from - and composing them into a single coordinate costs
- * one resample instead of three, which matters on an upscaled picture that each resample softens.
- */
-export class ScreenGeometryFilter extends Filter {
-  public uniforms: {
-    uCurvatureX: number;
-    uCurvatureY: number;
-    uCurvatureExponent: number;
-    uOverscan: number;
-    uPixelAspect: number;
-    uRowStretch: number;
-    uLineLag: number;
-    uSagLines: number;
-    uResolution: Float32Array;
+/** the screen geometry stage's uniforms, named as its glsl declares them */
+export const screenGeometryUniforms = (
+  options: ScreenGeometryFilterOptions,
+): Record<string, UniformData> => {
+  const finalOptions = { ...defaultScreenGeometryOptions, ...options };
+  return {
+    uScreenGeometryCurvatureX: { value: finalOptions.curvatureX, type: "f32" },
+    uScreenGeometryCurvatureY: { value: finalOptions.curvatureY, type: "f32" },
+    uScreenGeometryCurvatureExponent: {
+      value: finalOptions.curvatureExponent,
+      type: "f32",
+    },
+    uScreenGeometryOverscan: { value: finalOptions.overscan, type: "f32" },
+    uScreenGeometryPixelAspect: {
+      value: resolvePixelAspect(finalOptions.pixelAspect),
+      type: "f32",
+    },
+    uScreenGeometryRowStretch: { value: finalOptions.rowStretch, type: "f32" },
+    uScreenGeometryLineLag: { value: finalOptions.lineLag, type: "f32" },
+    uScreenGeometrySagLines: { value: finalOptions.sagLines, type: "f32" },
   };
-
-  constructor(options: ScreenGeometryFilterOptions = {}) {
-    const finalOptions = { ...defaultScreenGeometryOptions, ...options };
-
-    const processedFragment = replacePlaceholders(fragment, {
-      MULTISAMPLE: finalOptions.multisampling,
-      LOAD_TAPS: finalOptions.loadTaps,
-    });
-
-    const glProgram = GlProgram.from({
-      vertex: defaultFilterVert,
-      fragment: processedFragment,
-      name: "screen-geometry-filter",
-    });
-
-    super({
-      glProgram,
-      resources: {
-        screenGeometryUniforms: {
-          uCurvatureX: {
-            value: finalOptions.curvatureX,
-            type: "f32",
-          },
-          uCurvatureY: {
-            value: finalOptions.curvatureY,
-            type: "f32",
-          },
-          uCurvatureExponent: {
-            value: finalOptions.curvatureExponent,
-            type: "f32",
-          },
-          uOverscan: {
-            value: finalOptions.overscan,
-            type: "f32",
-          },
-          uPixelAspect: {
-            value: resolvePixelAspect(finalOptions.pixelAspect),
-            type: "f32",
-          },
-          uRowStretch: {
-            value: finalOptions.rowStretch,
-            type: "f32",
-          },
-          uLineLag: {
-            value: finalOptions.lineLag,
-            type: "f32",
-          },
-          uSagLines: {
-            value: finalOptions.sagLines,
-            type: "f32",
-          },
-          uResolution: { value: new Float32Array(2), type: "vec2<f32>" },
-        },
-      },
-    });
-
-    this.uniforms = this.resources.screenGeometryUniforms.uniforms;
-  }
-
-  override apply(
-    filterSystem: FilterSystem,
-    input: Texture,
-    output: RenderTexture,
-    clearMode: boolean,
-  ): void {
-    this.uniforms.uResolution[0] = input.frame.width;
-    this.uniforms.uResolution[1] = input.frame.height;
-    super.apply(filterSystem, input, output, clearMode);
-  }
-}
+};

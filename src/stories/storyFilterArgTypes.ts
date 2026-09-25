@@ -2,29 +2,30 @@ import type { ArgTypes } from "@storybook/react";
 
 import type { CRTFiltersProps } from "./CRTFilters.stories";
 
-import { defaultBloomUniforms } from "../filters/BloomFilter";
-import { defaultColorAdjustmentUniforms } from "../filters/ColorAdjustmentFilter";
-import { defaultFlickerOptions } from "../filters/FlickerFilter";
-import { defaultNoiseUniforms } from "../filters/NoiseFilter";
-import { defaultPhosphorMaskOptions } from "../filters/PhosphorMaskFilter";
-import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
-import { defaultRoundedCornersUniforms } from "../filters/RoundedCornersFilter";
-import { defaultScanlinesUniforms } from "../filters/ScanlinesFilter";
+import { defaultBloomUniforms } from "../filters/stages/BloomFilterOptions";
+import { defaultColorAdjustmentUniforms } from "../filters/stages/ColorAdjustmentFilterOptions";
+import { defaultFlickerOptions } from "../filters/stages/FlickerFilterOptions";
+import { defaultNoiseUniforms } from "../filters/stages/NoiseFilterOptions";
+import { defaultPhosphorMaskOptions } from "../filters/stages/PhosphorMaskFilterOptions";
+import { defaultRaiseBlackPointUniforms } from "../filters/stages/RaiseBlackPointFilterOptions";
+import { defaultRoundedCornersUniforms } from "../filters/stages/RoundedCornersFilterOptions";
+import { defaultScanlinesUniforms } from "../filters/stages/ScanlinesFilterOptions";
 import {
   defaultScreenGeometryOptions,
   pixelAspectRatios,
-} from "../filters/ScreenGeometryFilter";
-import { defaultSharpenUniforms } from "../filters/SharpenFilter";
-import { defaultSwitchOnOptions } from "../filters/SwitchOnFilter";
-import { defaultVignetteUniforms } from "../filters/VignetteFilter";
+} from "../filters/stages/ScreenGeometryFilterOptions";
+import { defaultSharpenUniforms } from "../filters/stages/SharpenFilterOptions";
+import { defaultSwitchOnOptions } from "../filters/stages/SwitchOnFilterOptions";
+import { defaultVignetteUniforms } from "../filters/stages/VignetteFilterOptions";
 import filterDocs from "./filterDocs.json";
 
 export const noiseArgTypes = {
   noise: {
     control: "boolean",
-    description: filterDocs.NoiseFilter.description,
+    description: filterDocs.NoiseFilterOptions.description,
     table: {
-      category: "Noise",
+      category: "Signal",
+      subcategory: "Noise",
     },
   },
   noiseIntensity: {
@@ -32,8 +33,8 @@ export const noiseArgTypes = {
     description: "Noise intensity",
     if: { arg: "noise", truthy: true },
     table: {
-      category: "Noise",
-      subcategory: "Settings",
+      category: "Signal",
+      subcategory: "Noise",
       defaultValue: { summary: `${defaultNoiseUniforms.intensity}` },
     },
   },
@@ -42,8 +43,8 @@ export const noiseArgTypes = {
     description: "Noise scale - larger values create bigger noise pixels",
     if: { arg: "noise", truthy: true },
     table: {
-      category: "Noise",
-      subcategory: "Settings",
+      category: "Signal",
+      subcategory: "Noise",
       defaultValue: { summary: `${defaultNoiseUniforms.scale}` },
     },
   },
@@ -53,8 +54,8 @@ export const noiseArgTypes = {
       "Noise FPS - frequency at which the noise updates per second. Set to 30 to emulate NTSC, or 25 for PAL.",
     if: { arg: "noise", truthy: true },
     table: {
-      category: "Noise",
-      subcategory: "Settings",
+      category: "Signal",
+      subcategory: "Noise",
       defaultValue: { summary: `${defaultNoiseUniforms.fps}` },
     },
   },
@@ -63,9 +64,10 @@ export const noiseArgTypes = {
 export const sharpenArgTypes = {
   sharpen: {
     control: "boolean",
-    description: filterDocs.SharpenFilter.description,
+    description: filterDocs.SharpenFilterOptions.description,
     table: {
-      category: "Sharpen",
+      category: "Signal",
+      subcategory: "Sharpen",
     },
   },
   sharpenAmount: {
@@ -73,8 +75,8 @@ export const sharpenArgTypes = {
     description: filterDocs.SharpenFilterOptions.properties.amount.description,
     if: { arg: "sharpen", truthy: true },
     table: {
-      category: "Sharpen",
-      subcategory: "Settings",
+      category: "Signal",
+      subcategory: "Sharpen",
       defaultValue: { summary: `${defaultSharpenUniforms.amount}` },
     },
   },
@@ -83,8 +85,8 @@ export const sharpenArgTypes = {
     description: filterDocs.SharpenFilterOptions.properties.radius.description,
     if: { arg: "sharpen", truthy: true },
     table: {
-      category: "Sharpen",
-      subcategory: "Settings",
+      category: "Signal",
+      subcategory: "Sharpen",
       defaultValue: { summary: `${defaultSharpenUniforms.radius}` },
     },
   },
@@ -94,8 +96,8 @@ export const sharpenArgTypes = {
       filterDocs.SharpenFilterOptions.properties.signalBlur.description,
     if: { arg: "sharpen", truthy: true },
     table: {
-      category: "Sharpen",
-      subcategory: "Settings",
+      category: "Signal",
+      subcategory: "Sharpen",
       defaultValue: { summary: `${defaultSharpenUniforms.signalBlur}` },
     },
   },
@@ -105,8 +107,8 @@ export const sharpenArgTypes = {
       filterDocs.SharpenFilterOptions.properties.asymmetry.description,
     if: { arg: "sharpen", truthy: true },
     table: {
-      category: "Sharpen",
-      subcategory: "Settings",
+      category: "Signal",
+      subcategory: "Sharpen",
       defaultValue: { summary: `${defaultSharpenUniforms.asymmetry}` },
     },
   },
@@ -115,9 +117,10 @@ export const sharpenArgTypes = {
 export const flickerArgTypes = {
   flicker: {
     control: "boolean",
-    description: filterDocs.FlickerFilter.description,
+    description: filterDocs.FlickerFilterOptions.description,
     table: {
-      category: "Flicker",
+      category: "Raster",
+      subcategory: "Flicker",
     },
   },
   flickerHz: {
@@ -125,8 +128,8 @@ export const flickerArgTypes = {
     description: filterDocs.FlickerFilterOptions.properties.hz.description,
     if: { arg: "flicker", truthy: true },
     table: {
-      category: "Flicker",
-      subcategory: "Settings",
+      category: "Raster",
+      subcategory: "Flicker",
       defaultValue: { summary: `${defaultFlickerOptions.hz}` },
     },
   },
@@ -135,8 +138,8 @@ export const flickerArgTypes = {
     description: filterDocs.FlickerFilterOptions.properties.depth.description,
     if: { arg: "flicker", truthy: true },
     table: {
-      category: "Flicker",
-      subcategory: "Settings",
+      category: "Raster",
+      subcategory: "Flicker",
       defaultValue: { summary: `${defaultFlickerOptions.depth}` },
     },
   },
@@ -146,8 +149,8 @@ export const flickerArgTypes = {
       filterDocs.FlickerFilterOptions.properties.persistence.description,
     if: { arg: "flicker", truthy: true },
     table: {
-      category: "Flicker",
-      subcategory: "Settings",
+      category: "Raster",
+      subcategory: "Flicker",
       defaultValue: { summary: `${defaultFlickerOptions.persistence}` },
     },
   },
@@ -156,9 +159,10 @@ export const flickerArgTypes = {
 export const scanlinesArgTypes = {
   scanlines: {
     control: "boolean",
-    description: filterDocs.ScanlinesFilter.description,
+    description: filterDocs.ScanlinesFilterOptions.description,
     table: {
-      category: "Scanlines",
+      category: "Raster",
+      subcategory: "Scanlines",
     },
   },
   pixelHeight: {
@@ -167,8 +171,8 @@ export const scanlinesArgTypes = {
       filterDocs.ScanlinesFilterOptions.properties.pixelHeight.description,
     if: { arg: "scanlines", truthy: true },
     table: {
-      category: "Scanlines",
-      subcategory: "Settings",
+      category: "Raster",
+      subcategory: "Scanlines",
       defaultValue: { summary: `${defaultScanlinesUniforms.pixelHeight}` },
     },
   },
@@ -178,8 +182,8 @@ export const scanlinesArgTypes = {
       filterDocs.ScanlinesFilterOptions.properties.gapBrightness.description,
     if: { arg: "scanlines", truthy: true },
     table: {
-      category: "Scanlines",
-      subcategory: "Settings",
+      category: "Raster",
+      subcategory: "Scanlines",
       defaultValue: { summary: `${defaultScanlinesUniforms.gapBrightness}` },
     },
   },
@@ -188,9 +192,10 @@ export const scanlinesArgTypes = {
 export const phosphorMaskArgTypes = {
   phosphorMask: {
     control: "boolean",
-    description: filterDocs.PhosphorMaskFilter.description,
+    description: filterDocs.PhosphorMaskFilterOptions.description,
     table: {
-      category: "Phosphor Mask",
+      category: "Raster",
+      subcategory: "Phosphor Mask",
     },
   },
   pixelWidth: {
@@ -199,8 +204,8 @@ export const phosphorMaskArgTypes = {
       filterDocs.PhosphorMaskFilterOptions.properties.pixelWidth.description,
     if: { arg: "phosphorMask", truthy: true },
     table: {
-      category: "Phosphor Mask",
-      subcategory: "Settings",
+      category: "Raster",
+      subcategory: "Phosphor Mask",
       defaultValue: { summary: `${defaultPhosphorMaskOptions.pixelWidth}` },
     },
   },
@@ -211,8 +216,8 @@ export const phosphorMaskArgTypes = {
         .description,
     if: { arg: "phosphorMask", truthy: true },
     table: {
-      category: "Phosphor Mask",
-      subcategory: "Settings",
+      category: "Raster",
+      subcategory: "Phosphor Mask",
       defaultValue: {
         summary: `${defaultPhosphorMaskOptions.maskBrightness}`,
       },
@@ -224,8 +229,8 @@ export const phosphorMaskArgTypes = {
       filterDocs.PhosphorMaskFilterOptions.properties.numSamples.description,
     if: { arg: "phosphorMask", truthy: true },
     table: {
-      category: "Phosphor Mask",
-      subcategory: "Settings",
+      category: "Raster",
+      subcategory: "Phosphor Mask",
       defaultValue: { summary: `${defaultPhosphorMaskOptions.numSamples}` },
     },
   },
@@ -236,8 +241,8 @@ export const phosphorMaskArgTypes = {
         .description,
     if: { arg: "phosphorMask", truthy: true },
     table: {
-      category: "Phosphor Mask",
-      subcategory: "Settings",
+      category: "Raster",
+      subcategory: "Phosphor Mask",
       defaultValue: {
         summary: `${defaultPhosphorMaskOptions.transitionWidth}`,
       },
@@ -248,9 +253,10 @@ export const phosphorMaskArgTypes = {
 export const bloomArgTypes = {
   bloom: {
     control: "boolean",
-    description: filterDocs.BloomFilter.description,
+    description: filterDocs.BloomFilterOptions.description,
     table: {
-      category: "Bloom Filter",
+      category: "Glow",
+      subcategory: "Bloom",
     },
   },
   bloomIntensity: {
@@ -258,8 +264,8 @@ export const bloomArgTypes = {
     description: filterDocs.BloomFilterOptions.properties.intensity.description,
     if: { arg: "bloom", truthy: true },
     table: {
-      category: "Bloom Filter",
-      subcategory: "Settings",
+      category: "Glow",
+      subcategory: "Bloom",
       defaultValue: { summary: `${defaultBloomUniforms.intensity}` },
     },
   },
@@ -268,8 +274,8 @@ export const bloomArgTypes = {
     description: filterDocs.BloomFilterOptions.properties.radius.description,
     if: { arg: "bloom", truthy: true },
     table: {
-      category: "Bloom Filter",
-      subcategory: "Settings",
+      category: "Glow",
+      subcategory: "Bloom",
       defaultValue: { summary: `${defaultBloomUniforms.radius}` },
     },
   },
@@ -278,8 +284,8 @@ export const bloomArgTypes = {
     description: filterDocs.BloomFilterOptions.properties.cutoff.description,
     if: { arg: "bloom", truthy: true },
     table: {
-      category: "Bloom Filter",
-      subcategory: "Settings",
+      category: "Glow",
+      subcategory: "Bloom",
       defaultValue: { summary: `${defaultBloomUniforms.cutoff}` },
     },
   },
@@ -288,8 +294,8 @@ export const bloomArgTypes = {
     description: filterDocs.BloomFilterOptions.properties.edgeBlur.description,
     if: { arg: "bloom", truthy: true },
     table: {
-      category: "Bloom Filter",
-      subcategory: "Settings",
+      category: "Glow",
+      subcategory: "Bloom",
       defaultValue: { summary: `${defaultBloomUniforms.edgeBlur}` },
     },
   },
@@ -298,9 +304,10 @@ export const bloomArgTypes = {
 export const vignetteArgTypes = {
   vignette: {
     control: "boolean",
-    description: filterDocs.VignetteFilter.description,
+    description: filterDocs.VignetteFilterOptions.description,
     table: {
-      category: "Vignette",
+      category: "Glow",
+      subcategory: "Vignette",
     },
   },
   vignetteIntensity: {
@@ -309,8 +316,8 @@ export const vignetteArgTypes = {
       filterDocs.VignetteFilterOptions.properties.intensity.description,
     if: { arg: "vignette", truthy: true },
     table: {
-      category: "Vignette",
-      subcategory: "Settings",
+      category: "Glow",
+      subcategory: "Vignette",
       defaultValue: { summary: `${defaultVignetteUniforms.intensity}` },
     },
   },
@@ -319,8 +326,8 @@ export const vignetteArgTypes = {
     description: filterDocs.VignetteFilterOptions.properties.radius.description,
     if: { arg: "vignette", truthy: true },
     table: {
-      category: "Vignette",
-      subcategory: "Settings",
+      category: "Glow",
+      subcategory: "Vignette",
       defaultValue: { summary: `${defaultVignetteUniforms.radius}` },
     },
   },
@@ -329,9 +336,10 @@ export const vignetteArgTypes = {
 export const raiseBlackPointArgTypes = {
   raiseBlackPoint: {
     control: "boolean",
-    description: filterDocs.RaiseBlackPointFilter.description,
+    description: filterDocs.RaiseBlackPointFilterOptions.description,
     table: {
-      category: "Raise Black Point",
+      category: "Glow",
+      subcategory: "Raise Black Point",
     },
   },
   blackPoint: {
@@ -340,8 +348,8 @@ export const raiseBlackPointArgTypes = {
       filterDocs.RaiseBlackPointFilterOptions.properties.blackPoint.description,
     if: { arg: "raiseBlackPoint", truthy: true },
     table: {
-      category: "Raise Black Point",
-      subcategory: "Settings",
+      category: "Glow",
+      subcategory: "Raise Black Point",
       defaultValue: {
         summary: `${defaultRaiseBlackPointUniforms.blackPoint}`,
       },
@@ -354,8 +362,8 @@ export const raiseBlackPointArgTypes = {
         .description,
     if: { arg: "raiseBlackPoint", truthy: true },
     table: {
-      category: "Raise Black Point",
-      subcategory: "Dome",
+      category: "Glow",
+      subcategory: "Raise Black Point: Dome",
       defaultValue: {
         summary: `${defaultRaiseBlackPointUniforms.domeEdgeLift}`,
       },
@@ -367,8 +375,8 @@ export const raiseBlackPointArgTypes = {
       filterDocs.RaiseBlackPointFilterOptions.properties.domeRadius.description,
     if: { arg: "raiseBlackPoint", truthy: true },
     table: {
-      category: "Raise Black Point",
-      subcategory: "Dome",
+      category: "Glow",
+      subcategory: "Raise Black Point: Dome",
       defaultValue: {
         summary: `${defaultRaiseBlackPointUniforms.domeRadius}`,
       },
@@ -381,8 +389,8 @@ export const raiseBlackPointArgTypes = {
         .description,
     if: { arg: "raiseBlackPoint", truthy: true },
     table: {
-      category: "Raise Black Point",
-      subcategory: "Dome",
+      category: "Glow",
+      subcategory: "Raise Black Point: Dome",
       defaultValue: {
         summary: `${defaultRaiseBlackPointUniforms.domeFalloff}`,
       },
@@ -395,8 +403,8 @@ export const raiseBlackPointArgTypes = {
         .description,
     if: { arg: "raiseBlackPoint", truthy: true },
     table: {
-      category: "Raise Black Point",
-      subcategory: "Dome",
+      category: "Glow",
+      subcategory: "Raise Black Point: Dome",
       defaultValue: {
         summary: `${defaultRaiseBlackPointUniforms.domeSuperellipse}`,
       },
@@ -408,8 +416,8 @@ export const raiseBlackPointArgTypes = {
       filterDocs.RaiseBlackPointFilterOptions.properties.liftHue.description,
     if: { arg: "raiseBlackPoint", truthy: true },
     table: {
-      category: "Raise Black Point",
-      subcategory: "Tint",
+      category: "Glow",
+      subcategory: "Raise Black Point: Tint",
       defaultValue: {
         summary: `${defaultRaiseBlackPointUniforms.liftHue}`,
       },
@@ -422,8 +430,8 @@ export const raiseBlackPointArgTypes = {
         .description,
     if: { arg: "raiseBlackPoint", truthy: true },
     table: {
-      category: "Raise Black Point",
-      subcategory: "Tint",
+      category: "Glow",
+      subcategory: "Raise Black Point: Tint",
       defaultValue: {
         summary: `${defaultRaiseBlackPointUniforms.liftSaturation}`,
       },
@@ -436,8 +444,8 @@ export const raiseBlackPointArgTypes = {
         .description,
     if: { arg: "raiseBlackPoint", truthy: true },
     table: {
-      category: "Raise Black Point",
-      subcategory: "Dome",
+      category: "Glow",
+      subcategory: "Raise Black Point: Dome",
       defaultValue: {
         summary: `${defaultRaiseBlackPointUniforms.domeCentreX}`,
       },
@@ -450,8 +458,8 @@ export const raiseBlackPointArgTypes = {
         .description,
     if: { arg: "raiseBlackPoint", truthy: true },
     table: {
-      category: "Raise Black Point",
-      subcategory: "Dome",
+      category: "Glow",
+      subcategory: "Raise Black Point: Dome",
       defaultValue: {
         summary: `${defaultRaiseBlackPointUniforms.domeCentreY}`,
       },
@@ -462,9 +470,10 @@ export const raiseBlackPointArgTypes = {
 export const roundedCornersArgTypes = {
   roundedCorners: {
     control: "boolean",
-    description: filterDocs.RoundedCornersFilter.description,
+    description: filterDocs.RoundedCornersFilterOptions.description,
     table: {
-      category: "Screen Shape",
+      category: "Tube",
+      subcategory: "Rounded Corners",
     },
   },
   cornerRadius: {
@@ -474,8 +483,8 @@ export const roundedCornersArgTypes = {
       filterDocs.RoundedCornersFilterOptions.properties.cornerRadius
         .description,
     table: {
-      category: "Screen Shape",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Rounded Corners",
       defaultValue: {
         summary: `${defaultRoundedCornersUniforms.cornerRadius}`,
       },
@@ -487,8 +496,8 @@ export const roundedCornersArgTypes = {
       filterDocs.RoundedCornersFilterOptions.properties.edgeFade.description,
     if: { arg: "roundedCorners", truthy: true },
     table: {
-      category: "Screen Shape",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Rounded Corners",
       defaultValue: {
         summary: `${defaultRoundedCornersUniforms.edgeFade}`,
       },
@@ -499,9 +508,10 @@ export const roundedCornersArgTypes = {
 export const screenGeometryArgTypes = {
   screenGeometry: {
     control: "boolean",
-    description: filterDocs.ScreenGeometryFilter.description,
+    description: filterDocs.ScreenGeometryFilterOptions.description,
     table: {
-      category: "Screen Geometry",
+      category: "Tube",
+      subcategory: "Screen Geometry",
     },
   },
   curvatureX: {
@@ -510,8 +520,8 @@ export const screenGeometryArgTypes = {
       filterDocs.ScreenGeometryFilterOptions.properties.curvatureX.description,
     if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Geometry",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Screen Geometry",
       defaultValue: { summary: `${defaultScreenGeometryOptions.curvatureX}` },
     },
   },
@@ -521,8 +531,8 @@ export const screenGeometryArgTypes = {
       filterDocs.ScreenGeometryFilterOptions.properties.curvatureY.description,
     if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Geometry",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Screen Geometry",
       defaultValue: { summary: `${defaultScreenGeometryOptions.curvatureY}` },
     },
   },
@@ -533,8 +543,8 @@ export const screenGeometryArgTypes = {
         .description,
     if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Geometry",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Screen Geometry",
       defaultValue: {
         summary: `${defaultScreenGeometryOptions.curvatureExponent}`,
       },
@@ -546,8 +556,8 @@ export const screenGeometryArgTypes = {
       filterDocs.ScreenGeometryFilterOptions.properties.overscan.description,
     if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Geometry",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Screen Geometry",
       defaultValue: { summary: `${defaultScreenGeometryOptions.overscan}` },
     },
   },
@@ -558,8 +568,8 @@ export const screenGeometryArgTypes = {
       filterDocs.ScreenGeometryFilterOptions.properties.pixelAspect.description,
     if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Geometry",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Screen Geometry",
       defaultValue: { summary: `${defaultScreenGeometryOptions.pixelAspect}` },
     },
   },
@@ -569,8 +579,8 @@ export const screenGeometryArgTypes = {
       filterDocs.ScreenGeometryFilterOptions.properties.rowStretch.description,
     if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Geometry",
-      subcategory: "High voltage sag",
+      category: "Tube",
+      subcategory: "Screen Geometry: High voltage sag",
       defaultValue: { summary: `${defaultScreenGeometryOptions.rowStretch}` },
     },
   },
@@ -580,8 +590,8 @@ export const screenGeometryArgTypes = {
       filterDocs.ScreenGeometryFilterOptions.properties.lineLag.description,
     if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Geometry",
-      subcategory: "High voltage sag",
+      category: "Tube",
+      subcategory: "Screen Geometry: High voltage sag",
       defaultValue: { summary: `${defaultScreenGeometryOptions.lineLag}` },
     },
   },
@@ -591,8 +601,8 @@ export const screenGeometryArgTypes = {
       filterDocs.ScreenGeometryFilterOptions.properties.sagLines.description,
     if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Geometry",
-      subcategory: "High voltage sag",
+      category: "Tube",
+      subcategory: "Screen Geometry: High voltage sag",
       defaultValue: { summary: `${defaultScreenGeometryOptions.sagLines}` },
     },
   },
@@ -603,8 +613,8 @@ export const screenGeometryArgTypes = {
         .description,
     if: { arg: "screenGeometry", truthy: true },
     table: {
-      category: "Screen Geometry",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Screen Geometry",
       defaultValue: {
         summary: `${defaultScreenGeometryOptions.multisampling}`,
       },
@@ -615,9 +625,10 @@ export const screenGeometryArgTypes = {
 export const colorAdjustmentArgTypes = {
   colorAdjustment: {
     control: "boolean",
-    description: filterDocs.ColorAdjustmentFilter.description,
+    description: filterDocs.ColorAdjustmentFilterOptions.description,
     table: {
-      category: "Color Adjustment",
+      category: "Tube",
+      subcategory: "Color Adjustment",
     },
   },
   gamma: {
@@ -626,8 +637,8 @@ export const colorAdjustmentArgTypes = {
       filterDocs.ColorAdjustmentFilterOptions.properties.gamma.description,
     if: { arg: "colorAdjustment", truthy: true },
     table: {
-      category: "Color Adjustment",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Color Adjustment",
       defaultValue: { summary: `${defaultColorAdjustmentUniforms.gamma}` },
     },
   },
@@ -637,8 +648,8 @@ export const colorAdjustmentArgTypes = {
       filterDocs.ColorAdjustmentFilterOptions.properties.saturation.description,
     if: { arg: "colorAdjustment", truthy: true },
     table: {
-      category: "Color Adjustment",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Color Adjustment",
       defaultValue: {
         summary: `${defaultColorAdjustmentUniforms.saturation}`,
       },
@@ -650,8 +661,8 @@ export const colorAdjustmentArgTypes = {
       filterDocs.ColorAdjustmentFilterOptions.properties.brightness.description,
     if: { arg: "colorAdjustment", truthy: true },
     table: {
-      category: "Color Adjustment",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Color Adjustment",
       defaultValue: {
         summary: `${defaultColorAdjustmentUniforms.brightness}`,
       },
@@ -664,8 +675,8 @@ export const colorAdjustmentArgTypes = {
         .description,
     if: { arg: "colorAdjustment", truthy: true },
     table: {
-      category: "Color Adjustment",
-      subcategory: "Phosphor primaries",
+      category: "Tube",
+      subcategory: "Color Adjustment: Phosphor primaries",
       defaultValue: {
         summary: `${defaultColorAdjustmentUniforms.phosphorExpansion}`,
       },
@@ -678,8 +689,8 @@ export const colorAdjustmentArgTypes = {
         .description,
     if: { arg: "colorAdjustment", truthy: true },
     table: {
-      category: "Color Adjustment",
-      subcategory: "Phosphor primaries",
+      category: "Tube",
+      subcategory: "Color Adjustment: Phosphor primaries",
       defaultValue: {
         summary: `${defaultColorAdjustmentUniforms.phosphorRedExtra}`,
       },
@@ -691,8 +702,8 @@ export const colorAdjustmentArgTypes = {
       filterDocs.ColorAdjustmentFilterOptions.properties.warmth.description,
     if: { arg: "colorAdjustment", truthy: true },
     table: {
-      category: "Color Adjustment",
-      subcategory: "Phosphor primaries",
+      category: "Tube",
+      subcategory: "Color Adjustment: Phosphor primaries",
       defaultValue: { summary: `${defaultColorAdjustmentUniforms.warmth}` },
     },
   },
@@ -703,8 +714,8 @@ export const colorAdjustmentArgTypes = {
         .description,
     if: { arg: "colorAdjustment", truthy: true },
     table: {
-      category: "Color Adjustment",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Color Adjustment",
       defaultValue: {
         summary: `${defaultColorAdjustmentUniforms.brightnessBottom}`,
       },
@@ -715,9 +726,10 @@ export const colorAdjustmentArgTypes = {
 export const switchOnArgTypes = {
   switchOn: {
     control: "boolean",
-    description: filterDocs.SwitchOnFilter.description,
+    description: filterDocs.SwitchOnFilterOptions.description,
     table: {
-      category: "Switch On",
+      category: "Tube",
+      subcategory: "Switch On",
     },
   },
   switchOnPaused: {
@@ -726,8 +738,8 @@ export const switchOnArgTypes = {
       "Hold the switch-on still instead of letting it play, so it can be scrubbed through with the elapsed control",
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Scrub",
+      category: "Tube",
+      subcategory: "Switch On: Scrub",
     },
   },
   switchOnElapsed: {
@@ -735,8 +747,8 @@ export const switchOnArgTypes = {
     description: "Point in the switch-on to hold, in milliseconds",
     if: { arg: "switchOnPaused", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Scrub",
+      category: "Tube",
+      subcategory: "Switch On: Scrub",
     },
   },
   switchOnWarmUpDelay: {
@@ -745,8 +757,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.warmUpDelay.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.warmUpDelay}` },
     },
   },
@@ -756,8 +768,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.riseDuration.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.riseDuration}` },
     },
   },
@@ -767,8 +779,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.decayDuration.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.decayDuration}` },
     },
   },
@@ -778,8 +790,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.overshoot.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.overshoot}` },
     },
   },
@@ -789,8 +801,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.castHue.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.castHue}` },
     },
   },
@@ -800,8 +812,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.castStrength.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.castStrength}` },
     },
   },
@@ -811,8 +823,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.overscan.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.overscan}` },
     },
   },
@@ -822,8 +834,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.bloomAmount.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.bloomAmount}` },
     },
   },
@@ -834,8 +846,8 @@ export const switchOnArgTypes = {
         .description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: {
         summary: `${defaultSwitchOnOptions.scanlinesPixelHeight}`,
       },
@@ -848,8 +860,8 @@ export const switchOnArgTypes = {
         .description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: {
         summary: `${defaultSwitchOnOptions.scanlinesGapBrightness}`,
       },
@@ -861,8 +873,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.degaussAmount.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.degaussAmount}` },
     },
   },
@@ -872,8 +884,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.degaussDecay.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.degaussDecay}` },
     },
   },
@@ -883,8 +895,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.rollAmount.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.rollAmount}` },
     },
   },
@@ -894,8 +906,8 @@ export const switchOnArgTypes = {
       filterDocs.SwitchOnFilterOptions.properties.rollDecay.description,
     if: { arg: "switchOn", truthy: true },
     table: {
-      category: "Switch On",
-      subcategory: "Settings",
+      category: "Tube",
+      subcategory: "Switch On",
       defaultValue: { summary: `${defaultSwitchOnOptions.rollDecay}` },
     },
   },

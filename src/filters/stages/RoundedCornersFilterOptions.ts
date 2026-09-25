@@ -1,7 +1,11 @@
-import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
+import type { UniformData } from "pixi.js";
 
-import fragment from "./roundedCorners.frag";
-
+/**
+ * Cuts the picture to the shape of a CRT's face, fading it up from black over a band just inside
+ * the edge so that curving it afterwards does not leave a hard, aliased line. The shape and the
+ * fade are contours of one superellipse, so the fade follows the corners as evenly as it does the
+ * sides.
+ */
 export type RoundedCornersFilterOptions = {
   /**
    * Corner radius as proportion of screen size (0-0.1). The shape drawn is a superellipse rather
@@ -41,43 +45,16 @@ export const defaultRoundedCornersUniforms: Required<RoundedCornersFilterOptions
     edgeFade: 0.015,
   };
 
-/**
- * Cuts the picture to the shape of a CRT's face, fading it up from black over a band just inside
- * the edge so that curving it afterwards does not leave a hard, aliased line. The shape and the
- * fade are contours of one superellipse, so the fade follows the corners as evenly as it does the
- * sides.
- */
-export class RoundedCornersFilter extends Filter {
-  public uniforms: {
-    uCornerExponent: number;
-    uEdgeFade: number;
+/** the rounded corners stage's uniforms, named as its glsl declares them */
+export const roundedCornersUniforms = (
+  options: RoundedCornersFilterOptions,
+): Record<string, UniformData> => {
+  const finalOptions = { ...defaultRoundedCornersUniforms, ...options };
+  return {
+    uRoundedCornersCornerExponent: {
+      value: cornerExponentFor(finalOptions.cornerRadius),
+      type: "f32",
+    },
+    uRoundedCornersEdgeFade: { value: finalOptions.edgeFade, type: "f32" },
   };
-
-  constructor(uniforms: RoundedCornersFilterOptions = {}) {
-    const finalUniforms = { ...defaultRoundedCornersUniforms, ...uniforms };
-
-    const glProgram = GlProgram.from({
-      vertex: defaultFilterVert,
-      fragment,
-      name: "rounded-corners-filter",
-    });
-
-    super({
-      glProgram,
-      resources: {
-        roundedCornersUniforms: {
-          uCornerExponent: {
-            value: cornerExponentFor(finalUniforms.cornerRadius),
-            type: "f32",
-          },
-          uEdgeFade: {
-            value: finalUniforms.edgeFade,
-            type: "f32",
-          },
-        },
-      },
-    });
-
-    this.uniforms = this.resources.roundedCornersUniforms.uniforms;
-  }
-}
+};

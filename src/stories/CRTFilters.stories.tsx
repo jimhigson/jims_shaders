@@ -5,7 +5,7 @@ import { useArgs } from "@storybook/preview-api";
 import { Container, Graphics, Sprite } from "pixi.js";
 import { useEffect, useState } from "react";
 
-import type { PixelAspect } from "../filters/ScreenGeometryFilter";
+import type { PixelAspect } from "../filters/stages/ScreenGeometryFilterOptions";
 import type { ExampleMediaId } from "./exampleMedia";
 
 import { DraggableSplitter } from "./DraggableSplitter";
@@ -18,15 +18,15 @@ extend({
   Sprite,
 });
 
-import { defaultBloomUniforms } from "../filters/BloomFilter";
-import { defaultColorAdjustmentUniforms } from "../filters/ColorAdjustmentFilter";
-import { defaultFlickerOptions } from "../filters/FlickerFilter";
-import { defaultNoiseUniforms } from "../filters/NoiseFilter";
-import { defaultRaiseBlackPointUniforms } from "../filters/RaiseBlackPointFilter";
-import { defaultRoundedCornersUniforms } from "../filters/RoundedCornersFilter";
-import { defaultScreenGeometryOptions } from "../filters/ScreenGeometryFilter";
-import { defaultSharpenUniforms } from "../filters/SharpenFilter";
-import { defaultSwitchOnOptions } from "../filters/SwitchOnFilter";
+import { defaultBloomUniforms } from "../filters/stages/BloomFilterOptions";
+import { defaultColorAdjustmentUniforms } from "../filters/stages/ColorAdjustmentFilterOptions";
+import { defaultFlickerOptions } from "../filters/stages/FlickerFilterOptions";
+import { defaultNoiseUniforms } from "../filters/stages/NoiseFilterOptions";
+import { defaultRaiseBlackPointUniforms } from "../filters/stages/RaiseBlackPointFilterOptions";
+import { defaultRoundedCornersUniforms } from "../filters/stages/RoundedCornersFilterOptions";
+import { defaultScreenGeometryOptions } from "../filters/stages/ScreenGeometryFilterOptions";
+import { defaultSharpenUniforms } from "../filters/stages/SharpenFilterOptions";
+import { defaultSwitchOnOptions } from "../filters/stages/SwitchOnFilterOptions";
 import { Example } from "./Example";
 import { exampleMedia } from "./exampleMedia";
 import {

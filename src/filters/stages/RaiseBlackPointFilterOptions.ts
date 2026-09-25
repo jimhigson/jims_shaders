@@ -1,11 +1,15 @@
-import { defaultFilterVert, Filter, GlProgram } from "pixi.js";
+import type { UniformData } from "pixi.js";
 
-import fragment from "./raiseBlackPoint.frag";
-
+/**
+ * Raises the black point of the image, simulating how older CRT screens couldn't produce perfect
+ * blacks. The lift is domed - weakest in the middle and strongest towards the edges - as if looking
+ * through the glass of a curved tube - and slightly cool, as the scattered light of a running tube
+ * is. Alpha is passed through unchanged.
+ */
 export type RaiseBlackPointFilterOptions = {
   /**
    * Simulates how older screens couldn't make perfect blacks by compressing the dynamic range slightly.
-   * 0 means no effect (same as not having the filter, whereas a value like 0.1 would be a very strong effect.
+   * 0 means no effect (same as not having the stage, whereas a value like 0.1 would be a very strong effect.
    * This is the lift in the middle of the dome, ie the least the image is lifted anywhere
    */
   blackPoint?: number;
@@ -68,76 +72,37 @@ export const defaultRaiseBlackPointUniforms: Required<RaiseBlackPointFilterOptio
     liftSaturation: 0.2,
   };
 
-/**
- * Raises the black point of the image, simulating how older CRT screens couldn't produce perfect
- * blacks. The lift is domed - weakest in the middle and strongest towards the edges - as if looking
- * through the glass of a curved tube - and slightly cool, as the scattered light of a running tube
- * is. Alpha is passed through unchanged.
- */
-export class RaiseBlackPointFilter extends Filter {
-  public uniforms: {
-    uBlackPoint: number;
-    uDomeCentre: Float32Array;
-    uDomeRadius: number;
-    uDomeEdgeLift: number;
-    uDomeFalloff: number;
-    uDomeSuperellipse: number;
-    uLiftHue: number;
-    uLiftSaturation: number;
+/** the raise black point stage's uniforms, named as its glsl declares them */
+export const raiseBlackPointUniforms = (
+  options: RaiseBlackPointFilterOptions,
+): Record<string, UniformData> => {
+  const finalOptions = { ...defaultRaiseBlackPointUniforms, ...options };
+  return {
+    uRaiseBlackPointBlackPoint: { value: finalOptions.blackPoint, type: "f32" },
+    uRaiseBlackPointDomeCentre: {
+      value: new Float32Array([
+        finalOptions.domeCentreX,
+        finalOptions.domeCentreY,
+      ]),
+      type: "vec2<f32>",
+    },
+    uRaiseBlackPointDomeRadius: { value: finalOptions.domeRadius, type: "f32" },
+    uRaiseBlackPointDomeEdgeLift: {
+      value: finalOptions.domeEdgeLift,
+      type: "f32",
+    },
+    uRaiseBlackPointDomeFalloff: {
+      value: finalOptions.domeFalloff,
+      type: "f32",
+    },
+    uRaiseBlackPointDomeSuperellipse: {
+      value: finalOptions.domeSuperellipse,
+      type: "f32",
+    },
+    uRaiseBlackPointLiftHue: { value: finalOptions.liftHue, type: "f32" },
+    uRaiseBlackPointLiftSaturation: {
+      value: finalOptions.liftSaturation,
+      type: "f32",
+    },
   };
-
-  constructor(uniforms: RaiseBlackPointFilterOptions = {}) {
-    const finalUniforms = { ...defaultRaiseBlackPointUniforms, ...uniforms };
-
-    const glProgram = GlProgram.from({
-      vertex: defaultFilterVert,
-      fragment,
-      name: "raise-black-point-filter",
-    });
-
-    super({
-      glProgram,
-      resources: {
-        raiseBlackPointUniforms: {
-          uBlackPoint: {
-            value: finalUniforms.blackPoint,
-            type: "f32",
-          },
-          uDomeCentre: {
-            value: new Float32Array([
-              finalUniforms.domeCentreX,
-              finalUniforms.domeCentreY,
-            ]),
-            type: "vec2<f32>",
-          },
-          uDomeRadius: {
-            value: finalUniforms.domeRadius,
-            type: "f32",
-          },
-          uDomeEdgeLift: {
-            value: finalUniforms.domeEdgeLift,
-            type: "f32",
-          },
-          uDomeFalloff: {
-            value: finalUniforms.domeFalloff,
-            type: "f32",
-          },
-          uDomeSuperellipse: {
-            value: finalUniforms.domeSuperellipse,
-            type: "f32",
-          },
-          uLiftHue: {
-            value: finalUniforms.liftHue,
-            type: "f32",
-          },
-          uLiftSaturation: {
-            value: finalUniforms.liftSaturation,
-            type: "f32",
-          },
-        },
-      },
-    });
-
-    this.uniforms = this.resources.raiseBlackPointUniforms.uniforms;
-  }
-}
+};

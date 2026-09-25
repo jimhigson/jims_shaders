@@ -1,10 +1,199 @@
 {
-  "BloomFilter": {
-    "name": "BloomFilter",
-    "description": "Creates a bloom/glow effect around bright areas to simulate light bleeding"
+  "CrtFilterPipelineOptions": {
+    "name": "CrtFilterPipelineOptions",
+    "properties": {
+      "bloom": {
+        "name": "bloom",
+        "optional": true,
+        "type": "union",
+        "description": "Bloom stage options, undefined to use defaults, false to disable"
+      },
+      "colorAdjustment": {
+        "name": "colorAdjustment",
+        "optional": true,
+        "type": "union",
+        "description": "Colour adjustment at the end of the tube, undefined to use defaults, false to disable"
+      },
+      "flicker": {
+        "name": "flicker",
+        "optional": true,
+        "type": "union",
+        "description": "Flicker stage options, undefined to use defaults, false to disable"
+      },
+      "noise": {
+        "name": "noise",
+        "optional": true,
+        "type": "union",
+        "description": "Noise stage options, undefined to use defaults, false to disable"
+      },
+      "phosphorMask": {
+        "name": "phosphorMask",
+        "optional": true,
+        "type": "union",
+        "description": "Phosphor mask stage options, undefined to use defaults, false to disable"
+      },
+      "raiseBlackPoint": {
+        "name": "raiseBlackPoint",
+        "optional": true,
+        "type": "union",
+        "description": "Raise black point stage options, undefined to use defaults, false to disable"
+      },
+      "roundedCorners": {
+        "name": "roundedCorners",
+        "optional": true,
+        "type": "union",
+        "description": "Rounded corners stage options, undefined to use defaults, false to disable"
+      },
+      "scanlines": {
+        "name": "scanlines",
+        "optional": true,
+        "type": "union",
+        "description": "Scanlines stage options, undefined to use defaults, false to disable"
+      },
+      "screenGeometry": {
+        "name": "screenGeometry",
+        "optional": true,
+        "type": "union",
+        "description": "Screen geometry stage options, undefined to use defaults, false to disable"
+      },
+      "sharpen": {
+        "name": "sharpen",
+        "optional": true,
+        "type": "union",
+        "description": "Sharpen stage options, undefined to use defaults, false to disable"
+      },
+      "signalColorAdjustment": {
+        "name": "signalColorAdjustment",
+        "optional": true,
+        "type": "union",
+        "description": "Colour adjustment at the start of the signal, undefined or false to leave out"
+      },
+      "switchOn": {
+        "name": "switchOn",
+        "optional": true,
+        "type": "union",
+        "description": "Switch on stage options, undefined to use defaults, false to disable"
+      },
+      "vignette": {
+        "name": "vignette",
+        "optional": true,
+        "type": "union",
+        "description": "Vignette stage options, undefined to use defaults, false to disable"
+      }
+    }
+  },
+  "CrtPhaseFilter": {
+    "name": "CrtPhaseFilter",
+    "description": "One pass of the CRT effect, carrying out several stages in a single fragment shader. Only the\nstages that are turned on are compiled in, so a stage that is turned off costs nothing."
+  },
+  "CrtPhaseFilterOptions": {
+    "name": "CrtPhaseFilterOptions",
+    "properties": {
+      "defines": {
+        "name": "defines",
+        "optional": false,
+        "type": "Record",
+        "description": "values for the fragment's placeholders - which stages are compiled in, and their constants"
+      },
+      "fragment": {
+        "name": "fragment",
+        "optional": false,
+        "type": "string",
+        "description": "the phase's fragment shader, with {{PLACEHOLDERS}} for its defines"
+      },
+      "name": {
+        "name": "name",
+        "optional": false,
+        "type": "string",
+        "description": "names the gl program, for debugging"
+      },
+      "uniforms": {
+        "name": "uniforms",
+        "optional": false,
+        "type": "Record",
+        "description": "the uniforms of every stage that is compiled in"
+      }
+    }
+  },
+  "GlowFilter": {
+    "name": "GlowFilter",
+    "description": "The light of the lit phosphors: bright areas glowing into their surroundings, the fall-off\ntowards the edges of the screen, and the glow that keeps the tube from ever being fully black."
+  },
+  "GlowFilterOptions": {
+    "name": "GlowFilterOptions",
+    "description": "Each stage's options, or false (or left out) to leave that stage out",
+    "properties": {
+      "bloom": {
+        "name": "bloom",
+        "optional": true,
+        "type": "union"
+      },
+      "raiseBlackPoint": {
+        "name": "raiseBlackPoint",
+        "optional": true,
+        "type": "union"
+      },
+      "vignette": {
+        "name": "vignette",
+        "optional": true,
+        "type": "union"
+      }
+    }
+  },
+  "RasterFilter": {
+    "name": "RasterFilter",
+    "description": "The picture as the beam lays it down on the phosphors: in scanlines, through the slot mask, and\ndying away between passes of the beam."
+  },
+  "RasterFilterOptions": {
+    "name": "RasterFilterOptions",
+    "description": "Each stage's options, or false (or left out) to leave that stage out",
+    "properties": {
+      "flicker": {
+        "name": "flicker",
+        "optional": true,
+        "type": "union"
+      },
+      "phosphorMask": {
+        "name": "phosphorMask",
+        "optional": true,
+        "type": "union"
+      },
+      "scanlines": {
+        "name": "scanlines",
+        "optional": true,
+        "type": "union"
+      }
+    }
+  },
+  "SignalFilter": {
+    "name": "SignalFilter",
+    "description": "The video signal on its way to the tube: its levels, the noise it picks up, and the peaking of\nthe set's luminance amplifier - everything that happens before the beam draws the picture."
+  },
+  "SignalFilterOptions": {
+    "name": "SignalFilterOptions",
+    "description": "Each stage's options, or false (or left out) to leave that stage out",
+    "properties": {
+      "colorAdjustment": {
+        "name": "colorAdjustment",
+        "optional": true,
+        "type": "union",
+        "description": "levels and colour of the signal before anything else happens to it"
+      },
+      "noise": {
+        "name": "noise",
+        "optional": true,
+        "type": "union"
+      },
+      "sharpen": {
+        "name": "sharpen",
+        "optional": true,
+        "type": "union"
+      }
+    }
   },
   "BloomFilterOptions": {
     "name": "BloomFilterOptions",
+    "description": "Creates a bloom/glow effect around bright areas to simulate light bleeding",
     "properties": {
       "cutoff": {
         "name": "cutoff",
@@ -32,12 +221,9 @@
       }
     }
   },
-  "ColorAdjustmentFilter": {
-    "name": "ColorAdjustmentFilter",
-    "description": "Adjusts gamma, saturation, and brightness for final color calibration. Can be put anywhere\nin the filters chain. One use is to counter-act if the other filters such as phosphor mask filter\nhave had an overall desaturating effect"
-  },
   "ColorAdjustmentFilterOptions": {
     "name": "ColorAdjustmentFilterOptions",
+    "description": "Adjusts gamma, saturation, and brightness for color calibration. Available at the start of the\nsignal phase and at the end of the tube phase. One use is to counter-act if other stages such as\nthe phosphor mask have had an overall desaturating effect",
     "properties": {
       "brightness": {
         "name": "brightness",
@@ -83,115 +269,9 @@
       }
     }
   },
-  "CrtFilterPipelineOptions": {
-    "name": "CrtFilterPipelineOptions",
-    "properties": {
-      "bloom": {
-        "name": "bloom",
-        "optional": true,
-        "type": "union",
-        "description": "Bloom filter options, undefined to use defaults, false to disable"
-      },
-      "colorAdjustment": {
-        "name": "colorAdjustment",
-        "optional": true,
-        "type": "union",
-        "description": "Color adjustment filter options, undefined to use defaults, false to disable"
-      },
-      "flicker": {
-        "name": "flicker",
-        "optional": true,
-        "type": "union",
-        "description": "Flicker filter options, undefined to use defaults, false to disable"
-      },
-      "noise": {
-        "name": "noise",
-        "optional": true,
-        "type": "union"
-      },
-      "phosphorMask": {
-        "name": "phosphorMask",
-        "optional": true,
-        "type": "union",
-        "description": "Phosphor mask filter options, undefined to use defaults, false to disable"
-      },
-      "raiseBlackPoint": {
-        "name": "raiseBlackPoint",
-        "optional": true,
-        "type": "union",
-        "description": "Raise black point filter options, undefined to use defaults, false to disable"
-      },
-      "roundedCorners": {
-        "name": "roundedCorners",
-        "optional": true,
-        "type": "union",
-        "description": "Rounded corners filter options, undefined to use defaults, false to disable"
-      },
-      "scanlines": {
-        "name": "scanlines",
-        "optional": true,
-        "type": "union",
-        "description": "Scanlines filter options, undefined to use defaults, false to disable"
-      },
-      "screenGeometry": {
-        "name": "screenGeometry",
-        "optional": true,
-        "type": "union",
-        "description": "Screen geometry filter options, undefined to use defaults, false to disable"
-      },
-      "sharpen": {
-        "name": "sharpen",
-        "optional": true,
-        "type": "union",
-        "description": "Sharpen filter options, undefined to use defaults, false to disable"
-      },
-      "switchOn": {
-        "name": "switchOn",
-        "optional": true,
-        "type": "union",
-        "description": "Switch on filter options, undefined to use defaults, false to disable"
-      },
-      "vignette": {
-        "name": "vignette",
-        "optional": true,
-        "type": "union",
-        "description": "Vignette filter options, undefined to use defaults, false to disable"
-      }
-    }
-  },
-  "CurvatureFilter": {
-    "name": "CurvatureFilter",
-    "description": "Emulates the curved look of projecting onto a rounded glass screen"
-  },
-  "CurvatureFilterOptions": {
-    "name": "CurvatureFilterOptions",
-    "properties": {
-      "curvatureX": {
-        "name": "curvatureX",
-        "optional": true,
-        "type": "number",
-        "description": "Horizontal curvature amount (0-1, typically 0.15)"
-      },
-      "curvatureY": {
-        "name": "curvatureY",
-        "optional": true,
-        "type": "number",
-        "description": "Vertical curvature amount (0-1, typically 0.15)"
-      },
-      "multisampling": {
-        "name": "multisampling",
-        "optional": true,
-        "type": "boolean",
-        "description": "Enable multisampling (FSAA) for smoother curvature, but also slower rendering.\nAlso add some blurring."
-      }
-    }
-  },
-  "FlickerFilter": {
-    "name": "FlickerFilter",
-    "description": "Fades the picture between refreshes, the way a phosphor does between the passes of the beam that\nrelight it.\n\nEvery frame is still drawn - this does not hold the frame rate down to the rate being emulated,\nit only dims the frames that fall between refreshes. Because the pattern has to repeat over a\nwhole number of the display's frames, the rate actually shown is the display's own refresh\ndivided by however many frames come closest to the rate asked for: a 120Hz display asked for 30Hz\nflickers every 4th frame, and asked for 24Hz every 5th. Rates that do not divide are not\napproximated, since a pattern that does not repeat evenly beats against the display and looks far\nworse than no flicker at all. The display's refresh is not something the page can ask for, so it\nis measured from the time between frames."
-  },
   "FlickerFilterOptions": {
     "name": "FlickerFilterOptions",
+    "description": "Fades the picture between refreshes, the way a phosphor does between the passes of the beam that\nrelight it.\n\nEvery frame is still drawn - this does not hold the frame rate down to the rate being emulated,\nit only dims the frames that fall between refreshes. Because the pattern has to repeat over a\nwhole number of the display's frames, the rate actually shown is the display's own refresh\ndivided by however many frames come closest to the rate asked for: a 120Hz display asked for 30Hz\nflickers every 4th frame, and asked for 24Hz every 5th. Rates that do not divide are not\napproximated, since a pattern that does not repeat evenly beats against the display and looks far\nworse than no flicker at all. The display's refresh is not something the page can ask for, so it\nis measured from the time between frames.",
     "properties": {
       "depth": {
         "name": "depth",
@@ -213,12 +293,9 @@
       }
     }
   },
-  "NoiseFilter": {
-    "name": "NoiseFilter",
-    "description": "Adds animated noise to simulate analog video interference and screen grain"
-  },
   "NoiseFilterOptions": {
     "name": "NoiseFilterOptions",
+    "description": "Adds animated noise to simulate analog video interference and screen grain",
     "properties": {
       "fps": {
         "name": "fps",
@@ -240,12 +317,9 @@
       }
     }
   },
-  "PhosphorMaskFilter": {
-    "name": "PhosphorMaskFilter",
-    "description": "Simulates the RGB phosphor dot pattern of CRT displays by creating vertical red, green, and blue stripes.\nOnly a slot mask is supported, since this was the most common type used in TVs and arcades."
-  },
   "PhosphorMaskFilterOptions": {
     "name": "PhosphorMaskFilterOptions",
+    "description": "Simulates the RGB phosphor dot pattern of CRT displays by creating vertical red, green, and blue stripes.\nOnly a slot mask is supported, since this was the most common type used in TVs and arcades.",
     "properties": {
       "maskBrightness": {
         "name": "maskBrightness",
@@ -273,18 +347,15 @@
       }
     }
   },
-  "RaiseBlackPointFilter": {
-    "name": "RaiseBlackPointFilter",
-    "description": "Raises the black point of the image, simulating how older CRT screens couldn't produce perfect\nblacks. The lift is domed - weakest in the middle and strongest towards the edges - as if looking\nthrough the glass of a curved tube - and slightly cool, as the scattered light of a running tube\nis. Alpha is passed through unchanged."
-  },
   "RaiseBlackPointFilterOptions": {
     "name": "RaiseBlackPointFilterOptions",
+    "description": "Raises the black point of the image, simulating how older CRT screens couldn't produce perfect\nblacks. The lift is domed - weakest in the middle and strongest towards the edges - as if looking\nthrough the glass of a curved tube - and slightly cool, as the scattered light of a running tube\nis. Alpha is passed through unchanged.",
     "properties": {
       "blackPoint": {
         "name": "blackPoint",
         "optional": true,
         "type": "number",
-        "description": "Simulates how older screens couldn't make perfect blacks by compressing the dynamic range slightly.\n0 means no effect (same as not having the filter, whereas a value like 0.1 would be a very strong effect.\nThis is the lift in the middle of the dome, ie the least the image is lifted anywhere"
+        "description": "Simulates how older screens couldn't make perfect blacks by compressing the dynamic range slightly.\n0 means no effect (same as not having the stage, whereas a value like 0.1 would be a very strong effect.\nThis is the lift in the middle of the dome, ie the least the image is lifted anywhere"
       },
       "domeCentreX": {
         "name": "domeCentreX",
@@ -336,12 +407,9 @@
       }
     }
   },
-  "RoundedCornersFilter": {
-    "name": "RoundedCornersFilter",
-    "description": "Cuts the picture to the shape of a CRT's face, fading it up from black over a band just inside\nthe edge so that curving it afterwards does not leave a hard, aliased line. The shape and the\nfade are contours of one superellipse, so the fade follows the corners as evenly as it does the\nsides."
-  },
   "RoundedCornersFilterOptions": {
     "name": "RoundedCornersFilterOptions",
+    "description": "Cuts the picture to the shape of a CRT's face, fading it up from black over a band just inside\nthe edge so that curving it afterwards does not leave a hard, aliased line. The shape and the\nfade are contours of one superellipse, so the fade follows the corners as evenly as it does the\nsides.",
     "properties": {
       "cornerRadius": {
         "name": "cornerRadius",
@@ -357,12 +425,9 @@
       }
     }
   },
-  "ScanlinesFilter": {
-    "name": "ScanlinesFilter",
-    "description": "Creates horizontal scanlines to simulate CRT display raster lines"
-  },
   "ScanlinesFilterOptions": {
     "name": "ScanlinesFilterOptions",
+    "description": "Creates horizontal scanlines to simulate CRT display raster lines",
     "properties": {
       "gapBrightness": {
         "name": "gapBrightness",
@@ -378,12 +443,9 @@
       }
     }
   },
-  "ScreenGeometryFilter": {
-    "name": "ScreenGeometryFilter",
-    "description": "Puts the picture where the beam would actually have drawn it: oversized by however far the raster\novershoots the glass, stretched by the sag of the high voltage under the beam current the picture\nitself is drawing, and curved by the shape of the screen.\n\nThese are one filter rather than three because they are all the same kind of thing - a change to\nwhere a point of the picture is sampled from - and composing them into a single coordinate costs\none resample instead of three, which matters on an upscaled picture that each resample softens."
-  },
   "ScreenGeometryFilterOptions": {
     "name": "ScreenGeometryFilterOptions",
+    "description": "Puts the picture where the beam would actually have drawn it: oversized by however far the raster\novershoots the glass, stretched by the sag of the high voltage under the beam current the picture\nitself is drawing, and curved by the shape of the screen.\n\nThese are one stage rather than three because they are all the same kind of thing - a change to\nwhere a point of the picture is sampled from - and composing them into a single coordinate costs\none resample instead of three, which matters on an upscaled picture that each resample softens.",
     "properties": {
       "curvatureExponent": {
         "name": "curvatureExponent",
@@ -447,12 +509,9 @@
       }
     }
   },
-  "SharpenFilter": {
-    "name": "SharpenFilter",
-    "description": "Sharpens along the scan direction only, in the manner of the peaking (aperture correction) in a\nCRT set's luminance amplifier, and of the scan velocity modulation that many sets of the same era\nadded on top of it. Both put a dark preshoot before a luminance edge and a bright overshoot after\nit. Only the luminance is sharpened, and the overshoot clips at white. The signal is optionally\nband-limited along the same axis first, standing in for what the chain rolled off before the\npeaking got to it."
-  },
   "SharpenFilterOptions": {
     "name": "SharpenFilterOptions",
+    "description": "Sharpens along the scan direction only, in the manner of the peaking (aperture correction) in a\nCRT set's luminance amplifier, and of the scan velocity modulation that many sets of the same era\nadded on top of it. Both put a dark preshoot before a luminance edge and a bright overshoot after\nit. Only the luminance is sharpened, and the overshoot clips at white. The signal is optionally\nband-limited along the same axis first, standing in for what the chain rolled off before the\npeaking got to it.",
     "properties": {
       "amount": {
         "name": "amount",
@@ -480,12 +539,9 @@
       }
     }
   },
-  "SwitchOnFilter": {
-    "name": "SwitchOnFilter",
-    "description": "Brings the picture up the way a CRT does when it is switched on: nothing at all while the heaters\nwarm, then an eased brightness rise that overshoots and settles, tinted while the guns are still\ncoming up to temperature, with the raster shrinking onto the screen as the EHT rises and blooming\nagain at the brightness peak. Also plays a fast degauss-coil ripple and a slower cold-vertical-\noscillator roll, and renders scanlines itself (in the raster's own scaled coordinate space) so\nthey shrink and wobble onto the screen with the picture rather than staying screen-space-fixed -\nleave ScanlinesFilter out of the chain elsewhere while this filter is active.\n\nThis is not a switch-off played backwards - a set being switched off collapses to a line and then\na dot, which has no counterpart here.\n\nThe animation runs from the moment the filter is constructed. Call `restart` to play it again."
-  },
   "SwitchOnFilterOptions": {
     "name": "SwitchOnFilterOptions",
+    "description": "Brings the picture up the way a CRT does when it is switched on: nothing at all while the heaters\nwarm, then an eased brightness rise that overshoots and settles, tinted while the guns are still\ncoming up to temperature, with the raster shrinking onto the screen as the EHT rises and blooming\nagain at the brightness peak. Also plays a fast degauss-coil ripple and a slower cold-vertical-\noscillator roll, and renders scanlines itself (in the raster's own scaled coordinate space) so\nthey shrink and wobble onto the screen with the picture rather than staying screen-space-fixed -\nthe raster phase's own scanlines can be turned off while this plays.\n\nThis is not a switch-off played backwards - a set being switched off collapses to a line and then\na dot, which has no counterpart here.\n\nThe animation runs from the moment the tube filter is constructed, and can be restarted or held.",
     "properties": {
       "bloomAmount": {
         "name": "bloomAmount",
@@ -557,13 +613,13 @@
         "name": "scanlinesGapBrightness",
         "optional": true,
         "type": "number",
-        "description": "Brightness of scanline gaps while this filter is active - pass the same value given to\nScanlinesFilter elsewhere in the chain, since that filter is left out while this one plays"
+        "description": "Brightness of scanline gaps while the switch-on plays - pass the same value given to the\nraster phase's scanlines, which match these once the switch-on is over"
       },
       "scanlinesPixelHeight": {
         "name": "scanlinesPixelHeight",
         "optional": true,
         "type": "number",
-        "description": "Height of scanline virtual pixels while this filter is active - pass the same value given to\nScanlinesFilter elsewhere in the chain, since that filter is left out while this one plays"
+        "description": "Height of scanline virtual pixels while the switch-on plays - pass the same value given to the\nraster phase's scanlines, which match these once the switch-on is over"
       },
       "warmUpDelay": {
         "name": "warmUpDelay",
@@ -573,12 +629,9 @@
       }
     }
   },
-  "VignetteFilter": {
-    "name": "VignetteFilter",
-    "description": "Darkens the edges of the screen to simulate the natural light falloff on CRT displays"
-  },
   "VignetteFilterOptions": {
     "name": "VignetteFilterOptions",
+    "description": "Darkens the edges of the screen to simulate the natural light falloff on CRT displays",
     "properties": {
       "intensity": {
         "name": "intensity",
@@ -591,6 +644,43 @@
         "optional": true,
         "type": "number",
         "description": "Radius from center where vignette starts"
+      }
+    }
+  },
+  "TubeFilter": {
+    "name": "TubeFilter",
+    "description": "The tube itself: coming up to temperature when switched on, the shape of its face, the geometry\nof the beam and the curve of the glass, and the calibration of the finished picture."
+  },
+  "TubeFilterOptions": {
+    "name": "TubeFilterOptions",
+    "description": "Each stage's options, or false (or left out) to leave that stage out",
+    "properties": {
+      "colorAdjustment": {
+        "name": "colorAdjustment",
+        "optional": true,
+        "type": "union",
+        "description": "final levels and colour of the picture as it leaves the glass"
+      },
+      "roundedCorners": {
+        "name": "roundedCorners",
+        "optional": true,
+        "type": "union"
+      },
+      "screenGeometry": {
+        "name": "screenGeometry",
+        "optional": true,
+        "type": "union"
+      },
+      "switchOn": {
+        "name": "switchOn",
+        "optional": true,
+        "type": "union"
+      },
+      "switchOnClock": {
+        "name": "switchOnClock",
+        "optional": true,
+        "type": "SwitchOnClock",
+        "description": "the switch-on's timing, to carry on a switch-on that is already playing - eg in a tube filter\nmade to replace one that was playing it. A fresh switch-on starts if this is left out"
       }
     }
   }
